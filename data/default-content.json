@@ -1,0 +1,174 @@
+{
+  "common": {
+    "name": "Difa Alfaruq",
+    "profession": "Web Developer",
+    "profile_photo": "foto.jpg",
+    "profile_photos": ["foto.jpg"],
+    "open_to_work_enabled": true,
+    "phone": "081776396965",
+    "email": "alfaruqdifa1211@gmail.com",
+    "address": "Papan Indah 2, Mangunjaya, Tambun Selatan, Kab. Bekasi",
+    "linkedin": "https://www.linkedin.com/in/difa-alfaruq-45156b312/",
+    "instagram": "https://www.instagram.com/difaalfaruqq?igsh=ZXZydzVpYmlvcGRm",
+    "whatsapp": "https://wa.me/6281776396965",
+    "cv_url": "https://drive.google.com/file/d/1GPihzRvLOoqR0jMukVrECQ5yT0zxC3t_/view?usp=sharing"
+  },
+  "languages": {
+    "id": {
+      "portfolio": "Portofolio Pribadi",
+      "contactMe": "Hubungi Saya",
+      "seeWork": "Lihat Kontribusi",
+      "downloadCv": "Unduh CV",
+      "stats": ["Pengalaman kerja", "Keterampilan utama", "Siap berkontribusi"],
+      "statValues": ["2+", "7+", "100%"],
+      "available": "Tersedia untuk bekerja",
+      "profileNote": "Operasional, produksi, admin, dan entry level IT support.",
+      "ready": "Open to work",
+      "aboutEyebrow": "Profil",
+      "aboutTitle": "Tentang Saya",
+      "infoLabels": ["Domisili", "Pendidikan", "Minat"],
+      "infoValues": ["Bekasi"],
+      "focusTitle": "Fokus Utama & Keahlian Pendukung",
+      "focusItems": ["Pengembangan Web", "Pemrograman", "Jaringan Komputer", "IT Support & Administrasi"],
+      "educationEyebrow": "Perjalanan Akademik",
+      "educationTitle": "Pendidikan",
+      "historyEyebrow": "Riwayat",
+      "historyTitle": "Pengalaman Kerja",
+      "projectEyebrow": "Kontribusi",
+      "projectTitle": "Proyek dan Tanggung Jawab",
+      "certificationEyebrow": "Kredensial",
+      "certificationTitle": "Sertifikasi",
+      "skillEyebrow": "Kemampuan",
+      "skillTitle": "Keterampilan",
+      "contactEyebrow": "Kontak",
+      "contactTitle": "Mari Terhubung",
+      "nav": ["Beranda", "Tentang", "Pendidikan", "Pengalaman", "Proyek", "Sertifikasi", "Skill", "Rating", "Kontak"],
+      "contactLabels": ["Telepon", "Email", "Alamat"],
+      "rights": "Hak cipta dilindungi.",
+      "heroDesc": "Lulusan Teknik Komputer dan Jaringan dengan pengalaman di produksi, pergudangan, administrasi stok, dan operasional toko. Terbiasa bekerja mengikuti SOP, teliti, dan siap belajar cepat.",
+      "aboutText": "Saya adalah lulusan Teknik Komputer dan Jaringan dengan pengalaman kerja di bidang produksi, pergudangan, dan operasional toko. Pernah bekerja sebagai Helper Produksi di PT Prakarsa Alam Segar dan Crew Store di PT Sewu Segar Primatama (Re.juve). Saya terbiasa bekerja dengan target, teliti dalam pencatatan, disiplin mengikuti SOP, serta mampu bekerja mandiri maupun dalam tim.",
+      "contactText": "Saya terbuka untuk kesempatan kerja dan siap dihubungi untuk proses rekrutmen, interview, atau diskusi kebutuhan posisi.",
+      "education": [
+        {"period":"2023 - Sekarang","status":"Sedang ditempuh","program":"Teknik Informatika","school":"Universitas Bani Saleh","description":"Sedang menempuh pendidikan Teknik Informatika dengan pembelajaran di bidang pengembangan perangkat lunak, jaringan komputer, basis data, dan sistem informasi.","logo":"assets/education/universitas-bani-saleh.png"},
+        {"period":"2020 - 2023","status":"Lulus","program":"Teknik Komputer dan Jaringan","school":"SMK Yadika 13","description":"Menyelesaikan pendidikan kejuruan Teknik Komputer dan Jaringan dengan pembelajaran dasar perangkat keras, jaringan, sistem operasi, dan troubleshooting komputer.","logo":"assets/education/smk-yadika-13.png"}
+      ],
+      "jobs": [
+        {"title":"Helper Produksi","company":"PT Prakarsa Alam Segar","period":"Okt 2025 - Jan 2026","category":"Pengalaman Kerja","image":"assets/experience/production.svg","description":"Mendukung proses produksi, pengemasan, pemindahan, dan penyusunan barang dengan tetap mengikuti SOP, target kerja, dan aturan keselamatan.","duties":["Membantu proses produksi mie instan sesuai prosedur kerja.","Melakukan pemindahan dan penyusunan kardus ke pallet dengan rapi dan aman.","Membantu proses packing produk agar siap dikirim.","Menjaga kebersihan area kerja dan mematuhi aturan K3.","Bekerja sama dengan tim produksi dan gudang untuk mengejar target harian."]},
+        {"title":"Crew Store Part Time","company":"PT Sewu Segar Primatama (Re.juve)","period":"Feb 2024 - Okt 2025","category":"Pengalaman Kerja","image":"assets/experience/store.svg","description":"Menangani pelayanan pelanggan, transaksi pembayaran, laporan penjualan, pencatatan stok, dan kebutuhan operasional toko.","duties":["Melayani pembayaran customer melalui EDC, cash, dan e-wallet.","Melakukan opening dan closing penjualan produk baru serta program diskon.","Memastikan pekerjaan sesuai SOP toko dan membantu persiapan audit.","Membuat laporan penjualan harian, mingguan, dan bulanan.","Mencatat stok produk dan melaporkan kebutuhan restock."]},
+        {"title":"Asisten Admin Produksi","company":"PT Sumitomo Wintec Electric Indonesia","period":"Juni 2022 - September 2022","category":"Magang","image":"assets/experience/sumitomo-electric.jpg","description":"Mendukung administrasi produksi melalui pengelolaan, pemindaian, koordinasi, dan pengarsipan dokumen operasional pabrik.","duties":["Mengelola dokumen hasil produksi untuk mendukung administrasi operasional pabrik.","Membuat salinan dokumen lebih dari 200 data per hari menggunakan scanner.","Berkoordinasi dengan tim produksi untuk memastikan dokumen sesuai dengan standar perusahaan.","Menyusun dan memelihara arsip dokumen agar mudah diakses saat dibutuhkan.","Berpengalaman dalam bekerja di lingkungan pabrik dan memahami standar keselamatan kerja (K3)."]}
+      ],
+      "projects": [
+        {"category":"Administrasi","title":"Laporan Penjualan Harian","text":"Mencatat transaksi harian, memisahkan metode pembayaran, dan membantu rekap penjualan toko."},
+        {"category":"Operasional","title":"Kontrol Stok Produk","text":"Membantu pencatatan stok, kebutuhan restock, dan ketersediaan produk agar operasional tetap lancar."},
+        {"category":"Produksi","title":"Dukungan Produksi","text":"Membantu proses pengemasan dan penyusunan barang sesuai kebutuhan tim produksi dan gudang."}
+      ],
+      "certifications": [
+        {"title":"CCNA: Introduction to Networks","issuer":"Cisco Networking Academy","date":"10 Februari 2026","image":"assets/certificate-preview.png","document":"https://drive.google.com/file/d/13wY7JfRv2-wWjgLO1-4-htJ0Wj7PQR5E/view?usp=sharing","certificate_number":"20260202033","credential_url":"","description":"Berhasil menyelesaikan CCNA: Introduction to Networks yang diselenggarakan oleh Universitas Bani Saleh melalui program Cisco Networking Academy."}
+      ],
+      "skills": ["Microsoft Excel","Microsoft Word","Microsoft PowerPoint","Desain Grafis Canva","Bahasa Inggris Dasar","Pemecahan Masalah","Teknik Komputer & Jaringan","Komunikasi Customer","Manajemen Stok",{"name":"Programming","category":"hard","since":"2023","level":"Menengah","image":"assets/skills/programming.svg","description":"Mempelajari pengembangan aplikasi dan website dari sisi antarmuka, logika program, back-end, hingga dasar pengembangan aplikasi lintas platform.","technologies":["HTML","CSS","JavaScript","PHP","Node.js","Next.js","React","Python","C++","Flutter"]}]
+    },
+    "en": {
+      "portfolio": "Personal Portfolio",
+      "contactMe": "Contact Me",
+      "seeWork": "View Contributions",
+      "downloadCv": "Download CV",
+      "stats": ["Work experience", "Core skills", "Ready to contribute"],
+      "statValues": ["2+", "7+", "100%"],
+      "available": "Available for work",
+      "profileNote": "Operations, production, administration, and entry-level IT support.",
+      "ready": "Open to work",
+      "aboutEyebrow": "Profile",
+      "aboutTitle": "About Me",
+      "infoLabels": ["Location", "Education", "Interests"],
+      "infoValues": ["Bekasi"],
+      "focusTitle": "Core Focus & Supporting Skills",
+      "focusItems": ["Web Development", "Programming", "Computer Networking", "IT Support & Administration"],
+      "educationEyebrow": "Academic Journey",
+      "educationTitle": "Education",
+      "historyEyebrow": "History",
+      "historyTitle": "Work Experience",
+      "projectEyebrow": "Contributions",
+      "projectTitle": "Projects and Responsibilities",
+      "certificationEyebrow": "Credentials",
+      "certificationTitle": "Certifications",
+      "skillEyebrow": "Capabilities",
+      "skillTitle": "Skills",
+      "contactEyebrow": "Contact",
+      "contactTitle": "Let's Connect",
+      "nav": ["Home", "About", "Education", "Experience", "Projects", "Certifications", "Skills", "Rating", "Contact"],
+      "contactLabels": ["Phone", "Email", "Address"],
+      "rights": "All Rights Reserved.",
+      "heroDesc": "A Computer and Network Engineering graduate with experience in production, warehousing, stock administration, and store operations. Accustomed to following SOPs, working carefully, and learning quickly.",
+      "aboutText": "I am a Computer and Network Engineering graduate with experience in production, warehousing, and store operations. I worked as a Production Helper at PT Prakarsa Alam Segar and as a Part-Time Store Crew member at PT Sewu Segar Primatama (Re.juve).",
+      "contactText": "I am open to job opportunities and available for recruitment, interviews, or discussions about position requirements.",
+      "education": [
+        {"period":"2023 - Present","status":"In progress","program":"Informatics Engineering","school":"Universitas Bani Saleh","description":"Currently studying Informatics Engineering with coursework in software development, computer networks, databases, and information systems.","logo":"assets/education/universitas-bani-saleh.png"},
+        {"period":"2020 - 2023","status":"Graduated","program":"Computer and Network Engineering","school":"SMK Yadika 13","description":"Completed vocational education covering computer hardware, networking, operating systems, and troubleshooting.","logo":"assets/education/smk-yadika-13.png"}
+      ],
+      "jobs": [
+        {"title":"Production Helper","company":"PT Prakarsa Alam Segar","period":"Oct 2025 - Jan 2026","category":"Work Experience","image":"assets/experience/production.svg","description":"Supported production, packaging, movement, and arrangement of goods while following SOPs, work targets, and safety requirements.","duties":["Supported instant noodle production according to work procedures.","Moved and arranged boxes neatly and safely on pallets.","Helped pack products for shipment.","Maintained workspace cleanliness and followed safety rules.","Worked with production and warehouse teams to meet daily targets."]},
+        {"title":"Part-Time Store Crew","company":"PT Sewu Segar Primatama (Re.juve)","period":"Feb 2024 - Oct 2025","category":"Work Experience","image":"assets/experience/store.svg","description":"Handled customer service, payment transactions, sales reports, stock records, and day-to-day store operations.","duties":["Handled customer payments via EDC, cash, and e-wallet.","Managed opening and closing sales for new products and promotions.","Ensured compliance with store SOPs and supported audit preparation.","Prepared daily, weekly, and monthly sales reports.","Recorded product stock and reported restocking needs."]},
+        {"title":"Production Admin Assistant","company":"PT Sumitomo Wintec Electric Indonesia","period":"June 2022 - September 2022","category":"Internship","image":"assets/experience/sumitomo-electric.jpg","description":"Supported production administration through document management, scanning, coordination, and factory operational filing.","duties":["Managed production documents to support factory operational administration.","Scanned and copied more than 200 document records per day.","Coordinated with the production team to ensure documents met company standards.","Organized and maintained document archives for easy retrieval.","Gained experience in a factory environment and followed occupational safety standards."]}
+      ],
+      "projects": [
+        {"category":"Administration","title":"Daily Sales Reports","text":"Recorded daily transactions, separated payment methods, and supported store sales recaps."},
+        {"category":"Operations","title":"Product Stock Control","text":"Helped track inventory, restocking needs, and product availability to keep operations running smoothly."},
+        {"category":"Production","title":"Production Support","text":"Supported packaging and product arrangement based on production and warehouse team needs."}
+      ],
+      "certifications": [
+        {"title":"CCNA: Introduction to Networks","issuer":"Cisco Networking Academy","date":"10 February 2026","image":"assets/certificate-preview.png","document":"https://drive.google.com/file/d/13wY7JfRv2-wWjgLO1-4-htJ0Wj7PQR5E/view?usp=sharing","certificate_number":"20260202033","credential_url":"","description":"Successfully completed CCNA: Introduction to Networks, offered by Universitas Bani Saleh through the Cisco Networking Academy program."}
+      ],
+      "skills": ["Microsoft Excel","Microsoft Word","Microsoft PowerPoint","Canva Graphic Design","Basic English","Problem Solving","Computer & Network Engineering","Customer Communication","Stock Management",{"name":"Programming","category":"hard","since":"2023","level":"Intermediate","image":"assets/skills/programming.svg","description":"Studies application and website development, covering interfaces, programming logic, back-end fundamentals, and cross-platform application development.","technologies":["HTML","CSS","JavaScript","PHP","Node.js","Next.js","React","Python","C++","Flutter"]}]
+    },
+    "ja": {
+      "portfolio": "個人ポートフォリオ",
+      "contactMe": "お問い合わせ",
+      "seeWork": "実績を見る",
+      "stats": ["実務経験", "主要スキル", "貢献への意欲"],
+      "statValues": ["2+", "7+", "100%"],
+      "available": "就業可能",
+      "profileNote": "店舗運営、生産、事務、初級ITサポートに対応できます。",
+      "ready": "Open to work",
+      "aboutEyebrow": "プロフィール",
+      "aboutTitle": "自己紹介",
+      "infoLabels": ["居住地", "学歴", "関心分野"],
+      "infoValues": ["ブカシ", "コンピュータ・ネットワーク工学", "運営、事務、ITサポート"],
+      "educationEyebrow": "学びの歩み",
+      "educationTitle": "学歴",
+      "historyEyebrow": "経歴",
+      "historyTitle": "職歴",
+      "projectEyebrow": "実績",
+      "projectTitle": "プロジェクトと担当業務",
+      "certificationEyebrow": "資格情報",
+      "certificationTitle": "資格・認定",
+      "skillEyebrow": "能力",
+      "skillTitle": "スキル",
+      "contactEyebrow": "連絡先",
+      "contactTitle": "お気軽にご連絡ください",
+      "nav": ["ホーム", "自己紹介", "学歴", "職歴", "実績", "資格", "スキル", "評価", "連絡先"],
+      "contactLabels": ["電話", "メール", "住所"],
+      "rights": "無断転載を禁じます。",
+      "heroDesc": "コンピュータ・ネットワーク工学を専攻し、生産、倉庫、在庫管理、店舗運営の経験があります。",
+      "aboutText": "コンピュータ・ネットワーク工学の卒業生で、生産、倉庫、店舗運営の経験があります。",
+      "contactText": "求人の機会を歓迎しており、採用選考や面接についてのご相談に対応できます。",
+      "education": [
+        {"period":"2023年 - 現在","status":"在学中","program":"情報工学","school":"Universitas Bani Saleh","description":"ソフトウェア開発、ネットワーク、データベース、情報システムを学んでいます。","logo":"assets/education/universitas-bani-saleh.png"},
+        {"period":"2020年 - 2023年","status":"卒業","program":"コンピュータ・ネットワーク工学","school":"SMK Yadika 13","description":"ハードウェア、ネットワーク、OS、トラブルシューティングを学びました。","logo":"assets/education/smk-yadika-13.png"}
+      ],
+      "jobs": [
+        {"title":"生産補助","company":"PT Prakarsa Alam Segar","period":"2025年10月 - 2026年1月","category":"職務経験","image":"assets/experience/production.svg","description":"SOP、作業目標、安全規則に従い、生産、梱包、商品の移動と整理を支援しました。","duties":["手順に従って即席麺の生産を補助。","段ボールを安全かつ整然とパレットへ移動・配置。","出荷に向けた製品梱包を補助。","作業場の清掃と安全規則を遵守。"]},
+        {"title":"パートタイム店舗スタッフ","company":"PT Sewu Segar Primatama (Re.juve)","period":"2024年2月 - 2025年10月","category":"職務経験","image":"assets/experience/store.svg","description":"顧客対応、決済、売上報告、在庫記録、日々の店舗運営を担当しました。","duties":["EDC、現金、電子ウォレットでの決済対応。","店舗SOPの遵守と監査準備を支援。","日次・週次・月次の売上レポートを作成。","商品在庫を記録し補充の必要性を報告。"]},
+        {"title":"生産事務アシスタント","company":"PT Sumitomo Wintec Electric Indonesia","period":"2022年6月 - 2022年9月","category":"インターンシップ","image":"assets/experience/sumitomo-electric.jpg","description":"生産文書の管理、スキャン、調整、保管を通じて工場の生産事務を支援しました。","duties":["工場運営事務を支援するため生産文書を管理。","スキャナーを使用して1日200件以上の文書データを複製。","文書が会社基準を満たすよう生産チームと連携。","必要なときに簡単に参照できるよう文書を整理・保管。","工場環境での業務と労働安全基準を経験。"]}
+      ],
+      "projects": [
+        {"category":"事務","title":"日次売上レポート","text":"日々の取引を記録し、決済方法を分類して売上集計を支援。"},
+        {"category":"運営","title":"商品在庫管理","text":"在庫と補充の必要性を記録し、円滑な運営を支援。"},
+        {"category":"生産","title":"生産サポート","text":"生産・倉庫チームの要望に応じて梱包と商品の整理を支援。"}
+      ],
+      "certifications": [
+        {"title":"CCNA: Introduction to Networks","issuer":"Cisco Networking Academy","date":"2026年2月10日","image":"assets/certificate-preview.png","document":"https://drive.google.com/file/d/13wY7JfRv2-wWjgLO1-4-htJ0Wj7PQR5E/view?usp=sharing","certificate_number":"20260202033","credential_url":"","description":"Universitas Bani Saleh が Cisco Networking Academy プログラムを通じて提供する CCNA: Introduction to Networks を修了しました。"}
+      ],
+      "skills": ["Microsoft Excel","Microsoft Word","Microsoft PowerPoint","Canvaデザイン","基礎英語","問題解決","コンピュータ・ネットワーク工学","顧客対応","在庫管理",{"name":"プログラミング","category":"hard","since":"2023","level":"中級","image":"assets/skills/programming.svg","description":"インターフェース、プログラミングロジック、バックエンド、クロスプラットフォーム開発の基礎を学んでいます。","technologies":["HTML","CSS","JavaScript","PHP","Node.js","Next.js","React","Python","C++","Flutter"]}]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# Local secrets and deployment configuration
+.env
+.env.*
+!.env.example
+api/config.local.php
+
+# Runtime data
+data/sessions/
+*.log
+
+# Dependencies and build output
+node_modules/
+dist/
+.vercel/
+
+# Local development tools
+.agents/
+.codex/
+.git-empty-backup/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
