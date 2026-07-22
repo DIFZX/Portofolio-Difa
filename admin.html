@@ -16,7 +16,7 @@
             <p class="eyebrow">Portfolio CMS</p>
             <h1>Masuk ke Admin</h1>
             <p class="muted">Kelola seluruh isi portofolio dari satu tempat.</p>
-            <label><span>Username</span><input id="loginUsername" autocomplete="username" value="admin" required></label>
+            <label><span>Email admin</span><input id="loginUsername" autocomplete="username" placeholder="nama@email.com" required></label>
             <label><span>Password</span><input id="loginPassword" type="password" autocomplete="current-password" required></label>
             <p id="loginNotice" class="notice" hidden></p>
             <button class="primary-button" type="submit">Masuk</button>
@@ -156,6 +156,9 @@
             </section>
         </section>
     </div>
-    <script src="admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="supabase-client.js"></script>
+    <script src="admin.js?v=20260722-supabase"></script>
 </body>
 </html>

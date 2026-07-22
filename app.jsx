@@ -107,8 +107,10 @@ function App() {
 
     useEffect(() => {
         let active = true;
-        fetch('api/content.php', { headers: { Accept: 'application/json' } })
-            .then((response) => response.json())
+        const contentRequest = window.portfolioSupabase?.configured
+            ? window.portfolioSupabase.getContent()
+            : fetch('api/content.php', { headers: { Accept: 'application/json' } }).then((response) => response.json());
+        contentRequest
             .then((result) => {
                 if (active && result.success && result.data) setPortfolioContent(result.data);
             })
@@ -1740,16 +1742,17 @@ function RatingSection({ language }) {
 
     const loadRatings = async () => {
         try {
-            const response = await fetch('api/ratings.php', {
-                headers: { Accept: 'application/json' },
-            });
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || copy.loadError);
+            if (window.portfolioSupabase?.configured) {
+                const data = await window.portfolioSupabase.getRatings();
+                setRatings(data);
+            } else {
+                const response = await fetch('api/ratings.php', {
+                    headers: { Accept: 'application/json' },
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.message || copy.loadError);
+                setRatings(result.data);
             }
-
-            setRatings(result.data);
         } catch (error) {
             setNotice({ type: 'error', text: error.message });
         } finally {
@@ -1778,18 +1781,20 @@ function RatingSection({ language }) {
         setSubmitting(true);
 
         try {
-            const response = await fetch('api/ratings.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({ ...form, rating: Number(form.rating) }),
-            });
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || copy.submitError);
+            let createdRating;
+            if (window.portfolioSupabase?.configured) {
+                createdRating = await window.portfolioSupabase.createRating(form);
+            } else {
+                const response = await fetch('api/ratings.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify({ ...form, rating: Number(form.rating) }),
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.message || copy.submitError);
+                createdRating = result.data;
             }
-
-            setRatings((current) => [result.data, ...current]);
+            setRatings((current) => [createdRating, ...current]);
             setForm(emptyForm);
             setNotice({ type: 'success', text: copy.success });
         } catch (error) {

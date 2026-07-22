@@ -167,11 +167,22 @@ function showLogin() {
 }
 
 async function showAdmin(session) {
-    state.csrf = session.csrf_token;
+    state.csrf = session.csrf_token || '';
     document.getElementById('loginView').hidden = true;
     document.getElementById('adminView').hidden = false;
-    const result = await request('api/content.php');
-    state.content = result.data;
+    const result = window.portfolioSupabase?.configured
+        ? await window.portfolioSupabase.getContent()
+        : await request('api/content.php');
+    let legacyContent = null;
+    if (window.portfolioSupabase?.configured && result.using_default) {
+        try {
+            const legacyResult = await request('api/content.php');
+            legacyContent = legacyResult.data || null;
+        } catch (_) {
+            // API PHP memang tidak tersedia setelah website berada di Vercel.
+        }
+    }
+    state.content = result.data || legacyContent || await fetch('data/default-content.json').then((response) => response.json());
     state.content.common ||= {};
     if (!state.content.common.phone || state.content.common.phone === '089634899278') {
         state.content.common.phone = '081776396965';
@@ -252,7 +263,11 @@ async function showAdmin(session) {
     });
     synchronizeCollectionImages();
     renderEditor();
-    if (result.using_default) showNotice('Menggunakan konten awal. Klik Simpan perubahan untuk menyimpannya ke database.');
+    if (result.using_default) {
+        showNotice(legacyContent
+            ? 'Konten MySQL lokal ditemukan. Klik Simpan perubahan untuk memigrasikannya ke Supabase.'
+            : 'Menggunakan konten awal. Klik Simpan perubahan untuk menyimpannya ke Supabase.');
+    }
 }
 
 function languageData() {
@@ -406,6 +421,10 @@ function createField(field, item) {
 }
 
 async function uploadImage(file) {
+    if (window.portfolioSupabase?.configured) {
+        const path = await window.portfolioSupabase.uploadImage(file);
+        return { success: true, path };
+    }
     const form = new FormData();
     form.append('image', file);
     return request('api/upload.php', { method: 'POST', body: form });
@@ -500,7 +519,11 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     const notice = document.getElementById('loginNotice');
     notice.hidden = true;
     try {
-        const result = await request('api/admin.php?action=login', { method: 'POST', body: JSON.stringify({ username: document.getElementById('loginUsername').value, password: document.getElementById('loginPassword').value }) });
+        const identity = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        const result = window.portfolioSupabase?.configured
+            ? await window.portfolioSupabase.login(identity, password)
+            : await request('api/admin.php?action=login', { method: 'POST', body: JSON.stringify({ username: identity, password }) });
         await showAdmin(result);
     } catch (error) {
         notice.textContent = error.message; notice.className = 'notice error'; notice.hidden = false;
@@ -550,14 +573,18 @@ document.getElementById('saveButton').addEventListener('click', async () => {
         synchronizeCollectionImages();
         if (!state.content.common.name) throw new Error('Nama tidak boleh kosong.');
         button.disabled = true; button.textContent = 'Menyimpan...';
-        await request('api/content.php', { method: 'PUT', body: JSON.stringify(state.content) });
+        if (window.portfolioSupabase?.configured) await window.portfolioSupabase.saveContent(state.content);
+        else await request('api/content.php', { method: 'PUT', body: JSON.stringify(state.content) });
         showNotice('Semua perubahan berhasil disimpan dan langsung tampil di website.');
     } catch (error) { showNotice(error.message, 'error'); }
     finally { button.disabled = false; button.textContent = 'Simpan perubahan'; }
 });
 
 document.getElementById('logoutButton').addEventListener('click', async () => {
-    try { await request('api/admin.php?action=logout', { method: 'POST' }); } catch (_) {}
+    try {
+        if (window.portfolioSupabase?.configured) await window.portfolioSupabase.logout();
+        else await request('api/admin.php?action=logout', { method: 'POST' });
+    } catch (_) {}
     state.content = null; state.csrf = ''; showLogin();
 });
 
@@ -567,14 +594,17 @@ document.getElementById('passwordForm').addEventListener('submit', async (event)
     const next = document.getElementById('newPassword').value;
     if (next !== document.getElementById('confirmPassword').value) { showNotice('Konfirmasi password baru tidak sama.', 'error'); return; }
     try {
-        await request('api/admin.php?action=password', { method: 'PUT', body: JSON.stringify({ current_password: current, new_password: next }) });
+        if (window.portfolioSupabase?.configured) await window.portfolioSupabase.changePassword(current, next);
+        else await request('api/admin.php?action=password', { method: 'PUT', body: JSON.stringify({ current_password: current, new_password: next }) });
         event.target.reset(); showNotice('Password admin berhasil diubah.');
     } catch (error) { showNotice(error.message, 'error'); }
 });
 
 (async function boot() {
     try {
-        const session = await request('api/admin.php?action=status');
+        const session = window.portfolioSupabase?.configured
+            ? await window.portfolioSupabase.getAdminSession()
+            : await request('api/admin.php?action=status');
         if (session.authenticated) await showAdmin(session); else showLogin();
     } catch (error) {
         showLogin();
