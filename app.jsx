@@ -3,7 +3,7 @@ const { useEffect, useRef, useState } = React;
 const translations = {
     id: {
         code: 'ID', language: 'Bahasa Indonesia', portfolio: 'Portofolio Pribadi',
-        nav: ['Beranda', 'Tentang', 'Pendidikan', 'Pengalaman', 'Proyek', 'Sertifikasi', 'Skill', 'Rating', 'Kontak'],
+        nav: ['Beranda', 'Tentang', 'Pendidikan', 'Pengalaman', 'Sertifikasi', 'Skill', 'Rating', 'Kontak'],
         heroDesc: 'Lulusan Teknik Komputer dan Jaringan dengan pengalaman di produksi, pergudangan, administrasi stok, dan operasional toko. Terbiasa bekerja mengikuti SOP, teliti, dan siap belajar cepat.',
         contactMe: 'Hubungi Saya', seeWork: 'Lihat Kontribusi', downloadCv: 'Unduh CV', previewCv: 'Pratinjau CV', cvTitle: 'Pratinjau Curriculum Vitae', closeCv: 'Tutup pratinjau CV', stats: ['Pengalaman kerja', 'Keterampilan utama', 'Siap berkontribusi'], statValues: ['2+', '7+', '100%'],
         available: 'Tersedia untuk bekerja', profileNote: 'Operasional, produksi, admin, dan entry level IT support.', ready: 'Open to work',
@@ -29,7 +29,7 @@ const translations = {
     },
     en: {
         code: 'EN', language: 'English', portfolio: 'Personal Portfolio',
-        nav: ['Home', 'About', 'Education', 'Experience', 'Projects', 'Certifications', 'Skills', 'Rating', 'Contact'],
+        nav: ['Home', 'About', 'Education', 'Experience', 'Certifications', 'Skills', 'Rating', 'Contact'],
         heroDesc: 'A Computer and Network Engineering graduate with experience in production, warehousing, stock administration, and store operations. Accustomed to following SOPs, working carefully, and learning quickly.',
         contactMe: 'Contact Me', seeWork: 'View Contributions', downloadCv: 'Download CV', previewCv: 'Preview CV', cvTitle: 'Curriculum Vitae Preview', closeCv: 'Close CV preview', stats: ['Work experience', 'Core skills', 'Ready to contribute'], statValues: ['2+', '7+', '100%'],
         available: 'Available for work', profileNote: 'Operations, production, administration, and entry-level IT support.', ready: 'Open to work',
@@ -55,7 +55,7 @@ const translations = {
     },
     ja: {
         code: 'JP', language: '日本語', portfolio: '個人ポートフォリオ',
-        nav: ['ホーム', '自己紹介', '学歴', '職歴', '実績', '資格', 'スキル', '評価', '連絡先'],
+        nav: ['ホーム', '自己紹介', '学歴', '職歴', '資格', 'スキル', '評価', '連絡先'],
         heroDesc: 'コンピュータ・ネットワーク工学を専攻し、生産、倉庫、在庫管理、店舗運営の経験があります。SOPを遵守し、丁寧に仕事を進め、新しいことを素早く学べます。',
         contactMe: 'お問い合わせ', seeWork: '実績を見る', stats: ['実務経験', '主要スキル', '貢献への意欲'], statValues: ['2+', '7+', '100%'],
         available: '就業可能', profileNote: '店舗運営、生産、事務、初級ITサポートに対応できます。', ready: 'Open to work',
@@ -97,6 +97,155 @@ function InterfaceIcon({ name }) {
     return <svg className="interface-icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
 }
 
+function InteractiveNameTitle({ firstName, remainingName }) {
+    const canvasRef = useRef(null);
+    const stageRef = useRef(null);
+    const pointerLabelRef = useRef(null);
+    const pointerRef = useRef({ x: -9999, y: -9999, targetX: -9999, targetY: -9999, active: false });
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const stage = stageRef.current;
+        if (!canvas || !stage) return undefined;
+
+        const context = canvas.getContext('2d');
+        const mask = document.createElement('canvas');
+        const maskContext = mask.getContext('2d', { willReadFrequently: true });
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let particles = [];
+        let frame = 0;
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+
+        const buildParticles = () => {
+            const bounds = stage.getBoundingClientRect();
+            width = Math.max(280, Math.round(bounds.width));
+            height = Math.round(Math.max(230, Math.min(470, width * 0.38)));
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            canvas.style.height = `${height}px`;
+            context.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            mask.width = width;
+            mask.height = height;
+            maskContext.clearRect(0, 0, width, height);
+            maskContext.fillStyle = '#000';
+            maskContext.textAlign = 'center';
+            maskContext.textBaseline = 'middle';
+            const compact = width < 620;
+            const sharedNameSize = Math.min(width * (compact ? 0.19 : 0.145), compact ? 86 : 176);
+            maskContext.font = `800 ${sharedNameSize}px "Bricolage Grotesque", sans-serif`;
+            maskContext.fillText(String(firstName || '').toUpperCase(), width / 2, height * 0.35);
+            maskContext.font = `800 ${sharedNameSize}px "Bricolage Grotesque", sans-serif`;
+            maskContext.fillText(String(remainingName || '').toUpperCase(), width / 2, height * 0.67);
+
+            const pixels = maskContext.getImageData(0, 0, width, height).data;
+            const step = compact ? 4 : 5;
+            const next = [];
+            for (let y = step; y < height; y += step) {
+                for (let x = step; x < width; x += step) {
+                    if (pixels[(y * width + x) * 4 + 3] > 80) {
+                        const warm = ((Math.floor(x / step) + Math.floor(y / step)) % 3) !== 0;
+                        next.push({ x, y, tx: x, ty: y, vx: 0, vy: 0, color: warm ? '#f05222' : '#163143' });
+                    }
+                }
+            }
+            particles = next;
+        };
+
+        const render = () => {
+            context.clearRect(0, 0, width, height);
+            const pointer = pointerRef.current;
+            const radius = width < 620 ? 64 : 96;
+            if (pointer.active && !reduceMotion) {
+                pointer.x += (pointer.targetX - pointer.x) * 0.075;
+                pointer.y += (pointer.targetY - pointer.y) * 0.075;
+                if (pointerLabelRef.current) {
+                    pointerLabelRef.current.style.left = `${pointer.x}px`;
+                    pointerLabelRef.current.style.top = `${pointer.y}px`;
+                }
+            }
+            particles.forEach((particle) => {
+                const dx = particle.x - pointer.x;
+                const dy = particle.y - pointer.y;
+                const distance = Math.hypot(dx, dy) || 1;
+                if (pointer.active && distance < radius && !reduceMotion) {
+                    const force = (1 - distance / radius) * 1.75;
+                    particle.vx += (dx / distance) * force;
+                    particle.vy += (dy / distance) * force;
+                }
+                particle.vx += (particle.tx - particle.x) * 0.045;
+                particle.vy += (particle.ty - particle.y) * 0.045;
+                particle.vx *= 0.88;
+                particle.vy *= 0.88;
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                context.fillStyle = particle.color;
+                context.fillRect(particle.x, particle.y, width < 620 ? 2.8 : 3.4, width < 620 ? 2.8 : 3.4);
+            });
+
+            if (pointer.active) {
+                context.beginPath();
+                context.arc(pointer.x, pointer.y, radius * 0.48, 0, Math.PI * 2);
+                context.strokeStyle = 'rgba(20, 49, 67, 0.36)';
+                context.lineWidth = 1;
+                context.setLineDash([4, 5]);
+                context.stroke();
+                context.setLineDash([]);
+            }
+            frame = requestAnimationFrame(render);
+        };
+
+        const handlePointer = (event) => {
+            const bounds = canvas.getBoundingClientRect();
+            const x = event.clientX - bounds.left;
+            const y = event.clientY - bounds.top;
+            const pointer = pointerRef.current;
+            if (!pointer.active) {
+                pointer.x = x;
+                pointer.y = y;
+            }
+            pointer.targetX = x;
+            pointer.targetY = y;
+            pointer.active = true;
+            pointerLabelRef.current?.classList.add('is-visible');
+        };
+
+        const handleLeave = () => {
+            pointerRef.current.active = false;
+            pointerLabelRef.current?.classList.remove('is-visible');
+        };
+
+        buildParticles();
+        document.fonts?.ready.then(buildParticles);
+        frame = requestAnimationFrame(render);
+        canvas.addEventListener('pointermove', handlePointer);
+        canvas.addEventListener('pointerleave', handleLeave);
+        window.addEventListener('resize', buildParticles);
+
+        return () => {
+            cancelAnimationFrame(frame);
+            canvas.removeEventListener('pointermove', handlePointer);
+            canvas.removeEventListener('pointerleave', handleLeave);
+            window.removeEventListener('resize', buildParticles);
+        };
+    }, [firstName, remainingName]);
+
+    return (
+        <div className="interactive-name-stage" ref={stageRef}>
+            <h1 className="sr-only">{firstName} {remainingName}</h1>
+            <canvas ref={canvasRef} aria-hidden="true"></canvas>
+            <span
+                className="interactive-pointer-label"
+                ref={pointerLabelRef}
+                aria-hidden="true"
+            >You</span>
+        </div>
+    );
+}
+
 function App() {
     const [loaderState, setLoaderState] = useState('loading');
     const [portfolioContent, setPortfolioContent] = useState(null);
@@ -127,6 +276,13 @@ function App() {
     }, [language]);
 
     useEffect(() => {
+        localStorage.removeItem('portfolio-theme');
+        document.documentElement.dataset.theme = 'light';
+        document.documentElement.style.colorScheme = 'light';
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#cfe5f2');
+    }, []);
+
+    useEffect(() => {
         document.body.classList.add('portfolio-loading');
         const exitTimer = window.setTimeout(() => setLoaderState('exiting'), 2800);
         const finishTimer = window.setTimeout(() => {
@@ -142,7 +298,7 @@ function App() {
     }, []);
 
     return (
-        <div className="app-container">
+        <div className="app-container" data-theme="light">
             <AmbientBackground />
             <MainPortfolio
                 language={language}
@@ -160,11 +316,12 @@ function AmbientBackground() {
     return (
         <div className="ambient-background" aria-hidden="true">
             <div className="ambient-grid"></div>
-            <span className="ambient-orb ambient-orb-one"></span>
-            <span className="ambient-orb ambient-orb-two"></span>
-            <span className="ambient-orb ambient-orb-three"></span>
-            <div className="ambient-particles">
-                {Array.from({ length: 9 }, (_, index) => <i key={index}></i>)}
+            <div className="cloudscape">
+                <img className="cloud cloud-one" src="assets/atmosphere/cloud-soft.png" alt="" />
+                <img className="cloud cloud-two" src="assets/atmosphere/cloud-soft.png" alt="" />
+                <img className="cloud cloud-three" src="assets/atmosphere/cloud-soft.png" alt="" />
+                <img className="cloud cloud-four" src="assets/atmosphere/cloud-soft.png" alt="" />
+                <img className="cloud cloud-five" src="assets/atmosphere/cloud-soft.png" alt="" />
             </div>
         </div>
     );
@@ -305,9 +462,10 @@ function collectionWithSharedImages(portfolioContent, language, type) {
         const items = portfolioContent?.languages?.[code]?.[type];
         if (!Array.isArray(items)) return;
         items.forEach((item, index) => {
-            if (item && typeof item === 'object' && !Array.isArray(item) && isCustomCollectionImage(item.image)) {
+            const collectionImage = [item?.image, item?.logo].find((image) => isCustomCollectionImage(image));
+            if (item && typeof item === 'object' && !Array.isArray(item) && collectionImage) {
                 const key = keyFor(item, index);
-                if (!sharedImages.has(key)) sharedImages.set(key, item.image);
+                if (!sharedImages.has(key)) sharedImages.set(key, collectionImage);
             }
         });
     });
@@ -364,6 +522,7 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
     const [firstName, ...remainingName] = String(common.name || '').trim().split(/\s+/);
     const [activeSection, setActiveSection] = useState('home');
     const [showTopButton, setShowTopButton] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
     const [footerTime, setFooterTime] = useState(() => new Date());
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLanguageOpen, setIsLanguageOpen] = useState(false);
@@ -374,6 +533,15 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
     const [activeSkillCategory, setActiveSkillCategory] = useState('hard');
     const [activeProfilePhoto, setActiveProfilePhoto] = useState(0);
     const [profileTouchStart, setProfileTouchStart] = useState(null);
+    const hangingCardRef = useRef(null);
+    const hangingStageRef = useRef(null);
+    const hangingRopeRef = useRef(null);
+    const hangingRopeShadowRef = useRef(null);
+    const experienceSectionRef = useRef(null);
+    const experienceStickyRef = useRef(null);
+    const experienceViewportRef = useRef(null);
+    const experienceTrackRef = useRef(null);
+    const experienceProgressRef = useRef(null);
     const configuredProfilePhotos = Array.isArray(common.profile_photos)
         ? common.profile_photos.filter((photo) => typeof photo === 'string' && photo.trim() !== '')
         : [];
@@ -434,6 +602,10 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
 
         const handleScroll = () => {
             setShowTopButton(window.scrollY > 520);
+            const documentHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+            const remainingScroll = documentHeight - window.scrollY;
+            const exactProgress = remainingScroll <= 2 ? 100 : (window.scrollY / documentHeight) * 100;
+            setScrollProgress(Math.min(100, Math.max(0, Number(exactProgress.toFixed(2)))));
         };
 
         handleScroll();
@@ -570,6 +742,197 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
     }, []);
 
     useEffect(() => {
+        const card = hangingCardRef.current;
+        const stage = hangingStageRef.current;
+        const rope = hangingRopeRef.current;
+        const ropeShadow = hangingRopeShadowRef.current;
+        if (!card || !stage || !rope || !ropeShadow || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+        const motion = {
+            angle: 0,
+            angularVelocity: 0,
+            shiftX: 0,
+            shiftVelocity: 0,
+            shiftY: 0,
+            shiftVelocityY: 0,
+            tiltX: 0,
+            targetAngle: 0,
+            targetShiftX: 0,
+            targetShiftY: 0,
+            targetTiltX: 0,
+            dragging: false,
+            pointerId: null,
+            lastPointerX: 0,
+            lastPointerY: 0,
+            lastPointerTime: performance.now(),
+            lastScrollY: window.scrollY,
+            dragStartPointerX: 0,
+            dragStartPointerY: 0,
+            dragStartShiftX: 0,
+            dragStartShiftY: 0,
+            ropeWidth: 480,
+            ropeStartOffset: 260,
+            ropeBaseEndY: 420,
+            ropeHeight: 650
+        };
+        let animationFrame = 0;
+
+        const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+        const section = stage.closest('.about-section');
+
+        const updateLanyardGeometry = () => {
+            if (!section) return;
+            const stageRect = stage.getBoundingClientRect();
+            const sectionRect = section.getBoundingClientRect();
+            const stagePaddingTop = Number.parseFloat(window.getComputedStyle(stage).paddingTop) || 0;
+            motion.ropeWidth = stageRect.width;
+            motion.ropeStartOffset = Math.max(30, stageRect.top - sectionRect.top + 4);
+            motion.ropeBaseEndY = motion.ropeStartOffset + stagePaddingTop - 4;
+            motion.ropeHeight = motion.ropeBaseEndY + 250;
+            const ropeSvg = rope.ownerSVGElement;
+            ropeSvg.style.top = `${(-motion.ropeStartOffset).toFixed(1)}px`;
+            ropeSvg.style.height = `${motion.ropeHeight.toFixed(1)}px`;
+            ropeSvg.setAttribute('viewBox', `0 0 ${motion.ropeWidth.toFixed(1)} ${motion.ropeHeight.toFixed(1)}`);
+        };
+
+        const animateCard = () => {
+            const spring = motion.dragging ? 0.15 : 0.038;
+            motion.angularVelocity += (motion.targetAngle - motion.angle) * spring;
+            motion.angularVelocity *= motion.dragging ? 0.72 : 0.91;
+            motion.angle = clamp(motion.angle + motion.angularVelocity, -13, 13);
+
+            motion.shiftVelocity += (motion.targetShiftX - motion.shiftX) * (motion.dragging ? 0.12 : 0.045);
+            motion.shiftVelocity *= motion.dragging ? 0.7 : 0.86;
+            motion.shiftX = clamp(motion.shiftX + motion.shiftVelocity, -190, 190);
+            motion.shiftVelocityY += (motion.targetShiftY - motion.shiftY) * (motion.dragging ? 0.12 : 0.042);
+            motion.shiftVelocityY *= motion.dragging ? 0.7 : 0.87;
+            motion.shiftY = clamp(motion.shiftY + motion.shiftVelocityY, -125, 210);
+            motion.tiltX += (motion.targetTiltX - motion.tiltX) * 0.1;
+
+            card.style.setProperty('--id-angle', `${motion.angle.toFixed(3)}deg`);
+            card.style.setProperty('--id-shift-x', `${motion.shiftX.toFixed(3)}px`);
+            card.style.setProperty('--id-shift-y', `${motion.shiftY.toFixed(3)}px`);
+            card.style.setProperty('--id-tilt-x', `${motion.tiltX.toFixed(3)}deg`);
+            card.style.setProperty('--id-strain', `${Math.min(5, Math.abs(motion.angularVelocity) * 1.4).toFixed(2)}px`);
+
+            const startX = motion.ropeWidth / 2;
+            const endX = startX + motion.shiftX;
+            const endY = motion.ropeBaseEndY + motion.shiftY;
+            const bend = clamp((motion.shiftVelocity * 8) + (motion.angularVelocity * 13), -52, 52);
+            const controlOneX = startX + motion.shiftX * 0.08 + bend * 0.22;
+            const controlOneY = Math.max(42, endY * 0.34);
+            const controlTwoX = endX - motion.shiftX * 0.2 - bend;
+            const controlTwoY = endY - Math.max(48, endY * 0.2);
+            const ropePath = `M ${startX.toFixed(2)} 0 C ${controlOneX.toFixed(2)} ${controlOneY.toFixed(2)}, ${controlTwoX.toFixed(2)} ${controlTwoY.toFixed(2)}, ${endX.toFixed(2)} ${endY.toFixed(2)}`;
+            rope.setAttribute('d', ropePath);
+            ropeShadow.setAttribute('d', ropePath);
+            animationFrame = window.requestAnimationFrame(animateCard);
+        };
+
+        const updatePointerTarget = (event, isDragging = motion.dragging) => {
+            const rect = stage.getBoundingClientRect();
+            const normalizedX = clamp((event.clientX - (rect.left + rect.width / 2)) / Math.max(rect.width / 2, 1), -1, 1);
+            const normalizedY = clamp((event.clientY - (rect.top + rect.height / 2)) / Math.max(rect.height / 2, 1), -1, 1);
+            if (!isDragging) motion.targetAngle = normalizedX * 3.2;
+            motion.targetTiltX = normalizedY * -3.5;
+        };
+
+        const handlePointerDown = (event) => {
+            if (event.pointerType === 'touch' || event.target.closest('button')) return;
+            motion.dragging = true;
+            motion.pointerId = event.pointerId;
+            motion.lastPointerX = event.clientX;
+            motion.lastPointerY = event.clientY;
+            motion.lastPointerTime = performance.now();
+            motion.dragStartPointerX = event.clientX;
+            motion.dragStartPointerY = event.clientY;
+            motion.dragStartShiftX = motion.shiftX;
+            motion.dragStartShiftY = motion.shiftY;
+            card.classList.add('is-grabbed');
+            card.setPointerCapture?.(event.pointerId);
+            updatePointerTarget(event, true);
+        };
+
+        const handlePointerMove = (event) => {
+            if (event.pointerType === 'touch') return;
+            if (motion.dragging && event.pointerId !== motion.pointerId) return;
+
+            const now = performance.now();
+            const elapsed = Math.max(now - motion.lastPointerTime, 8);
+            if (motion.dragging) {
+                const pointerSpeedX = (event.clientX - motion.lastPointerX) / elapsed;
+                const pointerSpeedY = (event.clientY - motion.lastPointerY) / elapsed;
+                const maximumX = Math.max(80, Math.min(190, stage.clientWidth * 0.42));
+                motion.targetShiftX = clamp(motion.dragStartShiftX + (event.clientX - motion.dragStartPointerX) * 0.88, -maximumX, maximumX);
+                motion.targetShiftY = clamp(motion.dragStartShiftY + (event.clientY - motion.dragStartPointerY) * 0.88, -125, 210);
+                motion.targetAngle = clamp(motion.targetShiftX * 0.035 + pointerSpeedX * 1.8, -12, 12);
+                motion.shiftVelocity = clamp(motion.shiftVelocity + pointerSpeedX * 0.3, -3.2, 3.2);
+                motion.shiftVelocityY = clamp(motion.shiftVelocityY + pointerSpeedY * 0.3, -3.2, 3.2);
+            }
+            motion.lastPointerX = event.clientX;
+            motion.lastPointerY = event.clientY;
+            motion.lastPointerTime = now;
+            updatePointerTarget(event);
+        };
+
+        const releaseCard = (event) => {
+            if (!motion.dragging || (event?.pointerId !== undefined && event.pointerId !== motion.pointerId)) return;
+            motion.dragging = false;
+            motion.pointerId = null;
+            motion.targetAngle = 0;
+            motion.targetShiftX = 0;
+            motion.targetShiftY = 0;
+            motion.targetTiltX = 0;
+            card.classList.remove('is-grabbed');
+        };
+
+        const resetHover = () => {
+            if (motion.dragging) return;
+            motion.targetAngle = 0;
+            motion.targetShiftX = 0;
+            motion.targetShiftY = 0;
+            motion.targetTiltX = 0;
+        };
+
+        const handleScrollSwing = () => {
+            const currentScrollY = window.scrollY;
+            const delta = currentScrollY - motion.lastScrollY;
+            motion.lastScrollY = currentScrollY;
+            motion.angularVelocity = clamp(motion.angularVelocity + delta * 0.018, -2.4, 2.4);
+            motion.shiftVelocity = clamp(motion.shiftVelocity + delta * 0.022, -1.8, 1.8);
+            motion.shiftVelocityY = clamp(motion.shiftVelocityY - delta * 0.028, -2.4, 2.4);
+        };
+
+        card.addEventListener('pointerdown', handlePointerDown);
+        card.addEventListener('pointermove', handlePointerMove);
+        card.addEventListener('pointerup', releaseCard);
+        card.addEventListener('pointercancel', releaseCard);
+        card.addEventListener('pointerleave', resetHover);
+        window.addEventListener('pointerup', releaseCard);
+        window.addEventListener('scroll', handleScrollSwing, { passive: true });
+        window.addEventListener('resize', updateLanyardGeometry);
+        const geometryObserver = typeof ResizeObserver !== 'undefined' && section
+            ? new ResizeObserver(updateLanyardGeometry)
+            : null;
+        geometryObserver?.observe(section);
+        updateLanyardGeometry();
+        animationFrame = window.requestAnimationFrame(animateCard);
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+            card.removeEventListener('pointerdown', handlePointerDown);
+            card.removeEventListener('pointermove', handlePointerMove);
+            card.removeEventListener('pointerup', releaseCard);
+            card.removeEventListener('pointercancel', releaseCard);
+            card.removeEventListener('pointerleave', resetHover);
+            window.removeEventListener('pointerup', releaseCard);
+            window.removeEventListener('scroll', handleScrollSwing);
+            window.removeEventListener('resize', updateLanyardGeometry);
+            geometryObserver?.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
         setActiveProfilePhoto((current) => current < profilePhotos.length ? current : 0);
         if (profilePhotos.length < 2) return undefined;
 
@@ -580,22 +943,84 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
         return () => window.clearInterval(timer);
     }, [profilePhotos.length]);
 
-    const handleTilt = (event) => {
-        const card = event.currentTarget;
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const rotateY = ((x / rect.width) - 0.5) * 10;
-        const rotateX = ((y / rect.height) - 0.5) * -10;
+    useEffect(() => {
+        const section = experienceSectionRef.current;
+        const sticky = experienceStickyRef.current;
+        const viewport = experienceViewportRef.current;
+        const track = experienceTrackRef.current;
+        const progressBar = experienceProgressRef.current;
+        if (!section || !sticky || !viewport || !track || !progressBar) return undefined;
 
-        card.style.setProperty('--rotate-x', `${rotateX}deg`);
-        card.style.setProperty('--rotate-y', `${rotateY}deg`);
-    };
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let horizontalTravel = 0;
+        let horizontalMode = false;
+        let animationFrame = 0;
 
-    const resetTilt = (event) => {
-        event.currentTarget.style.setProperty('--rotate-x', '0deg');
-        event.currentTarget.style.setProperty('--rotate-y', '0deg');
-    };
+        const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+
+        const updateHorizontalPosition = () => {
+            animationFrame = 0;
+            if (!horizontalMode || horizontalTravel <= 0) {
+                track.style.transform = 'translate3d(0, 0, 0)';
+                progressBar.style.transform = 'scaleX(0)';
+                return;
+            }
+
+            const sectionRect = section.getBoundingClientRect();
+            const stickyTop = Number.parseFloat(window.getComputedStyle(sticky).top) || 0;
+            const scrollRange = Math.max(section.offsetHeight - sticky.offsetHeight, 1);
+            const progress = clamp((stickyTop - sectionRect.top) / scrollRange, 0, 1);
+            track.style.transform = `translate3d(${(-horizontalTravel * progress).toFixed(2)}px, 0, 0)`;
+            progressBar.style.transform = `scaleX(${progress.toFixed(4)})`;
+        };
+
+        const requestHorizontalUpdate = () => {
+            if (animationFrame) return;
+            animationFrame = window.requestAnimationFrame(updateHorizontalPosition);
+        };
+
+        const measureHorizontalSection = () => {
+            horizontalMode = window.innerWidth > 1050 && !reducedMotion.matches;
+            section.classList.toggle('is-horizontal-ready', horizontalMode);
+
+            if (!horizontalMode) {
+                horizontalTravel = 0;
+                section.style.removeProperty('height');
+                track.style.transform = 'translate3d(0, 0, 0)';
+                track.style.removeProperty('--experience-center-inset');
+                progressBar.style.transform = 'scaleX(0)';
+                return;
+            }
+
+            const firstCard = track.querySelector('.experience-card');
+            const cardWidth = firstCard?.getBoundingClientRect().width || 0;
+            const centerInset = Math.max(2, (viewport.clientWidth - cardWidth) / 2);
+            track.style.setProperty('--experience-center-inset', `${centerInset.toFixed(2)}px`);
+            horizontalTravel = Math.max(0, track.scrollWidth - viewport.clientWidth);
+            section.style.height = `${Math.ceil(sticky.offsetHeight + horizontalTravel)}px`;
+            requestHorizontalUpdate();
+        };
+
+        const resizeObserver = typeof ResizeObserver !== 'undefined'
+            ? new ResizeObserver(measureHorizontalSection)
+            : null;
+        resizeObserver?.observe(viewport);
+        window.addEventListener('resize', measureHorizontalSection);
+        window.addEventListener('scroll', requestHorizontalUpdate, { passive: true });
+        document.fonts?.ready.then(measureHorizontalSection);
+        measureHorizontalSection();
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+            resizeObserver?.disconnect();
+            window.removeEventListener('resize', measureHorizontalSection);
+            window.removeEventListener('scroll', requestHorizontalUpdate);
+            section.style.removeProperty('height');
+            section.classList.remove('is-horizontal-ready');
+            track.style.removeProperty('transform');
+            progressBar.style.removeProperty('transform');
+        };
+    }, [language, portfolioContent]);
 
     const showPreviousProfilePhoto = () => {
         setActiveProfilePhoto((current) => (current - 1 + profilePhotos.length) % profilePhotos.length);
@@ -650,21 +1075,55 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
             '生産文書の管理、スキャン、調整、保管を通じて工場の生産事務を支援しました。'
         ]
     }[language];
-    const experienceImages = ['assets/experience/production.svg', 'assets/experience/store.svg', 'assets/experience/sumitomo-electric.jpg'];
+    const experienceDetailDescriptions = {
+        id: [
+            'Di PT Prakarsa Alam Segar, saya mendukung kelancaran lini produksi mie instan mulai dari proses pengemasan, pemindahan kardus, hingga penataan produk di pallet. Saya terbiasa bekerja cepat dan rapi sesuai SOP, menjaga kebersihan serta keselamatan area kerja, dan berkoordinasi dengan tim produksi maupun gudang untuk mencapai target harian.',
+            'Di Re.juve, saya menangani pengalaman pelanggan dari awal hingga akhir, termasuk transaksi melalui EDC, tunai, dan e-wallet, pelaksanaan program promosi, serta proses opening dan closing toko. Saya juga menyusun laporan penjualan, mencatat pergerakan stok, menyiapkan kebutuhan restock, dan memastikan operasional selalu sesuai SOP serta siap menghadapi audit.',
+            'Selama menjadi Asisten Admin Produksi di Sumitomo Electric Wintec I., saya mengelola dan memindai lebih dari 200 dokumen produksi per hari, memastikan data tersusun akurat dan mudah ditemukan, serta berkoordinasi dengan tim produksi agar setiap dokumen memenuhi standar perusahaan. Pengalaman ini memperkuat ketelitian, kecepatan administrasi, dan pemahaman saya terhadap disiplin kerja serta keselamatan K3 di lingkungan pabrik.'
+        ],
+        en: [
+            'At PT Prakarsa Alam Segar, I supported the instant-noodle production line from packaging and moving cartons to arranging finished products on pallets. I learned to work quickly and accurately within SOPs, maintain a clean and safe workspace, and coordinate with production and warehouse teams to achieve daily targets.',
+            'At Re.juve, I managed the customer journey from payment through EDC, cash, and e-wallet to promotional programs and store opening and closing procedures. I also prepared sales reports, monitored stock movement, coordinated restocking needs, and kept daily operations compliant with SOPs and ready for audit.',
+            'As a Production Admin Assistant at Sumitomo Electric Wintec I., I managed and scanned more than 200 production documents each day, maintained accurate and accessible records, and coordinated with production teams to ensure documentation met company standards. The role strengthened my attention to detail, administrative speed, and understanding of disciplined factory operations and workplace safety.'
+        ],
+        ja: [
+            'PT Prakarsa Alam Segarでは、即席麺の包装、段ボールの移動、完成品のパレット配置まで、生産ラインの円滑な運営を支援しました。SOPを守りながら迅速かつ正確に作業し、清潔で安全な作業環境を維持するとともに、生産・倉庫チームと連携して日々の目標達成に取り組みました。',
+            'Re.juveでは、EDC・現金・電子ウォレットによる決済から販促施策、店舗の開店・閉店業務まで、一連の顧客対応を担当しました。さらに売上報告、在庫管理、補充調整を行い、日々の店舗運営がSOPに沿い監査に対応できる状態を維持しました。',
+            'Sumitomo Electric Wintec I.の生産事務アシスタントとして、1日200件以上の生産文書を管理・スキャンし、正確で検索しやすい記録を維持しました。生産チームと連携して文書を会社基準に合わせる経験を通じ、細部への注意、事務処理の速さ、工場での規律と安全への理解を高めました。'
+        ]
+    }[language];
+    const experienceImages = [
+        'assets/uploads/20260720-082534-05e6dc0432b5.webp',
+        'assets/uploads/20260720-082539-9be8e6f22c3d.png',
+        'assets/experience/sumitomo-electric.jpg'
+    ];
+    const experienceImageFor = (job, defaultJob, index) => {
+        const candidates = [job.image, job.logo, defaultJob.image, defaultJob.logo].filter(Boolean);
+        const customImage = candidates.find((image) => isCustomCollectionImage(image));
+        if (customImage) return customImage;
+        const companyIdentity = `${job.company || defaultJob.company || ''} ${job.title || defaultJob.title || ''}`;
+        if (/prakarsa|\bpas\b/i.test(companyIdentity)) return experienceImages[0];
+        if (/re\.?juve|sewu segar/i.test(companyIdentity)) return experienceImages[1];
+        if (/sumitomo/i.test(companyIdentity)) return experienceImages[2];
+        return candidates[0] || experienceImages[index] || '';
+    };
     const internshipExperience = {
         id: {
-            title: 'Asisten Admin Produksi', company: 'PT Sumitomo Wintec Electric Indonesia', period: 'Juni 2022 - September 2022', category: 'Magang', image: 'assets/experience/sumitomo-electric.jpg',
+            title: 'Asisten Admin Produksi', company: 'Sumitomo Electric Wintec I.', period: 'Juni 2022 - September 2022', category: 'Magang', image: 'assets/experience/sumitomo-electric.jpg',
             description: experienceDescriptions[2],
+            detail: experienceDetailDescriptions[2],
             duties: ['Mengelola dokumen hasil produksi untuk mendukung administrasi operasional pabrik.', 'Membuat salinan dokumen lebih dari 200 data per hari menggunakan scanner.', 'Berkoordinasi dengan tim produksi untuk memastikan dokumen sesuai dengan standar perusahaan.', 'Menyusun dan memelihara arsip dokumen agar mudah diakses saat dibutuhkan.', 'Berpengalaman dalam bekerja di lingkungan pabrik dan memahami standar keselamatan kerja (K3).']
         },
         en: {
-            title: 'Production Admin Assistant', company: 'PT Sumitomo Wintec Electric Indonesia', period: 'June 2022 - September 2022', category: 'Internship', image: 'assets/experience/sumitomo-electric.jpg',
+            title: 'Production Admin Assistant', company: 'Sumitomo Electric Wintec I.', period: 'June 2022 - September 2022', category: 'Internship', image: 'assets/experience/sumitomo-electric.jpg',
             description: experienceDescriptions[2],
+            detail: experienceDetailDescriptions[2],
             duties: ['Managed production documents to support factory operational administration.', 'Scanned and copied more than 200 document records per day.', 'Coordinated with the production team to ensure documents met company standards.', 'Organized and maintained document archives for easy retrieval.', 'Gained experience in a factory environment and followed occupational safety standards.']
         },
         ja: {
-            title: '生産事務アシスタント', company: 'PT Sumitomo Wintec Electric Indonesia', period: '2022年6月 - 2022年9月', category: 'インターンシップ', image: 'assets/experience/sumitomo-electric.jpg',
+            title: '生産事務アシスタント', company: 'Sumitomo Electric Wintec I.', period: '2022年6月 - 2022年9月', category: 'インターンシップ', image: 'assets/experience/sumitomo-electric.jpg',
             description: experienceDescriptions[2],
+            detail: experienceDetailDescriptions[2],
             duties: ['工場運営事務を支援するため生産文書を管理。', 'スキャナーを使用して1日200件以上の文書データを複製。', '文書が会社基準を満たすよう生産チームと連携。', '必要なときに簡単に参照できるよう文書を整理・保管。', '工場環境での業務と労働安全基準を経験。']
         }
     }[language];
@@ -683,8 +1142,9 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
             company: companyParts[0] || defaultCompanyParts[0] || '',
             period: job.period || companyParts.slice(1).join(' | ') || defaultCompanyParts.slice(1).join(' | '),
             category: job.category || experienceCopy.category,
-            image: job.image || experienceImages[index] || '',
+            image: experienceImageFor(job, defaultJob, index),
             description: job.description || experienceDescriptions[index] || (job.duties || defaultJob.duties || [])[0] || '',
+            detail: job.detail || experienceDetailDescriptions[index] || (job.duties || defaultJob.duties || []).join(' '),
             duties: job.duties?.length ? job.duties : (defaultJob.duties || [])
         };
     });
@@ -698,6 +1158,7 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
             category: job.category || internshipExperience.category,
             image: job.image || internshipExperience.image,
             description: job.description || internshipExperience.description,
+            detail: job.detail || internshipExperience.detail,
             duties: job.duties?.length ? job.duties : internshipExperience.duties
         } : job)
         : [...normalizedJobs, internshipExperience];
@@ -720,35 +1181,69 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
         en: { detail: 'Details', issued: 'Issued on', number: 'Certificate number', download: 'Download PDF', credential: 'View Credential', pending: 'The credential link will be added once available.', close: 'Close certificate details' },
         ja: { detail: '詳細', issued: '取得日', number: '認定番号', download: 'PDFをダウンロード', credential: 'Credential を見る', pending: 'Credential リンクは準備でき次第追加されます。', close: '認定詳細を閉じる' }
     }[language];
-    const defaultCertificate = {
-        title: 'CCNA: Introduction to Networks',
-        issuer: 'Cisco Networking Academy',
-        date: language === 'id' ? '10 Februari 2026' : (language === 'ja' ? '2026年2月10日' : '10 February 2026'),
-        image: 'assets/certificate-preview.png',
-        document: 'https://drive.google.com/file/d/13wY7JfRv2-wWjgLO1-4-htJ0Wj7PQR5E/view?usp=sharing',
-        certificate_number: '20260202033',
-        description: language === 'id'
-            ? 'Berhasil menyelesaikan CCNA: Introduction to Networks yang diselenggarakan oleh Universitas Bani Saleh melalui program Cisco Networking Academy.'
-            : (language === 'ja'
-                ? 'Universitas Bani Saleh が Cisco Networking Academy プログラムを通じて提供する CCNA: Introduction to Networks を修了しました。'
-                : 'Successfully completed CCNA: Introduction to Networks, offered by Universitas Bani Saleh through the Cisco Networking Academy program.'),
-        credential_url: ''
-    };
-    const storedCertifications = Array.isArray(t.certifications) ? t.certifications : [];
-    const normalizedCertifications = storedCertifications.map((item) =>
-        item.certificate_number === defaultCertificate.certificate_number || item.title === defaultCertificate.title
-            ? {
+    const allDefaultCertificates = [
+        {
+            title: 'CCNA: Introduction to Networks',
+            issuer: 'Cisco Networking Academy',
+            date: language === 'id' ? '10 Februari 2026' : (language === 'ja' ? '2026年2月10日' : '10 February 2026'),
+            image: 'assets/ccna-preview.png',
+            document: 'assets/DIFA_ALFARUQ_certificate.pdf',
+            certificate_number: '20260202033',
+            description: language === 'id'
+                ? 'Berhasil menyelesaikan CCNA: Introduction to Networks yang diselenggarakan oleh Universitas Bani Saleh melalui program Cisco Networking Academy.'
+                : (language === 'ja'
+                    ? 'Universitas Bani Saleh が Cisco Networking Academy プログラムを通じて提供する CCNA: Introduction to Networks を修了しました。'
+                    : 'Successfully completed CCNA: Introduction to Networks, offered by Universitas Bani Saleh through the Cisco Networking Academy program.'),
+            credential_url: ''
+        },
+        {
+            title: 'Cisco IT Essentials',
+            issuer: 'Cisco Networking Academy',
+            date: language === 'id' ? '15 November 2025' : (language === 'ja' ? '2025年11月15日' : '15 November 2025'),
+            image: 'assets/it-essentials-preview.png',
+            document: 'assets/IT_Essentials_certificate_difaalfaruq-m-ubs-ac-id_0f3bf3c1-43cf-4153-88f0-9d0bd5bfded7 (2).pdf',
+            certificate_number: 'ITE-2025-0891',
+            description: language === 'id'
+                ? 'Sertifikasi IT Essentials dari Cisco Networking Academy yang mencakup pemahaman tentang perangkat keras komputer, perangkat lunak, sistem operasi, jaringan dasar, dan troubleshooting.'
+                : (language === 'ja'
+                    ? 'Cisco Networking Academy による IT Essentials 認定。コンピュータハードウェア、ソフトウェア、OS、ネットワークの基礎、トラブルシューティングを網羅。'
+                    : 'IT Essentials certification from Cisco Networking Academy covering computer hardware, software, operating systems, networking fundamentals, and troubleshooting.'),
+            credential_url: ''
+        },
+        {
+            title: 'Sertifikat Keahlian Jaringan BNSP',
+            issuer: 'Badan Nasional Sertifikasi Profesi (BNSP)',
+            date: language === 'id' ? '20 Agustus 2023' : (language === 'ja' ? '2023年8月20日' : '20 August 2023'),
+            image: 'assets/bnsp-preview.png',
+            document: 'assets/Sertifikat Keahlian Jaringan BNSP (1).pdf',
+            certificate_number: 'BNSP-TKJ-2023-551',
+            description: language === 'id'
+                ? 'Sertifikasi kompetensi nasional bidang Teknik Komputer dan Jaringan yang diterbitkan oleh Badan Nasional Sertifikasi Profesi (BNSP) sebagai pengakuan atas keahlian operasional dan pemeliharaan jaringan.'
+                : (language === 'ja'
+                    ? 'インドネシア国家職業認定機関（BNSP）が発行するコンピュータ・ネットワーク工学分野の国家技能認定。'
+                    : 'National competency certification in Computer and Network Engineering issued by the National Professional Certification Agency (BNSP) recognizing operational and network maintenance expertise.'),
+            credential_url: ''
+        }
+    ];
+    const storedCertifications = Array.isArray(t.certifications) && t.certifications.length > 0 ? t.certifications : [];
+    const updatedStoredCertifications = storedCertifications.map(item => {
+        const matchingDef = allDefaultCertificates.find(d => d.title === item.title || d.certificate_number === item.certificate_number);
+        if (matchingDef) {
+            return {
                 ...item,
-                document: !item.document || item.document === 'assets/DIFA_ALFARUQ_certificate.pdf'
-                    ? defaultCertificate.document
-                    : item.document
-            }
-            : item
-    );
-    const hasCurrentCertificate = normalizedCertifications.some((item) =>
-        item.certificate_number === defaultCertificate.certificate_number || item.title === defaultCertificate.title
-    );
-    const certifications = hasCurrentCertificate ? normalizedCertifications : [defaultCertificate, ...normalizedCertifications];
+                image: matchingDef.image,
+                document: item.document && !item.document.includes('drive.google.com') ? item.document : matchingDef.document
+            };
+        }
+        return item;
+    });
+    const mergedCertifications = [...updatedStoredCertifications];
+    allDefaultCertificates.forEach(defCert => {
+        if (!mergedCertifications.some(c => c.title === defCert.title || c.certificate_number === defCert.certificate_number)) {
+            mergedCertifications.push(defCert);
+        }
+    });
+    const certifications = mergedCertifications.length > 0 ? mergedCertifications : allDefaultCertificates;
     const skillCopy = {
         id: { intro: 'Bukan sekadar daftar nama—buka setiap keahlian untuk melihat pengalaman dan cara saya menggunakannya.', hard: 'Hard Skill', soft: 'Soft Skill', since: 'Sejak', level: 'Tingkat', learned: 'Teknologi yang dipelajari', detail: 'Detail', close: 'Tutup detail keahlian', empty: 'Belum ada keahlian pada kategori ini.' },
         en: { intro: 'More than a list—open each skill to see my experience and how I use it.', hard: 'Hard Skills', soft: 'Soft Skills', since: 'Since', level: 'Level', learned: 'Technologies learned', detail: 'Details', close: 'Close skill details', empty: 'No skills have been added to this category.' },
@@ -859,7 +1354,7 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
         hour12: false
     }).format(footerTime).replace(/:/g, ' : ');
 
-    const sectionIds = ['home', 'about', 'education', 'experience', 'projects', 'certifications', 'skills', 'rating', 'contact'];
+    const sectionIds = ['home', 'about', 'education', 'experience', 'certifications', 'skills', 'rating', 'contact'];
     const navItems = sectionIds.map((id, index) => ({ href: `#${id}`, id, label: t.nav[index] }));
     const handleAgentResult = (result) => {
         if (result.type === 'certificate') setSelectedCertificate(result.item);
@@ -870,10 +1365,18 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
 
     return (
         <div className="main-portfolio fade-in-up">
+            <div className="top-ruler" aria-hidden="true">
+                <span className="top-ruler-brand">DIFA ALFARUQ</span>
+                <span className="top-ruler-track" style={{ '--scroll-progress': `${scrollProgress}%` }}>
+                    {Array.from({ length: 12 }, (_, index) => <i key={index}>{(index + 1) * 100}</i>)}
+                    <strong className={`top-ruler-progress ${scrollProgress === 100 ? 'is-full' : ''}`}>
+                        {scrollProgress === 100 ? 'FULL' : `${Math.round(scrollProgress)}%`}
+                    </strong>
+                </span>
+                <span className="top-ruler-status"><i></i>LIVE · {footerClock}</span>
+            </div>
             <div className="navigation-shell">
-                <a className="nav-brand magnetic-surface" href="#home" aria-label={common.name} onClick={() => setIsMenuOpen(false)}>
-                    <strong>{common.name}.</strong>
-                </a>
+                <div className="hero-availability-pill"><i></i>{t.available}</div>
                 <nav className="navbar magnetic-surface">
                 <div className={`nav-links ${isMenuOpen ? 'is-open' : ''}`} id="primary-navigation">
                     <div className="mobile-nav-meta" aria-hidden="true">
@@ -908,35 +1411,13 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                     <span></span>
                 </button>
                 </nav>
+                <a className="hero-email-pill" href={`mailto:${common.email}`}><span aria-hidden="true">✉</span>{common.email}</a>
             </div>
 
             <header id="home" className="hero-section" data-section>
                 <div className="hero-content reveal is-visible">
-                    <p className="eyebrow">{t.portfolio}</p>
-                    <div className="hero-name-stage">
-                        <span className="hero-orbit hero-orbit-outer" aria-hidden="true"></span>
-                        <span className="hero-orbit hero-orbit-inner" aria-hidden="true"></span>
-                        <span className="hero-tech-icon hero-tech-code" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14" /></svg>
-                        </span>
-                        <span className="hero-tech-icon hero-tech-terminal" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><path d="m5 8 4 4-4 4M11 16h8" /></svg>
-                        </span>
-                        <span className="hero-tech-icon hero-tech-database" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="6.5" ry="3" /><path d="M5.5 6v6c0 1.7 2.9 3 6.5 3s6.5-1.3 6.5-3V6M5.5 12v6c0 1.7 2.9 3 6.5 3s6.5-1.3 6.5-3v-6" /></svg>
-                        </span>
-                        <span className="hero-tech-icon hero-tech-chip" aria-hidden="true">
-                            <svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1" /><rect x="10" y="10" width="4" height="4" /><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" /></svg>
-                        </span>
-                        <h1 className="hero-role">
-                            <span>{firstName}</span>
-                            <span>{remainingName.join(' ')}</span>
-                        </h1>
-                    </div>
+                    <InteractiveNameTitle firstName={firstName} remainingName={remainingName.join(' ')} />
                     <TypewriterProfession firstRole={common.profession} />
-                    <p className="hero-desc">
-                        {t.heroDesc}
-                    </p>
                     <div className="hero-actions">
                         <a href="#contact" className="btn-primary">{t.contactMe}</a>
                         <div className="cv-action" role="group" aria-label={cvCopy.download}>
@@ -958,6 +1439,8 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                         ))}
                     </div>
                 </div>
+                <div className="hero-corner hero-corner-left"><strong>WORKING WORLDWIDE</strong><span>BEKASI BASED, ON PURPOSE</span></div>
+                <div className="hero-corner hero-corner-right"><strong>OPEN FOR 2026</strong><span>YOUR TIMEZONE, HANDLED</span></div>
             </header>
 
             {isCvPreviewOpen && (
@@ -1000,7 +1483,19 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                         </div>
                     </div>
                     <div className="about-profile-container">
-                        <div className="profile-panel tilt-card" onMouseMove={handleTilt} onMouseLeave={resetTilt}>
+                        <div className="hanging-id-stage" ref={hangingStageRef}>
+                            <svg className="id-flex-rope" aria-hidden="true" preserveAspectRatio="none">
+                                <path className="id-flex-rope-shadow" ref={hangingRopeShadowRef}></path>
+                                <path className="id-flex-rope-line" ref={hangingRopeRef}></path>
+                            </svg>
+                            <div className="hanging-id-motion" ref={hangingCardRef}>
+                                <span className="id-card-clip" aria-hidden="true"><i></i></span>
+                                <div className="profile-panel id-profile-card">
+                                    <div className="id-card-heading">
+                                        <span>PROFILE / 01</span>
+                                        <strong>DIFA ALFARUQ</strong>
+                                        <i aria-hidden="true"></i>
+                                    </div>
                             <div
                                 className="image-frame profile-carousel"
                                 onTouchStart={(event) => setProfileTouchStart(event.touches[0].clientX)}
@@ -1009,9 +1504,10 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                                 {profilePhotos.length > 0 && (
                                     <img
                                         src={profilePhotos[activeProfilePhoto]}
-                                        alt={`${common.name} ${activeProfilePhoto + 1}`}
-                                        className="profile-photo"
-                                        key={`${profilePhotos[activeProfilePhoto]}-${activeProfilePhoto}`}
+                                                alt={`${common.name} ${activeProfilePhoto + 1}`}
+                                                className="profile-photo"
+                                                draggable={false}
+                                                key={`${profilePhotos[activeProfilePhoto]}-${activeProfilePhoto}`}
                                         onError={(event) => { event.currentTarget.style.display = 'none'; }}
                                     />
                                 )}
@@ -1038,6 +1534,14 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                                         </div>
                                     </>
                                 )}
+                                    </div>
+                                    <div className="id-card-footer">
+                                        <span><i className="availability-dot"></i>{common.open_to_work_enabled !== false ? 'AVAILABLE' : 'PROFILE'}</span>
+                                        <strong>{common.profession}</strong>
+                                        <small>{t.infoValues[0]}</small>
+                                    </div>
+                                </div>
+                                <span className="id-drag-hint" aria-hidden="true">DRAG FREELY</span>
                             </div>
                         </div>
                         <div className="profile-meta-grid">
@@ -1084,70 +1588,72 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                 </div>
             </section>
 
-            <section id="experience" className="section experience-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.historyEyebrow}</p>
-                    <h2 className="section-title">{t.historyTitle}</h2>
-                </div>
-                <div className="experience-timeline">
-                    {jobs.map((job, index) => {
+            <section id="experience" className="section experience-section reveal" data-section ref={experienceSectionRef}>
+                <div className="experience-sticky" ref={experienceStickyRef}>
+                    <div className="experience-horizontal-header">
+                        <div className="section-heading">
+                            <p className="eyebrow">{t.historyEyebrow}</p>
+                            <h2 className="section-title">{t.historyTitle}</h2>
+                        </div>
+                    </div>
+                    <div className="experience-scroll-viewport" ref={experienceViewportRef}>
+                        <div className="experience-timeline" ref={experienceTrackRef}>
+                        {jobs.map((job, index) => {
                         const isExpanded = expandedExperienceIndex === index;
                         const detailId = `experience-detail-${index}`;
                         return (
                         <article className={`experience-card interactive-card ${isExpanded ? 'is-expanded' : ''}`} key={`experience-${index}`} style={{ '--delay': `${index * 100}ms` }}>
                             <span className="experience-dot" aria-hidden="true"></span>
-                            <button
-                                className="experience-card-toggle"
-                                type="button"
-                                aria-expanded={isExpanded}
-                                aria-controls={detailId}
-                                onClick={() => setExpandedExperienceIndex(isExpanded ? null : index)}
-                            >
-                                <span className="experience-visual">
-                                    {job.image ? <img src={job.image} alt="" /> : <span>{job.company.charAt(0)}</span>}
-                                </span>
-                                <span className="experience-card-content">
+                            <div className="experience-card-shell">
+                            <div className="experience-card-main">
+                                <span className="experience-card-index">{String(index + 1).padStart(2, '0')}</span>
+                                <div className="experience-card-content">
                                     <span className="experience-card-meta">
-                                        <span>{job.category}</span>
                                         {job.period && <time>{job.period}</time>}
                                     </span>
-                                    <span className="experience-title" role="heading" aria-level="3">{job.title}</span>
-                                    <span className="experience-company">{job.company}</span>
-                                    {job.description && <span className="experience-summary">{job.description}</span>}
-                                </span>
-                                <span className="experience-expand-control" aria-hidden="true"><i></i><i></i></span>
-                            </button>
-                            <div className="experience-inline-detail" id={detailId} aria-hidden={!isExpanded}>
-                                <div className="experience-inline-detail-inner">
-                                    <p className="experience-inline-heading">{experienceCopy.responsibilities}</p>
-                                    <ul>
-                                        {(job.duties || []).map((duty, dutyIndex) => <li key={`duty-${index}-${dutyIndex}`}>{duty}</li>)}
-                                    </ul>
-                                    <div className="experience-inline-tags">
-                                        <span>{job.category}</span>
-                                        <span>{job.company}</span>
+                                    <h3 className="experience-title">{job.title}</h3>
+                                    <p className="experience-company">{job.company}</p>
+                                    {job.description && <p className="experience-summary">{job.description}</p>}
+                                </div>
+                                <div className={`experience-visual ${/prakarsa/i.test(job.company) ? 'logo-pas' : (/sumitomo/i.test(job.company) ? 'logo-sumitomo' : '')}`}>
+                                    {job.image && (
+                                        <img
+                                            src={job.image}
+                                            alt={`Logo ${job.company}`}
+                                            onError={(event) => event.currentTarget.parentElement?.classList.add('is-missing')}
+                                        />
+                                    )}
+                                    <span className="experience-logo-fallback">{job.company.charAt(0)}</span>
+                                </div>
+                            </div>
+                            <div className="experience-card-action-row">
+                                <button
+                                    className="experience-detail-button"
+                                    type="button"
+                                    aria-expanded={isExpanded}
+                                    aria-controls={detailId}
+                                    onClick={() => setExpandedExperienceIndex(isExpanded ? null : index)}
+                                >
+                                    <span>{isExpanded ? experienceCopy.close : experienceCopy.detail}</span>
+                                    <i aria-hidden="true">{isExpanded ? '−' : '↓'}</i>
+                                </button>
+                            </div>
+                                <div className="experience-inline-detail" id={detailId} aria-hidden={!isExpanded}>
+                                    <div className="experience-inline-detail-inner">
+                                        <p className="experience-detail-paragraph">{job.detail}</p>
                                     </div>
                                 </div>
                             </div>
                         </article>
                         );
-                    })}
-                </div>
-            </section>
-
-            <section id="projects" className="section projects-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.projectEyebrow}</p>
-                    <h2 className="section-title">{t.projectTitle}</h2>
-                </div>
-                <div className="project-grid">
-                    {projects.map((project, index) => (
-                        <article className="project-card interactive-card" key={`project-${index}`} style={{ '--delay': `${index * 110}ms` }}>
-                            <span>{project.category}</span>
-                            <h3>{project.title}</h3>
-                            <p>{project.text}</p>
-                        </article>
-                    ))}
+                        })}
+                        </div>
+                    </div>
+                    <div className="experience-pan-status" aria-hidden="true">
+                        <span>01</span>
+                        <i><b ref={experienceProgressRef}></b></i>
+                        <span>{String(jobs.length).padStart(2, '0')}</span>
+                    </div>
                 </div>
             </section>
 
@@ -1157,23 +1663,34 @@ function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
                     <h2 className="section-title">{t.certificationTitle}</h2>
                 </div>
                 {certifications.length > 0 ? (
-                    <div className="certification-grid">
+                    <div className="compact-cert-grid">
                         {certifications.map((item, index) => (
-                            <article className="certification-card interactive-card" key={`${item.title}-${index}`} style={{ '--delay': `${index * 90}ms` }}>
-                                <div className="certification-card-heading">
-                                    <div className="certification-thumbnail">
-                                        {item.image ? <img src={item.image} alt="" /> : <InterfaceIcon name="certificate" />}
-                                    </div>
-                                    <div>
-                                        <h3>{item.title}</h3>
-                                        <h4>{item.issuer}</h4>
-                                    </div>
+                            <article
+                                className="compact-cert-card"
+                                key={`${item.title}-${index}`}
+                                onClick={() => setSelectedCertificate(item)}
+                                style={{ '--delay': `${index * 90}ms` }}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedCertificate(item); }}
+                            >
+                                <div className="compact-cert-media">
+                                    {item.image ? (
+                                        <img src={item.image} alt={item.title} />
+                                    ) : (
+                                        <div className="compact-cert-fallback">
+                                            <InterfaceIcon name="certificate" />
+                                        </div>
+                                    )}
+                                    <span className="compact-cert-badge">{item.date}</span>
                                 </div>
-                                <div className="certification-card-footer">
-                                    <time>{item.date}</time>
-                                    <button type="button" onClick={() => setSelectedCertificate(item)}>
-                                        {certificateCopy.detail} <span aria-hidden="true">→</span>
-                                    </button>
+                                <div className="compact-cert-body">
+                                    <span className="compact-cert-issuer">{item.issuer}</span>
+                                    <h3 className="compact-cert-title">{item.title}</h3>
+                                    <div className="compact-cert-footer">
+                                        <span>{certificateCopy.detail}</span>
+                                        <span aria-hidden="true" className="compact-cert-arrow">→</span>
+                                    </div>
                                 </div>
                             </article>
                         ))}

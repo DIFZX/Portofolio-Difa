@@ -51,13 +51,13 @@ const programmingSkillByLanguage = {
 };
 const experienceDefaultsByLanguage = {
     id: [
-        { category: 'Pengalaman Kerja', period: 'Okt 2025 - Jan 2026', image: 'assets/experience/production.svg', description: 'Mendukung proses produksi, pengemasan, pemindahan, dan penyusunan barang dengan tetap mengikuti SOP, target kerja, dan aturan keselamatan.' },
-        { category: 'Pengalaman Kerja', period: 'Feb 2024 - Okt 2025', image: 'assets/experience/store.svg', description: 'Menangani pelayanan pelanggan, transaksi pembayaran, laporan penjualan, pencatatan stok, dan kebutuhan operasional toko.' },
+        { category: 'Pengalaman Kerja', period: 'Okt 2025 - Jan 2026', image: 'assets/uploads/20260720-082534-05e6dc0432b5.webp', description: 'Mendukung proses produksi, pengemasan, pemindahan, dan penyusunan barang dengan tetap mengikuti SOP, target kerja, dan aturan keselamatan.' },
+        { category: 'Pengalaman Kerja', period: 'Feb 2024 - Okt 2025', image: 'assets/uploads/20260720-082539-9be8e6f22c3d.png', description: 'Menangani pelayanan pelanggan, transaksi pembayaran, laporan penjualan, pencatatan stok, dan kebutuhan operasional toko.' },
         { category: 'Magang', period: 'Juni 2022 - September 2022', image: 'assets/experience/sumitomo-electric.jpg', description: 'Mendukung administrasi produksi melalui pengelolaan, pemindaian, koordinasi, dan pengarsipan dokumen operasional pabrik.' }
     ],
     en: [
-        { category: 'Work Experience', period: 'Oct 2025 - Jan 2026', image: 'assets/experience/production.svg', description: 'Supported production, packaging, movement, and arrangement of goods while following SOPs, work targets, and safety requirements.' },
-        { category: 'Work Experience', period: 'Feb 2024 - Oct 2025', image: 'assets/experience/store.svg', description: 'Handled customer service, payment transactions, sales reports, stock records, and day-to-day store operations.' },
+        { category: 'Work Experience', period: 'Oct 2025 - Jan 2026', image: 'assets/uploads/20260720-082534-05e6dc0432b5.webp', description: 'Supported production, packaging, movement, and arrangement of goods while following SOPs, work targets, and safety requirements.' },
+        { category: 'Work Experience', period: 'Feb 2024 - Oct 2025', image: 'assets/uploads/20260720-082539-9be8e6f22c3d.png', description: 'Handled customer service, payment transactions, sales reports, stock records, and day-to-day store operations.' },
         { category: 'Internship', period: 'June 2022 - September 2022', image: 'assets/experience/sumitomo-electric.jpg', description: 'Supported production administration through document management, scanning, coordination, and factory operational filing.' }
     ],
     ja: [
@@ -67,9 +67,9 @@ const experienceDefaultsByLanguage = {
     ]
 };
 const internshipExperienceByLanguage = {
-    id: { title: 'Asisten Admin Produksi', company: 'PT Sumitomo Wintec Electric Indonesia', period: 'Juni 2022 - September 2022', category: 'Magang', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.id[2].description, duties: ['Mengelola dokumen hasil produksi untuk mendukung administrasi operasional pabrik.', 'Membuat salinan dokumen lebih dari 200 data per hari menggunakan scanner.', 'Berkoordinasi dengan tim produksi untuk memastikan dokumen sesuai dengan standar perusahaan.', 'Menyusun dan memelihara arsip dokumen agar mudah diakses saat dibutuhkan.', 'Berpengalaman dalam bekerja di lingkungan pabrik dan memahami standar keselamatan kerja (K3).'] },
-    en: { title: 'Production Admin Assistant', company: 'PT Sumitomo Wintec Electric Indonesia', period: 'June 2022 - September 2022', category: 'Internship', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.en[2].description, duties: ['Managed production documents to support factory operational administration.', 'Scanned and copied more than 200 document records per day.', 'Coordinated with the production team to ensure documents met company standards.', 'Organized and maintained document archives for easy retrieval.', 'Gained experience in a factory environment and followed occupational safety standards.'] },
-    ja: { title: '生産事務アシスタント', company: 'PT Sumitomo Wintec Electric Indonesia', period: '2022年6月 - 2022年9月', category: 'インターンシップ', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.ja[2].description, duties: ['工場運営事務を支援するため生産文書を管理。', 'スキャナーを使用して1日200件以上の文書データを複製。', '文書が会社基準を満たすよう生産チームと連携。', '必要なときに簡単に参照できるよう文書を整理・保管。', '工場環境での業務と労働安全基準を経験。'] }
+    id: { title: 'Asisten Admin Produksi', company: 'Sumitomo Electric Wintec I.', period: 'Juni 2022 - September 2022', category: 'Magang', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.id[2].description, duties: ['Mengelola dokumen hasil produksi untuk mendukung administrasi operasional pabrik.', 'Membuat salinan dokumen lebih dari 200 data per hari menggunakan scanner.', 'Berkoordinasi dengan tim produksi untuk memastikan dokumen sesuai dengan standar perusahaan.', 'Menyusun dan memelihara arsip dokumen agar mudah diakses saat dibutuhkan.', 'Berpengalaman dalam bekerja di lingkungan pabrik dan memahami standar keselamatan kerja (K3).'] },
+    en: { title: 'Production Admin Assistant', company: 'Sumitomo Electric Wintec I.', period: 'June 2022 - September 2022', category: 'Internship', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.en[2].description, duties: ['Managed production documents to support factory operational administration.', 'Scanned and copied more than 200 document records per day.', 'Coordinated with the production team to ensure documents met company standards.', 'Organized and maintained document archives for easy retrieval.', 'Gained experience in a factory environment and followed occupational safety standards.'] },
+    ja: { title: '生産事務アシスタント', company: 'Sumitomo Electric Wintec I.', period: '2022年6月 - 2022年9月', category: 'インターンシップ', image: 'assets/experience/sumitomo-electric.jpg', description: experienceDefaultsByLanguage.ja[2].description, duties: ['工場運営事務を支援するため生産文書を管理。', 'スキャナーを使用して1日200件以上の文書データを複製。', '文書が会社基準を満たすよう生産チームと連携。', '必要なときに簡単に参照できるよう文書を整理・保管。', '工場環境での業務と労働安全基準を経験。'] }
 };
 
 function isCustomCollectionImage(path) {
@@ -284,9 +284,10 @@ function synchronizeCollectionImages() {
             const items = state.content.languages?.[code]?.[type];
             if (!Array.isArray(items)) return;
             items.forEach((item, index) => {
-                if (item && typeof item === 'object' && isCustomCollectionImage(item.image)) {
+                const collectionImage = [item?.image, item?.logo].find((image) => isCustomCollectionImage(image));
+                if (item && typeof item === 'object' && collectionImage) {
                     const key = keyFor(item, index);
-                    if (!sharedImages.has(key)) sharedImages.set(key, item.image);
+                    if (!sharedImages.has(key)) sharedImages.set(key, collectionImage);
                 }
             });
         });
