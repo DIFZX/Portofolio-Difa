@@ -4435,8 +4435,8 @@ body {
     width: calc(100% - 36px);
     max-width: 1560px;
     min-height: auto;
-    margin: 18px auto 0;
-    padding: clamp(76px, 9vw, 132px) clamp(24px, 6vw, 96px);
+    margin: 24px auto 0 !important;
+    padding: clamp(44px, 5.2vw, 68px) clamp(24px, 5vw, 64px) !important;
     position: relative;
     overflow: hidden;
     color: var(--ink);
@@ -4478,7 +4478,7 @@ body {
 
 .section-heading,
 .rating-heading {
-    margin-bottom: clamp(42px, 6vw, 76px);
+    margin-bottom: clamp(26px, 3.5vw, 40px) !important;
 }
 
 .education-section .section-heading,
@@ -12220,7 +12220,7 @@ html[data-theme="dark"] body {
 .education-section > .section-heading {
     width: 100%;
     max-width: none;
-    margin: 0 auto clamp(42px, 5vw, 68px);
+    margin: 0 auto clamp(24px, 3.2vw, 38px) !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12521,7 +12521,29 @@ html[data-theme="dark"] body {
     border-radius: 32px 32px 0 0 !important;
 }
 
+/* Global spacing harmonization across cards and forms */
+.section:not(.hero-section) {
+    margin-top: 24px !important;
+}
+
+.rating-form {
+    gap: 16px !important;
+    padding: 24px !important;
+}
+
+.rating-form label {
+    gap: 6px !important;
+}
+
+.contact-panel {
+    gap: 20px !important;
+}
+
 @media (max-width: 720px) {
+    .section:not(.hero-section) {
+        margin-top: 14px !important;
+        padding: 42px 18px 36px !important;
+    }
     .footer {
         border-radius: 24px 24px 0 0 !important;
     }
