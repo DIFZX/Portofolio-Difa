@@ -899,8 +899,6 @@ function ProfileCard({ copy }) {
         const y = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
         element.style.setProperty('--tilt-x', `${y}deg`);
         element.style.setProperty('--tilt-y', `${x}deg`);
-        element.style.setProperty('--glow-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
-        element.style.setProperty('--glow-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
     };
 
     const resetTilt = () => {
@@ -912,7 +910,6 @@ function ProfileCard({ copy }) {
     return (
         <div className="profile-stage reveal">
             <div className="profile-card" ref={cardRef} onPointerMove={handleMove} onPointerLeave={resetTilt}>
-                <div className="profile-glare" aria-hidden="true"></div>
                 <img src={PROFILE.photo} alt="Potret Difa Alfaruq"/>
                 <div className="profile-card-info">
                     <div>
@@ -1243,7 +1240,10 @@ function Contact({ copy }) {
             <div className="section-container">
                 <div className="contact-grid">
                     <div className="contact-copy reveal">
-                        <h2>{copy.contact.titleTop}<br/>{copy.contact.titleBottom}</h2>
+                        <h2>
+                            <span>{copy.contact.titleTop}</span>
+                            <span>{copy.contact.titleBottom}</span>
+                        </h2>
                         <p>{copy.contact.intro}</p>
 
                         <div className="contact-block">
