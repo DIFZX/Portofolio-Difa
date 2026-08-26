@@ -498,6 +498,52 @@ main {
     text-transform: uppercase;
 }
 
+.typewriter-title {
+    position: relative;
+}
+
+.typewriter-line {
+    width: fit-content;
+    max-width: 100%;
+    position: relative;
+    display: block;
+}
+
+.typewriter-text {
+    display: block;
+    clip-path: inset(0 100% 0 0);
+}
+
+.typewriter-line::after {
+    content: '';
+    width: 0.045em;
+    height: 0.78em;
+    position: absolute;
+    top: 0.08em;
+    left: 0;
+    background: currentColor;
+    opacity: 0;
+}
+
+.reveal.is-visible .typewriter-text {
+    animation: typewriter-reveal var(--typewriter-duration) steps(var(--typewriter-steps), end) var(--typewriter-delay) both;
+}
+
+.reveal.is-visible .typewriter-line::after {
+    animation: typewriter-caret var(--typewriter-duration) steps(var(--typewriter-steps), end) var(--typewriter-delay) both;
+}
+
+@keyframes typewriter-reveal {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes typewriter-caret {
+    0% { left: 0; opacity: 1; }
+    94% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+}
+
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -972,11 +1018,7 @@ main {
     font-size: clamp(3.25rem, 5.3vw, 5rem);
 }
 
-.contact-copy h2 span {
-    display: block;
-}
-
-.contact-copy h2 span:last-child {
+.contact-copy h2 > .typewriter-line:last-child {
     font-size: 0.84em;
     letter-spacing: -0.065em;
 }
@@ -2055,8 +2097,8 @@ main {
 
 .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 700ms ease var(--reveal-delay, 0ms), transform 700ms cubic-bezier(.2, .75, .25, 1) var(--reveal-delay, 0ms);
+    transform: translateY(38px);
+    transition: opacity 1050ms ease-out var(--reveal-delay, 0ms), transform 1150ms cubic-bezier(.16, .72, .2, 1) var(--reveal-delay, 0ms);
 }
 
 .reveal.is-visible {
@@ -2384,7 +2426,7 @@ main {
         font-size: clamp(2.8rem, 14vw, 4.4rem);
     }
 
-    .contact-copy h2 span:last-child {
+    .contact-copy h2 > .typewriter-line:last-child {
         font-size: 0.78em;
     }
 
@@ -2653,5 +2695,14 @@ main {
     .reveal {
         opacity: 1;
         transform: none;
+    }
+
+    .typewriter-text {
+        clip-path: none;
+        animation: none !important;
+    }
+
+    .typewriter-line::after {
+        display: none;
     }
 }

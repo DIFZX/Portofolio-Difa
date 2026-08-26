@@ -143,7 +143,7 @@ const CONTENT = {
                 period: 'Jun 2022 — Sep 2022',
                 description: 'Mendukung administrasi produksi melalui pengelolaan, pemindaian, koordinasi, dan pengarsipan dokumen operasional pabrik.',
                 tags: ['Production Admin', 'Document Control', 'Scanning', 'K3'],
-                image: 'assets/experience/sumitomo-electric.jpg',
+                image: 'assets/experience/sumitomo-electric.jpg?v=20260826-cropped',
                 duties: [
                     'Mengelola dokumen hasil produksi untuk mendukung administrasi pabrik.',
                     'Memindai dan membuat salinan lebih dari 200 data dokumen per hari.',
@@ -299,7 +299,7 @@ const CONTENT = {
                 period: 'Jun 2022 — Sep 2022',
                 description: 'Supported production administration through document management, scanning, coordination, and factory operational filing.',
                 tags: ['Production Admin', 'Document Control', 'Scanning', 'Safety'],
-                image: 'assets/experience/sumitomo-electric.jpg',
+                image: 'assets/experience/sumitomo-electric.jpg?v=20260826-cropped',
                 duties: [
                     'Managed production documents to support factory administration.',
                     'Scanned and copied more than 200 document records per day.',
@@ -362,6 +362,38 @@ function Icon({ name, size = 20, className = '' }) {
         <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             {paths[name] || paths.asterisk}
         </svg>
+    );
+}
+
+function TypewriterTitle({ as = 'h2', lines, className = '', id }) {
+    const Heading = as;
+    const titleLines = (Array.isArray(lines) ? lines : [lines]).map((line) => String(line));
+    let elapsed = 0;
+
+    return (
+        <Heading className={`typewriter-title ${className}`.trim()} id={id} aria-label={titleLines.join(' ')}>
+            {titleLines.map((line, index) => {
+                const steps = Math.max(Array.from(line).length, 1);
+                const duration = Math.max(650, steps * 65);
+                const delay = 300 + elapsed;
+                elapsed += duration + 140;
+
+                return (
+                    <span
+                        className="typewriter-line"
+                        style={{
+                            '--typewriter-steps': steps,
+                            '--typewriter-duration': `${duration}ms`,
+                            '--typewriter-delay': `${delay}ms`
+                        }}
+                        aria-hidden="true"
+                        key={`${line}-${index}`}
+                    >
+                        <span className="typewriter-text">{line}</span>
+                    </span>
+                );
+            })}
+        </Heading>
     );
 }
 
@@ -927,7 +959,7 @@ function About({ copy }) {
     return (
         <section id="about" className="about-section page-section" data-section>
             <div className="section-container">
-                <h2 className="section-title reveal">{copy.about.title}</h2>
+                <TypewriterTitle className="section-title reveal" lines={copy.about.title}/>
 
                 <div className="bento-grid">
                     <article className="bento-card intro-card reveal">
@@ -1032,7 +1064,7 @@ function Projects({ copy, onOpen }) {
         <section id="projects" className="projects-section inverse-section page-section" data-section>
             <div className="section-container">
                 <div className="projects-heading reveal">
-                    <h2>{project.headingTop}<br/>{project.headingBottom}</h2>
+                    <TypewriterTitle lines={[project.headingTop, project.headingBottom]}/>
                     <p>{project.intro}</p>
                 </div>
 
@@ -1171,7 +1203,7 @@ function Experience({ copy, onOpen }) {
             <div className="experience-grid-pattern" aria-hidden="true"></div>
             <div className="section-container">
                 <div className="experience-heading reveal">
-                    <h2>{copy.experience.title}</h2>
+                    <TypewriterTitle lines={copy.experience.title}/>
                     <p>{copy.experience.intro}</p>
                 </div>
 
@@ -1240,10 +1272,7 @@ function Contact({ copy }) {
             <div className="section-container">
                 <div className="contact-grid">
                     <div className="contact-copy reveal">
-                        <h2>
-                            <span>{copy.contact.titleTop}</span>
-                            <span>{copy.contact.titleBottom}</span>
-                        </h2>
+                        <TypewriterTitle lines={[copy.contact.titleTop, copy.contact.titleBottom]}/>
                         <p>{copy.contact.intro}</p>
 
                         <div className="contact-block">
@@ -1411,9 +1440,9 @@ function App() {
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.08, rootMargin: '0px 0px -50px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -70px' });
         elements.forEach((element, index) => {
-            element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+            element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 110}ms`);
             observer.observe(element);
         });
         return () => observer.disconnect();
