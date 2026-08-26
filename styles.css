@@ -1000,6 +1000,7 @@ main {
 
 .projects-heading h2,
 .experience-heading h2,
+.certifications-heading h2,
 .contact-copy h2 {
     margin: 0;
     font-family: var(--font-display);
@@ -1658,8 +1659,236 @@ main {
     transform: translateY(-5px) scale(1.05);
 }
 
+.certifications-section {
+    padding: 116px 0 132px;
+}
+
+.certifications-heading {
+    margin-bottom: 62px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 44px;
+}
+
+.certifications-heading h2 {
+    max-width: 720px;
+    font-size: clamp(3.5rem, 6.8vw, 6.2rem);
+}
+
+.certifications-heading p {
+    max-width: 430px;
+    margin: 0;
+    color: var(--inverse-muted);
+    font-size: 0.78rem;
+    line-height: 1.72;
+    text-align: right;
+}
+
+.certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+    gap: 22px;
+}
+
+.certification-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    color: var(--inverse-ink);
+    background: var(--inverse-surface);
+    border: 1px solid var(--inverse-line);
+    border-radius: 24px;
+    box-shadow: 8px 8px 0 color-mix(in srgb, var(--inverse-ink) 13%, transparent);
+    overflow: hidden;
+    transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
+}
+
+.certification-card:hover {
+    border-color: color-mix(in srgb, var(--inverse-ink) 50%, var(--inverse-line));
+    box-shadow: 12px 12px 0 color-mix(in srgb, var(--inverse-ink) 18%, transparent);
+    transform: translateY(-7px);
+}
+
+.certification-preview {
+    aspect-ratio: 16 / 10;
+    position: relative;
+    display: block;
+    background: #f6f6f4;
+    border-bottom: 1px solid var(--inverse-line);
+    overflow: hidden;
+}
+
+.certification-preview img {
+    width: 100%;
+    height: 100%;
+    padding: 11px;
+    object-fit: contain;
+    transition: transform 420ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.certification-preview > span {
+    min-height: 36px;
+    padding: 0 12px;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    background: rgb(5 5 5 / 88%);
+    border: 1px solid rgb(255 255 255 / 18%);
+    border-radius: 999px;
+    font-size: 0.54rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+}
+
+.certification-card:hover .certification-preview img {
+    transform: scale(1.025);
+}
+
+.certification-card-body {
+    min-height: 330px;
+    padding: 25px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.certification-topline {
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    color: var(--inverse-muted);
+    font-size: 0.51rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    line-height: 1.45;
+    text-transform: uppercase;
+}
+
+.certification-topline span {
+    max-width: 62%;
+}
+
+.certification-topline time {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
+.certification-topline time small {
+    margin-bottom: 3px;
+    display: block;
+    color: color-mix(in srgb, var(--inverse-muted) 74%, transparent);
+    font-size: 0.43rem;
+}
+
+.certification-card h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.1vw, 1.8rem);
+    line-height: 1;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+}
+
+.certification-card-body > p {
+    margin: 17px 0 20px;
+    color: var(--inverse-muted);
+    font-size: 0.68rem;
+    line-height: 1.68;
+}
+
+.certification-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.certification-tags span {
+    padding: 6px 8px;
+    color: var(--inverse-muted);
+    border: 1px solid var(--inverse-line);
+    border-radius: 7px;
+    font-size: 0.47rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.certification-number {
+    margin-top: 22px;
+    padding-top: 16px;
+    display: grid;
+    gap: 5px;
+    border-top: 1px solid var(--inverse-line);
+}
+
+.certification-number span {
+    color: var(--inverse-muted);
+    font-size: 0.48rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.certification-number strong {
+    overflow-wrap: anywhere;
+    font-size: 0.63rem;
+    letter-spacing: 0.04em;
+}
+
+.certification-actions {
+    margin-top: auto;
+    padding-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+.certification-actions a {
+    min-height: 43px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid var(--inverse-line);
+    border-radius: 10px;
+    font-size: 0.54rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-align: center;
+    text-transform: uppercase;
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.certification-actions a:first-child {
+    color: var(--inverse-bg);
+    background: var(--inverse-ink);
+    border-color: var(--inverse-ink);
+}
+
+.certification-actions a:hover {
+    border-color: var(--inverse-ink);
+    transform: translateY(-3px);
+}
+
+.certification-actions a:last-child:hover {
+    color: var(--inverse-bg);
+    background: var(--inverse-ink);
+}
+
 .contact-section {
     padding: 116px 0 34px;
+    color: var(--ink);
+    background: var(--page);
+    transition: color 280ms ease, background-color 280ms ease;
 }
 
 .contact-grid {
@@ -1672,7 +1901,7 @@ main {
 .contact-copy > p {
     max-width: 470px;
     margin: 30px 0 48px;
-    color: var(--inverse-muted);
+    color: var(--muted);
     font-size: 0.88rem;
     line-height: 1.72;
 }
@@ -1684,7 +1913,7 @@ main {
 .contact-block > span {
     display: block;
     margin-bottom: 13px;
-    color: var(--inverse-muted);
+    color: var(--muted);
     font-size: 0.57rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -1698,16 +1927,16 @@ main {
     display: flex;
     align-items: center;
     gap: 13px;
-    color: var(--inverse-ink);
-    background: var(--inverse-surface);
-    border: 1px solid var(--inverse-line);
+    color: var(--ink);
+    background: var(--surface-soft);
+    border: 1px solid var(--line-soft);
     border-radius: 13px;
     cursor: pointer;
     transition: transform 180ms ease, border-color 180ms ease;
 }
 
 .email-copy:hover {
-    border-color: var(--inverse-muted);
+    border-color: var(--muted);
     transform: translateY(-3px);
 }
 
@@ -1717,8 +1946,8 @@ main {
     flex: 0 0 auto;
     display: grid;
     place-items: center;
-    color: var(--inverse-bg);
-    background: var(--inverse-ink);
+    color: var(--page);
+    background: var(--ink);
     border-radius: 50%;
 }
 
@@ -1740,23 +1969,23 @@ main {
     height: 54px;
     display: grid;
     place-items: center;
-    color: var(--inverse-ink);
-    background: var(--inverse-bg);
-    border: 1px solid var(--inverse-line);
+    color: var(--ink);
+    background: var(--page);
+    border: 1px solid var(--line-soft);
     border-radius: 12px;
     transition: color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
 .social-links a:hover {
-    color: var(--inverse-bg);
-    background: var(--inverse-ink);
+    color: var(--page);
+    background: var(--ink);
     transform: translateY(-4px);
 }
 
 .contact-form-shell {
     padding: 30px;
-    background: var(--inverse-surface);
-    border: 1px solid var(--inverse-line);
+    background: var(--surface-soft);
+    border: 1px solid var(--line-soft);
     border-radius: 26px;
 }
 
@@ -1778,7 +2007,7 @@ main {
 }
 
 .contact-form-shell label > span {
-    color: var(--inverse-muted);
+    color: var(--muted);
     font-size: 0.56rem;
     font-weight: 800;
     letter-spacing: 0.1em;
@@ -1789,9 +2018,9 @@ main {
 .contact-form-shell textarea,
 .contact-form-shell select {
     width: 100%;
-    color: var(--inverse-ink);
-    background: var(--inverse-bg);
-    border: 1px solid var(--inverse-line);
+    color: var(--ink);
+    background: var(--page);
+    border: 1px solid var(--line-soft);
     border-radius: 9px;
     outline: none;
     transition: border-color 180ms ease, box-shadow 180ms ease;
@@ -1811,14 +2040,14 @@ main {
 
 .contact-form-shell input::placeholder,
 .contact-form-shell textarea::placeholder {
-    color: color-mix(in srgb, var(--inverse-muted) 65%, transparent);
+    color: color-mix(in srgb, var(--muted) 65%, transparent);
 }
 
 .contact-form-shell input:focus,
 .contact-form-shell textarea:focus,
 .contact-form-shell select:focus {
-    border-color: var(--inverse-ink);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--inverse-ink) 11%, transparent);
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 11%, transparent);
 }
 
 .send-button {
@@ -1828,8 +2057,8 @@ main {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    color: var(--inverse-bg);
-    background: var(--inverse-ink);
+    color: var(--page);
+    background: var(--ink);
     border: 0;
     border-radius: 10px;
     font-size: 0.65rem;
@@ -1856,8 +2085,8 @@ main {
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    color: var(--inverse-muted);
-    border-top: 1px solid var(--inverse-line);
+    color: var(--muted);
+    border-top: 1px solid var(--line-soft);
     font-size: 0.55rem;
     line-height: 1.6;
 }
@@ -2136,6 +2365,15 @@ main {
     .timeline-item {
         grid-template-columns: minmax(0, 1fr) 60px minmax(0, 1fr);
     }
+
+    .certifications-heading {
+        display: grid;
+        gap: 26px;
+    }
+
+    .certifications-heading p {
+        text-align: left;
+    }
 }
 
 @media (max-width: 860px) {
@@ -2351,13 +2589,15 @@ main {
     .about-section,
     .projects-section,
     .experience-section,
+    .certifications-section,
     .contact-section {
         padding-top: 78px;
     }
 
     .about-section,
     .projects-section,
-    .experience-section {
+    .experience-section,
+    .certifications-section {
         padding-bottom: 90px;
     }
 
@@ -2418,6 +2658,7 @@ main {
 
     .projects-heading h2,
     .experience-heading h2,
+    .certifications-heading h2,
     .contact-copy h2 {
         font-size: clamp(3.1rem, 16vw, 5rem);
     }
@@ -2432,6 +2673,21 @@ main {
 
     .projects-heading p {
         text-align: left;
+    }
+
+    .certifications-heading {
+        margin-bottom: 42px;
+        gap: 24px;
+    }
+
+    .certification-card {
+        border-radius: 18px;
+        box-shadow: 5px 5px 0 color-mix(in srgb, var(--inverse-ink) 13%, transparent);
+    }
+
+    .certification-card-body {
+        min-height: 0;
+        padding: 22px;
     }
 
     .selected-project {

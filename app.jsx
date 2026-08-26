@@ -23,6 +23,7 @@ const CONTENT = {
             ['about', 'Tentang'],
             ['projects', 'Proyek'],
             ['experience', 'Pengalaman'],
+            ['certifications', 'Sertifikasi'],
             ['contact', 'Kontak']
         ],
         menu: { open: 'Buka menu', close: 'Tutup menu' },
@@ -153,6 +154,46 @@ const CONTENT = {
                 ]
             }
         ],
+        certifications: {
+            headingTop: 'Sertifikasi',
+            headingBottom: 'Profesional',
+            intro: 'Dokumen kompetensi yang memperkuat fondasi saya di jaringan komputer, perangkat keras, sistem operasi, dan dukungan teknis.',
+            issued: 'Diterbitkan',
+            number: 'Nomor Sertifikat',
+            view: 'Lihat PDF',
+            download: 'Unduh PDF',
+            items: [
+                {
+                    title: 'CCNA: Introduction to Networks',
+                    issuer: 'Cisco Networking Academy',
+                    date: '10 Februari 2026',
+                    number: '20260202033',
+                    description: 'Penyelesaian pelatihan Introduction to Networks yang diselenggarakan Universitas Bani Saleh melalui program Cisco Networking Academy.',
+                    tags: ['Networking Fundamentals', 'Cisco IOS', 'IPv4 & IPv6'],
+                    image: 'assets/ccna-preview.png',
+                    document: 'assets/DIFA_ALFARUQ_certificate.pdf'
+                },
+                {
+                    title: 'Cisco IT Essentials',
+                    issuer: 'Cisco Networking Academy',
+                    date: '6 September 2025',
+                    description: 'Pelatihan IT Essentials yang mencakup perangkat keras komputer, sistem operasi, dasar jaringan, keamanan, dan troubleshooting.',
+                    tags: ['Computer Hardware', 'Operating Systems', 'Troubleshooting'],
+                    image: 'assets/it-essentials-preview.png',
+                    document: 'assets/IT_Essentials_certificate_difaalfaruq-m-ubs-ac-id_0f3bf3c1-43cf-4153-88f0-9d0bd5bfded7 (2).pdf'
+                },
+                {
+                    title: 'Kompetensi Teknik Komputer dan Jaringan',
+                    issuer: 'Badan Nasional Sertifikasi Profesi (BNSP)',
+                    date: '18 Oktober 2022',
+                    number: '61100 3513 20000788 2023',
+                    description: 'Sertifikasi kompetensi nasional KKNI Level II pada bidang Teknik Komputer dan Jaringan.',
+                    tags: ['KKNI Level II', 'Computer Network', 'Technical Support'],
+                    image: 'assets/bnsp-preview.png',
+                    document: 'assets/Sertifikat Keahlian Jaringan BNSP (1).pdf'
+                }
+            ]
+        },
         contact: {
             titleTop: 'Mari Mulai',
             titleBottom: 'Percakapan',
@@ -179,6 +220,7 @@ const CONTENT = {
             ['about', 'About'],
             ['projects', 'Projects'],
             ['experience', 'Experience'],
+            ['certifications', 'Certifications'],
             ['contact', 'Contact']
         ],
         menu: { open: 'Open menu', close: 'Close menu' },
@@ -309,6 +351,46 @@ const CONTENT = {
                 ]
             }
         ],
+        certifications: {
+            headingTop: 'Professional',
+            headingBottom: 'Certifications',
+            intro: 'Competency records that strengthen my foundation in computer networking, hardware, operating systems, and technical support.',
+            issued: 'Issued',
+            number: 'Certificate Number',
+            view: 'View PDF',
+            download: 'Download PDF',
+            items: [
+                {
+                    title: 'CCNA: Introduction to Networks',
+                    issuer: 'Cisco Networking Academy',
+                    date: '10 February 2026',
+                    number: '20260202033',
+                    description: 'Completed Introduction to Networks training offered by Universitas Bani Saleh through the Cisco Networking Academy program.',
+                    tags: ['Networking Fundamentals', 'Cisco IOS', 'IPv4 & IPv6'],
+                    image: 'assets/ccna-preview.png',
+                    document: 'assets/DIFA_ALFARUQ_certificate.pdf'
+                },
+                {
+                    title: 'Cisco IT Essentials',
+                    issuer: 'Cisco Networking Academy',
+                    date: '6 September 2025',
+                    description: 'IT Essentials training covering computer hardware, operating systems, networking fundamentals, security, and troubleshooting.',
+                    tags: ['Computer Hardware', 'Operating Systems', 'Troubleshooting'],
+                    image: 'assets/it-essentials-preview.png',
+                    document: 'assets/IT_Essentials_certificate_difaalfaruq-m-ubs-ac-id_0f3bf3c1-43cf-4153-88f0-9d0bd5bfded7 (2).pdf'
+                },
+                {
+                    title: 'Computer and Network Engineering Competency',
+                    issuer: 'National Professional Certification Agency (BNSP)',
+                    date: '18 October 2022',
+                    number: '61100 3513 20000788 2023',
+                    description: 'A national Level II IQF competency certification in Computer and Network Engineering.',
+                    tags: ['IQF Level II', 'Computer Network', 'Technical Support'],
+                    image: 'assets/bnsp-preview.png',
+                    document: 'assets/Sertifikat Keahlian Jaringan BNSP (1).pdf'
+                }
+            ]
+        },
         contact: {
             titleTop: "Let's Start",
             titleBottom: 'A Conversation',
@@ -1243,6 +1325,67 @@ function Experience({ copy, onOpen }) {
     );
 }
 
+function Certifications({ copy }) {
+    const section = copy.certifications;
+
+    return (
+        <section id="certifications" className="certifications-section inverse-section page-section" data-section>
+            <div className="section-container">
+                <div className="certifications-heading reveal">
+                    <TypewriterTitle lines={[section.headingTop, section.headingBottom]}/>
+                    <p>{section.intro}</p>
+                </div>
+
+                <div className="certifications-grid">
+                    {section.items.map((certificate) => (
+                        <article className="certification-card reveal" key={certificate.title}>
+                            <a
+                                className="certification-preview"
+                                href={certificate.document}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`${section.view}: ${certificate.title}`}
+                            >
+                                <img src={certificate.image} alt={`Sertifikat ${certificate.title}`} loading="lazy" decoding="async"/>
+                                <span><Icon name="eye" size={17}/>{section.view}</span>
+                            </a>
+
+                            <div className="certification-card-body">
+                                <div className="certification-topline">
+                                    <span>{certificate.issuer}</span>
+                                    <time><small>{section.issued}</small>{certificate.date}</time>
+                                </div>
+                                <h3>{certificate.title}</h3>
+                                <p>{certificate.description}</p>
+
+                                <div className="certification-tags">
+                                    {certificate.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                                </div>
+
+                                {certificate.number && (
+                                    <div className="certification-number">
+                                        <span>{section.number}</span>
+                                        <strong>{certificate.number}</strong>
+                                    </div>
+                                )}
+
+                                <div className="certification-actions">
+                                    <a href={certificate.document} target="_blank" rel="noopener noreferrer">
+                                        <Icon name="eye" size={17}/>{section.view}
+                                    </a>
+                                    <a href={certificate.document} download>
+                                        <Icon name="download" size={17}/>{section.download}
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
 function Contact({ copy }) {
     const [copied, setCopied] = useState(false);
     const [sending, setSending] = useState(false);
@@ -1268,7 +1411,7 @@ function Contact({ copy }) {
     };
 
     return (
-        <section id="contact" className="contact-section inverse-section page-section" data-section>
+        <section id="contact" className="contact-section page-section" data-section>
             <div className="section-container">
                 <div className="contact-grid">
                     <div className="contact-copy reveal">
@@ -1489,6 +1632,7 @@ function App() {
                 <About copy={copy}/>
                 <Projects copy={copy} onOpen={() => setProjectOpen(true)}/>
                 <Experience copy={copy} onOpen={setActiveJob}/>
+                <Certifications copy={copy}/>
                 <Contact copy={copy}/>
             </main>
 
