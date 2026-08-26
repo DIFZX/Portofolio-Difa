@@ -1,11 +1,7 @@
-# Local secrets and deployment configuration
+# Local environment files
 .env
 .env.*
 !.env.example
-api/config.local.php
-
-# Runtime data
-data/sessions/
 *.log
 
 # Dependencies and build output

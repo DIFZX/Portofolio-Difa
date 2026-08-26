@@ -1,2413 +1,1481 @@
-const { useEffect, useRef, useState } = React;
+const { useEffect, useMemo, useRef, useState } = React;
 
-const translations = {
+const PROFILE = {
+    name: 'Difa Alfaruq',
+    email: 'alfaruqdifa1211@gmail.com',
+    phone: '0817 7639 6965',
+    location: 'Bekasi, Indonesia',
+    address: 'Tambun Selatan, Kabupaten Bekasi',
+    photo: 'assets/profile-difa.jpeg',
+    campusLogo: 'assets/education/universitas-bani-saleh.png',
+    cv: 'assets/CV_Difa_Alfaruq_EN.pdf',
+    linkedin: 'https://www.linkedin.com/in/difa-alfaruq-45156b312/',
+    instagram: 'https://www.instagram.com/difaalfaruqq?igsh=ZXZydzVpYmlvcGRm',
+    whatsapp: 'https://wa.me/6281776396965'
+};
+
+const CONTENT = {
     id: {
-        code: 'ID', language: 'Bahasa Indonesia', portfolio: 'Portofolio Pribadi',
-        nav: ['Beranda', 'Tentang', 'Pendidikan', 'Pengalaman', 'Sertifikasi', 'Skill', 'Rating', 'Kontak'],
-        heroDesc: 'Lulusan Teknik Komputer dan Jaringan dengan pengalaman di produksi, pergudangan, administrasi stok, dan operasional toko. Terbiasa bekerja mengikuti SOP, teliti, dan siap belajar cepat.',
-        contactMe: 'Hubungi Saya', seeWork: 'Lihat Kontribusi', downloadCv: 'Unduh CV', previewCv: 'Pratinjau CV', cvTitle: 'Pratinjau Curriculum Vitae', closeCv: 'Tutup pratinjau CV', stats: ['Pengalaman kerja', 'Keterampilan utama', 'Siap berkontribusi'], statValues: ['2+', '7+', '100%'],
-        available: 'Tersedia untuk bekerja', profileNote: 'Operasional, produksi, admin, dan entry level IT support.', ready: 'Open to work',
-        aboutEyebrow: 'Profil', aboutTitle: 'Tentang Saya', aboutText: 'Saya adalah lulusan Teknik Komputer dan Jaringan dengan pengalaman kerja di bidang produksi, pergudangan, dan operasional toko. Pernah bekerja sebagai Helper Produksi di PT Prakarsa Alam Segar dan Crew Store di PT Sewu Segar Primatama (Re.juve). Saya terbiasa bekerja dengan target, teliti dalam pencatatan, disiplin mengikuti SOP, serta mampu bekerja mandiri maupun dalam tim.',
-        infoLabels: ['Domisili'], infoValues: ['Bekasi'], focusTitle: 'Fokus Utama & Keahlian Pendukung', focusItems: ['Pengembangan Web', 'Pemrograman', 'Jaringan Komputer', 'IT Support & Administrasi'],
-        educationEyebrow: 'Perjalanan Akademik', educationTitle: 'Pendidikan', education: [
-            ['2023 - Sekarang', 'Sedang ditempuh', 'Teknik Informatika', 'Universitas Bani Saleh', 'Sedang menempuh pendidikan Teknik Informatika dengan pembelajaran di bidang pengembangan perangkat lunak, jaringan komputer, basis data, dan sistem informasi.', 'assets/education/universitas-bani-saleh.png'],
-            ['2020 - 2023', 'Lulus', 'Teknik Komputer dan Jaringan', 'SMK Yadika 13', 'Menyelesaikan pendidikan kejuruan Teknik Komputer dan Jaringan dengan pembelajaran dasar perangkat keras, jaringan, sistem operasi, dan troubleshooting komputer.', 'assets/education/smk-yadika-13.png']
+        code: 'ID',
+        documentTitle: 'Difa Alfaruq | Web Developer & IT Support',
+        nav: [
+            ['home', 'Beranda'],
+            ['about', 'Tentang'],
+            ['projects', 'Proyek'],
+            ['experience', 'Pengalaman'],
+            ['contact', 'Kontak']
         ],
-        historyEyebrow: 'Riwayat', historyTitle: 'Pengalaman Kerja', jobs: [
-            ['Helper Produksi', 'PT Prakarsa Alam Segar | Okt 2025 - Jan 2026', ['Membantu proses produksi mie instan sesuai prosedur kerja.', 'Melakukan pemindahan dan penyusunan kardus ke pallet dengan rapi dan aman.', 'Membantu proses packing produk agar siap dikirim.', 'Menjaga kebersihan area kerja dan mematuhi aturan K3.', 'Bekerja sama dengan tim produksi dan gudang untuk mengejar target harian.']],
-            ['Crew Store Part Time', 'PT Sewu Segar Primatama (Re.juve) | Feb 2024 - Okt 2025', ['Melayani pembayaran customer melalui EDC, cash, dan e-wallet.', 'Melakukan opening dan closing penjualan produk baru serta program diskon.', 'Memastikan pekerjaan sesuai SOP toko dan membantu persiapan audit.', 'Membuat laporan penjualan harian, mingguan, dan bulanan.', 'Mencatat stok produk dan melaporkan kebutuhan restock.']]
+        menu: { open: 'Buka menu', close: 'Tutup menu' },
+        theme: { light: 'Aktifkan mode gelap', dark: 'Aktifkan mode terang' },
+        hero: {
+            tags: ['DIFA ✦', 'TEKNIK INFORMATIKA', 'WEB DEVELOPER', 'IT SUPPORT', 'IT INFRASTRUCTURE'],
+            available: 'Terbuka untuk bekerja',
+            based: 'Berbasis di Bekasi, ID',
+            today: 'Hari ini',
+            scroll: 'Gulir ke bawah',
+            physicsA11y: 'Elemen interaktif. Seret, lempar, dan benturkan satu sama lain. Gunakan tombol panah atau spasi jika memakai keyboard.',
+            physicsSymbolLabel: 'Objek bintang interaktif'
+        },
+        about: {
+            title: 'Tentang Saya',
+            greeting: 'Profil Singkat',
+            description: 'Mahasiswa Teknik Informatika (IPK 3,74/4,00) bersertifikasi CCNA dan BNSP, dengan pengalaman lebih dari dua tahun di produksi, pergudangan, ritel, dan administrasi. Terbiasa menangani dokumentasi operasional, inventaris, proses produksi, dan kerja tim.',
+            descriptionTwo: 'Memahami jaringan komputer, konfigurasi dan troubleshooting, perangkat keras, Windows/Linux, serta Microsoft Office. Adaptif, teliti, bertanggung jawab, dan berfokus pada karier di bidang IT Support, IT Infrastructure, serta Network Operations.',
+            resumeDownload: 'Unduh CV',
+            resumePreview: 'Lihat CV',
+            handle: '@difaalfaruqq',
+            online: 'Siap dihubungi',
+            hire: 'Hubungi Saya',
+            educationLabel: '2023 — Sekarang',
+            educationStatus: 'Sedang ditempuh',
+            campus: 'Universitas Bani Saleh',
+            degree: 'S1 Teknik Informatika',
+            gpaLabel: 'IPK',
+            gpaValue: '3,74',
+            gpaScale: '/ 4,00',
+            courseworkLabel: 'Fokus Pembelajaran:',
+            coursework: ['Pemrograman Web', 'Basis Data', 'Jaringan Komputer', 'Sistem Operasi', 'Rekayasa Perangkat Lunak'],
+            stackTitle: 'Tech Stack',
+            workflowTitle: 'Filosofi Kerja',
+            workflow: 'Saya tidak sekadar menyelesaikan tugas; saya memetakan masalah, merapikan alur, lalu memilih alat yang paling sesuai. Bagi saya, solusi yang baik harus mudah digunakan, mudah dipelihara, dan benar-benar membantu pekerjaan sehari-hari.',
+            workflowTags: ['Problem Mapping', 'Practical Solutions'],
+            focusTitle: 'Fokus Saya',
+            focus: 'Menggabungkan kemampuan teknis dan pengalaman operasional untuk membangun solusi web yang praktis sekaligus memberi dukungan IT yang responsif.',
+            focusTags: ['Web Development', 'IT Operations']
+        },
+        stackGroups: [
+            { title: 'Core Languages', icon: 'code', items: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'] },
+            { title: 'Frameworks & UI', icon: 'layout', items: ['React', 'Responsive Web Design'] },
+            { title: 'Tools & Ecosystem', icon: 'tool', items: ['Git', 'GitHub', 'VS Code', 'Canva', 'Microsoft 365'] },
+            { title: 'IT Infrastructure & Support', icon: 'network', items: ['Cisco IOS', 'MikroTik RouterOS', 'TCP/IP', 'LAN/WLAN', 'Cisco Packet Tracer', 'Windows', 'Linux', 'Hardware Troubleshooting'] }
         ],
-        projectEyebrow: 'Kontribusi', projectTitle: 'Proyek dan Tanggung Jawab', projects: [
-            ['Administrasi', 'Laporan Penjualan Harian', 'Mencatat transaksi harian, memisahkan metode pembayaran, dan membantu rekap penjualan toko.'],
-            ['Operasional', 'Kontrol Stok Produk', 'Membantu pencatatan stok, kebutuhan restock, dan ketersediaan produk agar operasional tetap lancar.'],
-            ['Produksi', 'Dukungan Produksi', 'Membantu proses pengemasan dan penyusunan barang sesuai kebutuhan tim produksi dan gudang.']
+        projects: {
+            headingTop: 'Selected',
+            headingBottom: 'Works',
+            intro: 'Satu karya pilihan yang menunjukkan proses saya menyusun identitas, konten, interaksi, dan pengalaman pengguna dalam satu website.',
+            category: 'Personal Web Portfolio',
+            title: 'Portofolio Difa',
+            description: 'Website portofolio satu halaman yang menampilkan profil, kemampuan web dan IT, karya pilihan, serta pengalaman kerja dalam tampilan monokrom yang responsif dan interaktif.',
+            metrics: [
+                ['02', 'Bahasa'],
+                ['100%', 'Responsif'],
+                ['01', 'Selected Work']
+            ],
+            tags: ['React 18', 'JSX', 'CSS3', 'Responsive UI', 'Client-side State'],
+            caseStudy: 'Baca Studi Kasus',
+            visit: 'Lihat Website',
+            view: 'Lihat Studi Kasus',
+            modalEyebrow: 'Studi Kasus / 01',
+            modalIntro: 'Rombakan menyeluruh untuk mengubah portofolio lama menjadi pengalaman yang lebih fokus, modern, dan mudah dipindai oleh recruiter.',
+            modalSections: [
+                ['Tujuan', 'Menyatukan profil, kapabilitas web, IT infrastructure, IT support, dan pengalaman kerja ke dalam satu alur cerita yang jelas.'],
+                ['Peran', 'Content structure, UI design, front-end implementation, responsive behavior, serta pengujian interaksi.'],
+                ['Fitur Utama', 'Mode terang/gelap, dua bahasa, navigasi aktif, kartu interaktif, timeline pengalaman, studi kasus, dan formulir kontak berbasis email.']
+            ]
+        },
+        experience: {
+            title: 'Pengalaman Kerja',
+            intro: 'Perjalanan profesional yang membentuk ketelitian, disiplin operasional, komunikasi, dan kemampuan menyelesaikan masalah.',
+            archive: 'Arsip Pengalaman',
+            open: 'Buka detail',
+            responsibilities: 'Tanggung Jawab Utama'
+        },
+        jobs: [
+            {
+                year: '2025',
+                category: 'Pengalaman Kerja',
+                title: 'Helper Produksi',
+                company: 'PT Prakarsa Alam Segar',
+                period: 'Okt 2025 — Jan 2026',
+                description: 'Mendukung proses produksi, pengemasan, pemindahan, dan penyusunan barang dengan tetap mengikuti SOP, target kerja, dan aturan keselamatan.',
+                tags: ['SOP', 'K3', 'Packing', 'Teamwork'],
+                image: 'assets/uploads/20260720-082534-05e6dc0432b5.webp',
+                duties: [
+                    'Membantu proses produksi mie instan sesuai prosedur kerja.',
+                    'Memindahkan dan menyusun kardus ke pallet dengan rapi dan aman.',
+                    'Membantu proses packing produk agar siap dikirim.',
+                    'Menjaga kebersihan area kerja dan mematuhi aturan K3.',
+                    'Berkoordinasi dengan tim produksi dan gudang untuk mencapai target harian.'
+                ]
+            },
+            {
+                year: '2024',
+                category: 'Pengalaman Kerja',
+                title: 'Crew Store Part Time',
+                company: 'PT Sewu Segar Primatama (Re.juve)',
+                period: 'Feb 2024 — Okt 2025',
+                description: 'Menangani pelayanan pelanggan, transaksi pembayaran, laporan penjualan, pencatatan stok, dan kebutuhan operasional toko.',
+                tags: ['Customer Service', 'POS & EDC', 'Stock Control', 'Reporting'],
+                image: 'assets/uploads/20260720-082539-9be8e6f22c3d.png',
+                duties: [
+                    'Melayani pembayaran pelanggan melalui EDC, tunai, dan e-wallet.',
+                    'Menangani opening dan closing serta program promosi toko.',
+                    'Memastikan pekerjaan sesuai SOP dan membantu persiapan audit.',
+                    'Membuat laporan penjualan harian, mingguan, dan bulanan.',
+                    'Mencatat stok produk dan melaporkan kebutuhan restock.'
+                ]
+            },
+            {
+                year: '2022',
+                category: 'Magang',
+                title: 'Asisten Admin Produksi',
+                company: 'Sumitomo Electric Wintec I.',
+                period: 'Jun 2022 — Sep 2022',
+                description: 'Mendukung administrasi produksi melalui pengelolaan, pemindaian, koordinasi, dan pengarsipan dokumen operasional pabrik.',
+                tags: ['Production Admin', 'Document Control', 'Scanning', 'K3'],
+                image: 'assets/experience/sumitomo-electric.jpg',
+                duties: [
+                    'Mengelola dokumen hasil produksi untuk mendukung administrasi pabrik.',
+                    'Memindai dan membuat salinan lebih dari 200 data dokumen per hari.',
+                    'Berkoordinasi dengan tim produksi agar dokumen sesuai standar perusahaan.',
+                    'Menyusun dan memelihara arsip agar mudah ditemukan saat dibutuhkan.',
+                    'Menerapkan standar keselamatan kerja selama berada di lingkungan pabrik.'
+                ]
+            }
         ],
-        certificationEyebrow: 'Kredensial', certificationTitle: 'Sertifikasi', certificationEmpty: 'Sertifikasi akan ditambahkan di bagian ini.',
-        skillEyebrow: 'Kemampuan', skillTitle: 'Keterampilan', skills: ['Microsoft Excel', 'Microsoft Word', 'Microsoft PowerPoint', 'Desain Grafis Canva', 'Bahasa Inggris Dasar', 'Pemecahan Masalah', 'Teknik Komputer & Jaringan', 'Komunikasi Customer', 'Manajemen Stok'],
-        contactEyebrow: 'Kontak', contactTitle: 'Mari Terhubung', contactText: 'Saya terbuka untuk kesempatan kerja dan siap dihubungi untuk proses rekrutmen, interview, atau diskusi kebutuhan posisi.', contactLabels: ['Telepon', 'Email', 'Alamat'],
-        preferences: 'Preferensi tampilan', chooseLanguage: 'Pilih bahasa', themes: ['Mode terang', 'Mode gelap', 'Ikuti sistem'], menuOpen: 'Buka menu navigasi', menuClose: 'Tutup menu navigasi', backTop: 'Kembali ke atas', rights: 'Hak cipta dilindungi.'
+        contact: {
+            titleTop: 'Mari Mulai',
+            titleBottom: 'Percakapan',
+            intro: 'Saya terbuka untuk peluang kerja, kolaborasi proyek, dan diskusi seputar web development maupun IT support.',
+            direct: 'Email Langsung',
+            copied: 'Email disalin',
+            social: 'Terhubung di Sosial Media',
+            fields: { name: 'Nama Anda', email: 'Email Anda', subject: 'Subjek', message: 'Pesan' },
+            placeholders: { name: 'Nama lengkap', email: 'nama@email.com', message: 'Ceritakan peluang atau kebutuhan Anda...' },
+            subjects: ['Peluang Kerja', 'Kolaborasi Proyek', 'IT Support', 'Pertanyaan Umum'],
+            send: 'Kirim Pesan',
+            sending: 'Membuka aplikasi email...',
+            rights: 'Hak cipta dilindungi.',
+            remote: 'Tersedia untuk kerja onsite & remote'
+        },
+        modal: { close: 'Tutup dialog' },
+        backTop: 'Kembali ke atas'
     },
     en: {
-        code: 'EN', language: 'English', portfolio: 'Personal Portfolio',
-        nav: ['Home', 'About', 'Education', 'Experience', 'Certifications', 'Skills', 'Rating', 'Contact'],
-        heroDesc: 'A Computer and Network Engineering graduate with experience in production, warehousing, stock administration, and store operations. Accustomed to following SOPs, working carefully, and learning quickly.',
-        contactMe: 'Contact Me', seeWork: 'View Contributions', downloadCv: 'Download CV', previewCv: 'Preview CV', cvTitle: 'Curriculum Vitae Preview', closeCv: 'Close CV preview', stats: ['Work experience', 'Core skills', 'Ready to contribute'], statValues: ['2+', '7+', '100%'],
-        available: 'Available for work', profileNote: 'Operations, production, administration, and entry-level IT support.', ready: 'Open to work',
-        aboutEyebrow: 'Profile', aboutTitle: 'About Me', aboutText: 'I am a Computer and Network Engineering graduate with experience in production, warehousing, and store operations. I worked as a Production Helper at PT Prakarsa Alam Segar and as a Part-Time Store Crew member at PT Sewu Segar Primatama (Re.juve). I am accustomed to targets, accurate record-keeping, following SOPs, and working independently or in a team.',
-        infoLabels: ['Location'], infoValues: ['Bekasi'], focusTitle: 'Core Focus & Supporting Skills', focusItems: ['Web Development', 'Programming', 'Computer Networking', 'IT Support & Administration'],
-        educationEyebrow: 'Academic Journey', educationTitle: 'Education', education: [
-            ['2023 - Present', 'In progress', 'Informatics Engineering', 'Universitas Bani Saleh', 'Currently studying Informatics Engineering with coursework in software development, computer networks, databases, and information systems.', 'assets/education/universitas-bani-saleh.png'],
-            ['2020 - 2023', 'Graduated', 'Computer and Network Engineering', 'SMK Yadika 13', 'Completed vocational education in Computer and Network Engineering, covering computer hardware, networking, operating systems, and computer troubleshooting.', 'assets/education/smk-yadika-13.png']
+        code: 'EN',
+        documentTitle: 'Difa Alfaruq | Web Developer & IT Support',
+        nav: [
+            ['home', 'Home'],
+            ['about', 'About'],
+            ['projects', 'Projects'],
+            ['experience', 'Experience'],
+            ['contact', 'Contact']
         ],
-        historyEyebrow: 'History', historyTitle: 'Work Experience', jobs: [
-            ['Production Helper', 'PT Prakarsa Alam Segar | Oct 2025 - Jan 2026', ['Supported instant noodle production according to work procedures.', 'Moved and arranged boxes neatly and safely on pallets.', 'Helped pack products for shipment.', 'Maintained workspace cleanliness and followed safety rules.', 'Worked with production and warehouse teams to meet daily targets.']],
-            ['Part-Time Store Crew', 'PT Sewu Segar Primatama (Re.juve) | Feb 2024 - Oct 2025', ['Handled customer payments via EDC, cash, and e-wallet.', 'Managed opening and closing sales for new products and promotions.', 'Ensured compliance with store SOPs and supported audit preparation.', 'Prepared daily, weekly, and monthly sales reports.', 'Recorded product stock and reported restocking needs.']]
+        menu: { open: 'Open menu', close: 'Close menu' },
+        theme: { light: 'Enable dark mode', dark: 'Enable light mode' },
+        hero: {
+            tags: ['DIFA ✦', 'INFORMATICS', 'WEB DEVELOPER', 'IT SUPPORT', 'IT INFRASTRUCTURE'],
+            available: 'Open to work',
+            based: 'Based in Bekasi, ID',
+            today: 'Today',
+            scroll: 'Scroll down',
+            physicsA11y: 'Interactive elements. Drag, throw, and collide them with each other. Use the arrow keys or space when using a keyboard.',
+            physicsSymbolLabel: 'Interactive star object'
+        },
+        about: {
+            title: 'About Me',
+            greeting: 'Professional Profile',
+            description: 'An Informatics Engineering student (GPA 3.74/4.00) with CCNA and BNSP certifications and more than two years of experience across production, warehousing, retail, and administration. Experienced in operational documentation, inventory reporting, production processes, and teamwork.',
+            descriptionTwo: 'Skilled in computer networking, configuration and troubleshooting, hardware, Windows/Linux, and Microsoft Office. Adaptable, detail-oriented, responsible, and focused on IT Support, IT Infrastructure, and Network Operations.',
+            resumeDownload: 'Download CV',
+            resumePreview: 'View CV',
+            handle: '@difaalfaruqq',
+            online: 'Available',
+            hire: 'Contact Me',
+            educationLabel: '2023 — Present',
+            educationStatus: 'In progress',
+            campus: 'Universitas Bani Saleh',
+            degree: 'B.Sc. Informatics Engineering',
+            gpaLabel: 'GPA',
+            gpaValue: '3.74',
+            gpaScale: '/ 4.00',
+            courseworkLabel: 'Learning Focus:',
+            coursework: ['Web Programming', 'Databases', 'Computer Networks', 'Operating Systems', 'Software Engineering'],
+            stackTitle: 'Tech Stack',
+            workflowTitle: 'Workflow Philosophy',
+            workflow: 'I do more than finish a task: I map the problem, simplify the workflow, and choose tools that fit. A good solution should be easy to use, easy to maintain, and genuinely helpful in daily work.',
+            workflowTags: ['Problem Mapping', 'Practical Solutions'],
+            focusTitle: 'My Focus',
+            focus: 'Combining technical ability and operational experience to build practical web solutions while providing responsive IT support.',
+            focusTags: ['Web Development', 'IT Operations']
+        },
+        stackGroups: [
+            { title: 'Core Languages', icon: 'code', items: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'] },
+            { title: 'Frameworks & UI', icon: 'layout', items: ['React', 'Responsive Web Design'] },
+            { title: 'Tools & Ecosystem', icon: 'tool', items: ['Git', 'GitHub', 'VS Code', 'Canva', 'Microsoft 365'] },
+            { title: 'IT Infrastructure & Support', icon: 'network', items: ['Cisco IOS', 'MikroTik RouterOS', 'TCP/IP', 'LAN/WLAN', 'Cisco Packet Tracer', 'Windows', 'Linux', 'Hardware Troubleshooting'] }
         ],
-        projectEyebrow: 'Contributions', projectTitle: 'Projects and Responsibilities', projects: [
-            ['Administration', 'Daily Sales Reports', 'Recorded daily transactions, separated payment methods, and supported store sales recaps.'],
-            ['Operations', 'Product Stock Control', 'Helped track inventory, restocking needs, and product availability to keep operations running smoothly.'],
-            ['Production', 'Production Support', 'Supported packaging and product arrangement based on production and warehouse team needs.']
+        projects: {
+            headingTop: 'Selected',
+            headingBottom: 'Works',
+            intro: 'One selected project showing how I shape identity, content, interaction, and user experience into a focused website.',
+            category: 'Personal Web Portfolio',
+            title: 'Difa Portfolio',
+            description: 'A one-page portfolio presenting my profile, web and IT capabilities, selected work, and professional experience through a responsive, interactive monochrome interface.',
+            metrics: [
+                ['02', 'Languages'],
+                ['100%', 'Responsive'],
+                ['01', 'Selected Work']
+            ],
+            tags: ['React 18', 'JSX', 'CSS3', 'Responsive UI', 'Client-side State'],
+            caseStudy: 'Read Case Study',
+            visit: 'View Website',
+            view: 'View Case Study',
+            modalEyebrow: 'Case Study / 01',
+            modalIntro: 'A complete redesign that turns the previous portfolio into a focused, modern experience that recruiters can scan quickly.',
+            modalSections: [
+                ['Objective', 'Bring my profile, web skills, IT infrastructure, IT support, and work history into one clear narrative.'],
+                ['Role', 'Content structure, UI design, front-end implementation, responsive behavior, and interaction testing.'],
+                ['Key Features', 'Light/dark themes, two languages, active navigation, interactive cards, an experience timeline, a case study, and an email-based contact form.']
+            ]
+        },
+        experience: {
+            title: 'Work Experience',
+            intro: 'A professional journey that developed accuracy, operational discipline, communication, and practical problem-solving.',
+            archive: 'Experience Archive',
+            open: 'Open details',
+            responsibilities: 'Key Responsibilities'
+        },
+        jobs: [
+            {
+                year: '2025',
+                category: 'Work Experience',
+                title: 'Production Helper',
+                company: 'PT Prakarsa Alam Segar',
+                period: 'Oct 2025 — Jan 2026',
+                description: 'Supported production, packaging, movement, and arrangement of goods while following SOPs, work targets, and safety requirements.',
+                tags: ['SOP', 'Safety', 'Packing', 'Teamwork'],
+                image: 'assets/uploads/20260720-082534-05e6dc0432b5.webp',
+                duties: [
+                    'Supported instant noodle production according to work procedures.',
+                    'Moved and arranged cartons neatly and safely on pallets.',
+                    'Helped pack products so they were ready for shipment.',
+                    'Maintained workspace cleanliness and followed safety rules.',
+                    'Coordinated with production and warehouse teams to meet daily targets.'
+                ]
+            },
+            {
+                year: '2024',
+                category: 'Work Experience',
+                title: 'Part-Time Store Crew',
+                company: 'PT Sewu Segar Primatama (Re.juve)',
+                period: 'Feb 2024 — Oct 2025',
+                description: 'Handled customer service, payment transactions, sales reports, stock records, and day-to-day store operations.',
+                tags: ['Customer Service', 'POS & EDC', 'Stock Control', 'Reporting'],
+                image: 'assets/uploads/20260720-082539-9be8e6f22c3d.png',
+                duties: [
+                    'Handled customer payments via EDC, cash, and e-wallet.',
+                    'Managed store opening, closing, and promotional programs.',
+                    'Ensured SOP compliance and supported audit preparation.',
+                    'Prepared daily, weekly, and monthly sales reports.',
+                    'Recorded stock and reported restocking requirements.'
+                ]
+            },
+            {
+                year: '2022',
+                category: 'Internship',
+                title: 'Production Admin Assistant',
+                company: 'Sumitomo Electric Wintec I.',
+                period: 'Jun 2022 — Sep 2022',
+                description: 'Supported production administration through document management, scanning, coordination, and factory operational filing.',
+                tags: ['Production Admin', 'Document Control', 'Scanning', 'Safety'],
+                image: 'assets/experience/sumitomo-electric.jpg',
+                duties: [
+                    'Managed production documents to support factory administration.',
+                    'Scanned and copied more than 200 document records per day.',
+                    'Coordinated with production teams to meet company document standards.',
+                    'Organized and maintained archives for fast retrieval.',
+                    'Followed occupational safety standards in the factory environment.'
+                ]
+            }
         ],
-        certificationEyebrow: 'Credentials', certificationTitle: 'Certifications', certificationEmpty: 'Certifications will be added here.',
-        skillEyebrow: 'Capabilities', skillTitle: 'Skills', skills: ['Microsoft Excel', 'Microsoft Word', 'Microsoft PowerPoint', 'Canva Graphic Design', 'Basic English', 'Problem Solving', 'Computer & Network Engineering', 'Customer Communication', 'Stock Management'],
-        contactEyebrow: 'Contact', contactTitle: "Let's Connect", contactText: 'I am open to job opportunities and available for recruitment, interviews, or discussions about position requirements.', contactLabels: ['Phone', 'Email', 'Address'],
-        preferences: 'Display preferences', chooseLanguage: 'Choose language', themes: ['Light mode', 'Dark mode', 'Use system setting'], menuOpen: 'Open navigation menu', menuClose: 'Close navigation menu', backTop: 'Back to top', rights: 'All Rights Reserved.'
-    },
-    ja: {
-        code: 'JP', language: '日本語', portfolio: '個人ポートフォリオ',
-        nav: ['ホーム', '自己紹介', '学歴', '職歴', '資格', 'スキル', '評価', '連絡先'],
-        heroDesc: 'コンピュータ・ネットワーク工学を専攻し、生産、倉庫、在庫管理、店舗運営の経験があります。SOPを遵守し、丁寧に仕事を進め、新しいことを素早く学べます。',
-        contactMe: 'お問い合わせ', seeWork: '実績を見る', stats: ['実務経験', '主要スキル', '貢献への意欲'], statValues: ['2+', '7+', '100%'],
-        available: '就業可能', profileNote: '店舗運営、生産、事務、初級ITサポートに対応できます。', ready: 'Open to work',
-        aboutEyebrow: 'プロフィール', aboutTitle: '自己紹介', aboutText: 'コンピュータ・ネットワーク工学の卒業生で、生産、倉庫、店舗運営の経験があります。PT Prakarsa Alam Segarで生産補助、PT Sewu Segar Primatama（Re.juve）でパートタイム店舗スタッフとして勤務しました。目標を意識し、正確な記録、SOPの遵守、個人・チームの両方での業務に慣れています。',
-        infoLabels: ['居住地', '学歴', '関心分野'], infoValues: ['ブカシ', 'コンピュータ・ネットワーク工学', '運営、事務、ITサポート'],
-        educationEyebrow: '学びの歩み', educationTitle: '学歴', education: [
-            ['2023年 - 現在', '在学中', '情報工学', 'Universitas Bani Saleh', 'ソフトウェア開発、コンピュータネットワーク、データベース、情報システムを中心に情報工学を学んでいます。', 'assets/education/universitas-bani-saleh.png'],
-            ['2020年 - 2023年', '卒業', 'コンピュータ・ネットワーク工学', 'SMK Yadika 13', 'コンピュータのハードウェア、ネットワーク、オペレーティングシステム、トラブルシューティングを学びました。', 'assets/education/smk-yadika-13.png']
-        ],
-        historyEyebrow: '経歴', historyTitle: '職歴', jobs: [
-            ['生産補助', 'PT Prakarsa Alam Segar | 2025年10月 - 2026年1月', ['手順に従って即席麺の生産を補助。', '段ボールを安全かつ整然とパレットへ移動・配置。', '出荷に向けた製品梱包を補助。', '作業場の清掃と安全規則を遵守。', '日々の目標達成に向け生産・倉庫チームと連携。']],
-            ['パートタイム店舗スタッフ', 'PT Sewu Segar Primatama (Re.juve) | 2024年2月 - 2025年10月', ['EDC、現金、電子ウォレットでの決済対応。', '新商品や割引施策の販売開始・締め作業。', '店舗SOPの遵守と監査準備を支援。', '日次・週次・月次の売上レポートを作成。', '商品在庫を記録し補充の必要性を報告。']]
-        ],
-        projectEyebrow: '実績', projectTitle: 'プロジェクトと担当業務', projects: [
-            ['事務', '日次売上レポート', '日々の取引を記録し、決済方法を分類して売上集計を支援。'],
-            ['運営', '商品在庫管理', '在庫、補充の必要性、商品状況を記録し円滑な運営を支援。'],
-            ['生産', '生産サポート', '生産・倉庫チームの要望に応じて梱包と商品の整理を支援。']
-        ],
-        certificationEyebrow: '資格情報', certificationTitle: '資格・認定', certificationEmpty: '資格・認定はここに追加されます。',
-        skillEyebrow: '能力', skillTitle: 'スキル', skills: ['Microsoft Excel', 'Microsoft Word', 'Microsoft PowerPoint', 'Canvaグラフィックデザイン', '基礎英語', '問題解決', 'コンピュータ・ネットワーク工学', '顧客対応', '在庫管理'],
-        contactEyebrow: '連絡先', contactTitle: 'お気軽にご連絡ください', contactText: '求人の機会を歓迎しており、採用選考、面接、ポジション要件についてのご相談に対応できます。', contactLabels: ['電話', 'メール', '住所'],
-        preferences: '表示設定', chooseLanguage: '言語を選択', themes: ['ライトモード', 'ダークモード', 'システム設定を使用'], menuOpen: 'ナビゲーションを開く', menuClose: 'ナビゲーションを閉じる', backTop: 'ページ上部へ', rights: '無断転載を禁じます。'
+        contact: {
+            titleTop: "Let's Start",
+            titleBottom: 'A Conversation',
+            intro: 'I am open to job opportunities, project collaborations, and conversations about web development or IT support.',
+            direct: 'Direct Email',
+            copied: 'Email copied',
+            social: 'Social Presence',
+            fields: { name: 'Your Name', email: 'Your Email', subject: 'Subject', message: 'Message' },
+            placeholders: { name: 'Full name', email: 'name@email.com', message: 'Tell me about the opportunity or your needs...' },
+            subjects: ['Job Opportunity', 'Project Collaboration', 'IT Support', 'General Inquiry'],
+            send: 'Send Message',
+            sending: 'Opening your email app...',
+            rights: 'All Rights Reserved.',
+            remote: 'Available for onsite & remote work'
+        },
+        modal: { close: 'Close dialog' },
+        backTop: 'Back to top'
     }
 };
 
-function InterfaceIcon({ name }) {
+function Icon({ name, size = 20, className = '' }) {
     const paths = {
-        language: <><path d="M4 5h7"/><path d="M7.5 3v2c0 4-2 7-5 8"/><path d="M5 8c1 2 3 4 6 5"/><path d="m13 19 3.5-8 3.5 8"/><path d="M14.5 16h4"/></>,
         sun: <><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"/></>,
-        moon: <path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>,
-        system: <><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></>,
-        chevron: <path d="m8 10 4 4 4-4"/>,
-        linkedin: <><path d="M6.5 8.5V18"/><path d="M6.5 5.5h.01"/><path d="M11 18v-5.3a3.2 3.2 0 0 1 6.4 0V18"/><path d="M11 8.5V18"/></>,
+        moon: <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/>,
+        menu: <><path d="M4 6h16M4 12h16M4 18h16"/></>,
+        close: <><path d="m6 6 12 12M18 6 6 18"/></>,
+        down: <><path d="M12 5v14M5 12l7 7 7-7"/></>,
+        up: <><path d="M12 19V5M5 12l7-7 7 7"/></>,
+        arrow: <><path d="M7 17 17 7M7 7h10v10"/></>,
+        asterisk: <><path d="M12 5v14M18 8.5 6 15.5M6 8.5l12 7"/></>,
+        code: <><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></>,
+        terminal: <><rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/></>,
+        eye: <><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></>,
+        layout: <><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></>,
+        tool: <><path d="M14.7 6.3a4 4 0 0 0-5-5L7.2 3.8l3 3 2.5-2.5a4 4 0 0 0 2 5L6 18l-3 3 3-1 8.7-8.7a4 4 0 0 0 0-5Z"/></>,
+        network: <><rect x="3" y="3" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><path d="M6 8v4h12v4M6 12v4"/></>,
+        support: <><circle cx="12" cy="12" r="9"/><path d="M8.5 10a3.5 3.5 0 0 1 7 0c0 2.5-3.5 2.2-3.5 5M12 18h.01"/></>,
+        download: <><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></>,
+        mail: <><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></>,
+        copy: <><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></>,
+        linkedin: <><path d="M6 9v9M6 6h.01M10 18v-5a4 4 0 0 1 8 0v5M10 9v9"/></>,
         instagram: <><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></>,
-        tiktok: <><path d="M14 4v9.2a4 4 0 1 1-3.4-4"/><path d="M14 4c.7 2.1 2.2 3.5 4.5 3.8"/></>,
-        whatsapp: <><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.2 7.7c.3-.3.6-.2.8.1l1 2c.1.3 0 .5-.2.8l-.7.8c.7 1.4 1.8 2.5 3.3 3.2l.8-.8c.2-.2.5-.3.8-.1l1.9.9c.3.2.4.5.2.8-.4.8-1.2 1.4-2.2 1.4-3.5-.1-6.7-3.2-6.8-6.8 0-1 .4-1.8 1.1-2.3Z"/></>,
-        certificate: <><path d="M7 3h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M9 7h6M9 11h4"/><path d="m10 16-1 5 3-2 3 2-1-5"/></>
+        whatsapp: <><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5Z"/><path d="M8.5 8.2c1.1 3.7 3.4 6 7 7"/></>,
+        send: <><path d="m3 3 18 9-18 9 4-9-4-9Z"/><path d="M7 12h14"/></>,
+        file: <><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></>,
+        pin: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
+        briefcase: <><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/></>
     };
-    return <svg className="interface-icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
-}
-
-function InteractiveNameTitle({ firstName, remainingName }) {
-    const canvasRef = useRef(null);
-    const stageRef = useRef(null);
-    const pointerLabelRef = useRef(null);
-    const pointerRef = useRef({ x: -9999, y: -9999, targetX: -9999, targetY: -9999, active: false });
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const stage = stageRef.current;
-        if (!canvas || !stage) return undefined;
-
-        const context = canvas.getContext('2d');
-        const mask = document.createElement('canvas');
-        const maskContext = mask.getContext('2d', { willReadFrequently: true });
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let particles = [];
-        let frame = 0;
-        let width = 0;
-        let height = 0;
-        let dpr = 1;
-
-        const buildParticles = () => {
-            const bounds = stage.getBoundingClientRect();
-            width = Math.max(280, Math.round(bounds.width));
-            height = Math.round(Math.max(230, Math.min(470, width * 0.38)));
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
-            canvas.width = Math.round(width * dpr);
-            canvas.height = Math.round(height * dpr);
-            canvas.style.height = `${height}px`;
-            context.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            mask.width = width;
-            mask.height = height;
-            maskContext.clearRect(0, 0, width, height);
-            maskContext.fillStyle = '#000';
-            maskContext.textAlign = 'center';
-            maskContext.textBaseline = 'middle';
-            const compact = width < 620;
-            const sharedNameSize = Math.min(width * (compact ? 0.19 : 0.145), compact ? 86 : 176);
-            maskContext.font = `800 ${sharedNameSize}px "Bricolage Grotesque", sans-serif`;
-            maskContext.fillText(String(firstName || '').toUpperCase(), width / 2, height * 0.35);
-            maskContext.font = `800 ${sharedNameSize}px "Bricolage Grotesque", sans-serif`;
-            maskContext.fillText(String(remainingName || '').toUpperCase(), width / 2, height * 0.67);
-
-            const pixels = maskContext.getImageData(0, 0, width, height).data;
-            const step = compact ? 4 : 5;
-            const next = [];
-            for (let y = step; y < height; y += step) {
-                for (let x = step; x < width; x += step) {
-                    if (pixels[(y * width + x) * 4 + 3] > 80) {
-                        const warm = ((Math.floor(x / step) + Math.floor(y / step)) % 3) !== 0;
-                        next.push({ x, y, tx: x, ty: y, vx: 0, vy: 0, color: warm ? '#f05222' : '#163143' });
-                    }
-                }
-            }
-            particles = next;
-        };
-
-        const render = () => {
-            context.clearRect(0, 0, width, height);
-            const pointer = pointerRef.current;
-            const radius = width < 620 ? 64 : 96;
-            if (pointer.active && !reduceMotion) {
-                pointer.x += (pointer.targetX - pointer.x) * 0.075;
-                pointer.y += (pointer.targetY - pointer.y) * 0.075;
-                if (pointerLabelRef.current) {
-                    pointerLabelRef.current.style.left = `${pointer.x}px`;
-                    pointerLabelRef.current.style.top = `${pointer.y}px`;
-                }
-            }
-            particles.forEach((particle) => {
-                const dx = particle.x - pointer.x;
-                const dy = particle.y - pointer.y;
-                const distance = Math.hypot(dx, dy) || 1;
-                if (pointer.active && distance < radius && !reduceMotion) {
-                    const force = (1 - distance / radius) * 1.75;
-                    particle.vx += (dx / distance) * force;
-                    particle.vy += (dy / distance) * force;
-                }
-                particle.vx += (particle.tx - particle.x) * 0.045;
-                particle.vy += (particle.ty - particle.y) * 0.045;
-                particle.vx *= 0.88;
-                particle.vy *= 0.88;
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-                context.fillStyle = particle.color;
-                context.fillRect(particle.x, particle.y, width < 620 ? 2.8 : 3.4, width < 620 ? 2.8 : 3.4);
-            });
-
-            if (pointer.active) {
-                context.beginPath();
-                context.arc(pointer.x, pointer.y, radius * 0.48, 0, Math.PI * 2);
-                context.strokeStyle = 'rgba(20, 49, 67, 0.36)';
-                context.lineWidth = 1;
-                context.setLineDash([4, 5]);
-                context.stroke();
-                context.setLineDash([]);
-            }
-            frame = requestAnimationFrame(render);
-        };
-
-        const handlePointer = (event) => {
-            const bounds = canvas.getBoundingClientRect();
-            const x = event.clientX - bounds.left;
-            const y = event.clientY - bounds.top;
-            const pointer = pointerRef.current;
-            if (!pointer.active) {
-                pointer.x = x;
-                pointer.y = y;
-            }
-            pointer.targetX = x;
-            pointer.targetY = y;
-            pointer.active = true;
-            pointerLabelRef.current?.classList.add('is-visible');
-        };
-
-        const handleLeave = () => {
-            pointerRef.current.active = false;
-            pointerLabelRef.current?.classList.remove('is-visible');
-        };
-
-        buildParticles();
-        document.fonts?.ready.then(buildParticles);
-        frame = requestAnimationFrame(render);
-        canvas.addEventListener('pointermove', handlePointer);
-        canvas.addEventListener('pointerleave', handleLeave);
-        window.addEventListener('resize', buildParticles);
-
-        return () => {
-            cancelAnimationFrame(frame);
-            canvas.removeEventListener('pointermove', handlePointer);
-            canvas.removeEventListener('pointerleave', handleLeave);
-            window.removeEventListener('resize', buildParticles);
-        };
-    }, [firstName, remainingName]);
 
     return (
-        <div className="interactive-name-stage" ref={stageRef}>
-            <h1 className="sr-only">{firstName} {remainingName}</h1>
-            <canvas ref={canvasRef} aria-hidden="true"></canvas>
-            <span
-                className="interactive-pointer-label"
-                ref={pointerLabelRef}
-                aria-hidden="true"
-            >You</span>
-        </div>
+        <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            {paths[name] || paths.asterisk}
+        </svg>
     );
 }
 
-function App() {
-    const [loaderState, setLoaderState] = useState('loading');
-    const [portfolioContent, setPortfolioContent] = useState(null);
-    const [language, setLanguage] = useState(() => {
-        const savedLanguage = localStorage.getItem('portfolio-language');
-        return translations[savedLanguage] ? savedLanguage : 'id';
-    });
-
-    useEffect(() => {
-        let active = true;
-        const contentRequest = window.portfolioSupabase?.configured
-            ? window.portfolioSupabase.getContent()
-            : fetch('api/content.php', { headers: { Accept: 'application/json' } }).then((response) => response.json());
-        contentRequest
-            .then((result) => {
-                if (active && result.success && result.data) setPortfolioContent(result.data);
-            })
-            .catch(() => {
-                // Konten statis tetap digunakan ketika database belum disiapkan.
-            });
-        return () => { active = false; };
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('portfolio-language', language);
-        document.documentElement.lang = language === 'ja' ? 'ja' : language;
-        document.title = `${translations[language].portfolio} - Difa Alfaruq`;
-    }, [language]);
-
-    useEffect(() => {
-        localStorage.removeItem('portfolio-theme');
-        document.documentElement.dataset.theme = 'light';
-        document.documentElement.style.colorScheme = 'light';
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#cfe5f2');
-    }, []);
-
-    useEffect(() => {
-        document.body.classList.add('portfolio-loading');
-        const exitTimer = window.setTimeout(() => setLoaderState('exiting'), 2800);
-        const finishTimer = window.setTimeout(() => {
-            setLoaderState('complete');
-            document.body.classList.remove('portfolio-loading');
-        }, 3650);
-
-        return () => {
-            window.clearTimeout(exitTimer);
-            window.clearTimeout(finishTimer);
-            document.body.classList.remove('portfolio-loading');
-        };
-    }, []);
-
+function Header({ copy, language, setLanguage, theme, setTheme, activeSection, menuOpen, setMenuOpen }) {
     return (
-        <div className="app-container" data-theme="light">
-            <AmbientBackground />
-            <MainPortfolio
-                language={language}
-                onChangeLanguage={setLanguage}
-                portfolioContent={portfolioContent}
-            />
-            {loaderState !== 'complete' && (
-                <AssetLoadingScreen language={language} isExiting={loaderState === 'exiting'} />
-            )}
-        </div>
-    );
-}
+        <header className="site-header">
+            <div className="nav-shell">
+                <a className="brand-mark" href="#home" aria-label="difaalfaruqq. — Beranda" onClick={() => setMenuOpen(false)}>
+                    <span>difaalfaruqq.</span>
+                </a>
 
-function AmbientBackground() {
-    return (
-        <div className="ambient-background" aria-hidden="true">
-            <div className="ambient-grid"></div>
-            <div className="cloudscape">
-                <img className="cloud cloud-one" src="assets/atmosphere/cloud-soft.png" alt="" />
-                <img className="cloud cloud-two" src="assets/atmosphere/cloud-soft.png" alt="" />
-                <img className="cloud cloud-three" src="assets/atmosphere/cloud-soft.png" alt="" />
-                <img className="cloud cloud-four" src="assets/atmosphere/cloud-soft.png" alt="" />
-                <img className="cloud cloud-five" src="assets/atmosphere/cloud-soft.png" alt="" />
-            </div>
-        </div>
-    );
-}
+                <nav className="desktop-nav" aria-label="Navigasi utama">
+                    {copy.nav.map(([id, label]) => (
+                        <a key={id} className={activeSection === id ? 'active' : ''} href={`#${id}`}>{label}</a>
+                    ))}
+                </nav>
 
-function WelcomeScreen({ language, onStart }) {
-    const copy = {
-        id: ['Selamat datang di', 'portofolio saya', 'Masuk Portofolio'],
-        en: ['Welcome to', 'my portfolio', 'Enter Portfolio'],
-        ja: ['ようこそ', '私のポートフォリオへ', 'ポートフォリオを見る']
-    }[language];
-    return (
-        <div className="screen welcome-screen fade-in">
-            <div className="welcome-content">
-                <h1 className="welcome-title">
-                    {copy[0]} <span>{copy[1]}</span>
-                </h1>
-                <button className="btn-explore pulse" onClick={onStart}>
-                    {copy[2]} <span aria-hidden="true">-&gt;</span>
-                </button>
-            </div>
-        </div>
-    );
-}
-
-function LoadingScreen({ language }) {
-    const loadingText = { id: 'Menyiapkan portofolio...', en: 'Preparing portfolio...', ja: 'ポートフォリオを準備しています...' }[language];
-    return (
-        <div className="screen loading-screen fade-in">
-            <div className="tech-loader" role="status" aria-label={loadingText}>
-                <div className="tech-orbit" aria-hidden="true">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div className="nav-actions">
+                    <button
+                        className="round-control"
+                        type="button"
+                        aria-label={copy.theme[theme]}
+                        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+                    >
+                        <Icon name={theme === 'light' ? 'moon' : 'sun'} size={18}/>
+                    </button>
+                    <button
+                        className={`language-switch is-${language}`}
+                        type="button"
+                        aria-label={language === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+                        onClick={() => setLanguage(language === 'id' ? 'en' : 'id')}
+                    >
+                        <span className="language-knob" aria-hidden="true"></span>
+                        <span className={language === 'id' ? 'selected' : ''}>ID</span>
+                        <span className={language === 'en' ? 'selected' : ''}>EN</span>
+                    </button>
+                    <button
+                        className="menu-control"
+                        type="button"
+                        aria-label={menuOpen ? copy.menu.close : copy.menu.open}
+                        aria-expanded={menuOpen}
+                        onClick={() => setMenuOpen(!menuOpen)}
+                    >
+                        <Icon name={menuOpen ? 'close' : 'menu'} size={26}/>
+                    </button>
                 </div>
-                <div className="tech-core" aria-hidden="true">
-                    <span>&lt;</span><strong>/</strong><span>&gt;</span>
-                </div>
-                <div className="tech-scan" aria-hidden="true"></div>
             </div>
-        </div>
-    );
-}
 
-function AssetLoadingScreen({ language, isExiting }) {
-    const [progress, setProgress] = useState(0);
-    const copy = {
-        id: { label: 'MEMUAT ASET', preparing: 'Menyiapkan antarmuka', ready: 'Sistem siap' },
-        en: { label: 'LOADING ASSETS', preparing: 'Preparing interface', ready: 'System ready' },
-        ja: { label: 'LOADING ASSETS', preparing: 'インターフェースを準備中', ready: 'システム準備完了' }
-    }[language];
-
-    useEffect(() => {
-        const startedAt = performance.now();
-        let frame;
-        const updateProgress = (time) => {
-            const nextProgress = Math.min(100, Math.floor(((time - startedAt) / 2550) * 100));
-            setProgress(nextProgress);
-            if (nextProgress < 100) frame = requestAnimationFrame(updateProgress);
-        };
-        frame = requestAnimationFrame(updateProgress);
-        return () => cancelAnimationFrame(frame);
-    }, []);
-
-    useEffect(() => {
-        if (isExiting) setProgress(100);
-    }, [isExiting]);
-
-    const currentTask = progress < 24
-        ? 'SYS_MEM_ALLOCATING'
-        : progress < 52
-            ? 'FETCHING_CONTENT_DATA'
-            : progress < 82
-                ? 'RENDERING_COMPONENTS'
-                : progress < 100 ? 'FINALIZING_INTERFACE' : 'BOOT_SEQUENCE_COMPLETE';
-
-    return (
-        <div className={`asset-loading-screen ${isExiting ? 'is-exiting' : ''}`}>
-            <div className="asset-loader-grid" aria-hidden="true"></div>
-            <section className="asset-loader-terminal" role="status" aria-live="polite" aria-label={`${copy.preparing} ${progress}%`}>
-                <div className="asset-loader-topline">
-                    <span>SYS.BOOT / PORTFOLIO</span>
-                    <span>BUILD_2026.07</span>
-                </div>
-                <div className="asset-loader-title"><span>&gt;</span> {copy.label}<i></i></div>
-                <div className="battery-loader" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
-                    <div className="battery-loader-fill" style={{ width: `${progress}%` }}>
-                        <span></span><span></span><span></span><span></span><span></span>
+            <div className={`mobile-menu ${menuOpen ? 'open' : ''}`} aria-hidden={!menuOpen}>
+                <div className="mobile-menu-inner">
+                    {copy.nav.map(([id, label], index) => (
+                        <a key={id} className={activeSection === id ? 'active' : ''} href={`#${id}`} onClick={() => setMenuOpen(false)}>
+                            <span>{String(index + 1).padStart(2, '0')}</span>
+                            {label}
+                        </a>
+                    ))}
+                    <div className="mobile-menu-footer">
+                        <span>{PROFILE.email}</span>
+                        <span>{PROFILE.location}</span>
                     </div>
                 </div>
-                <div className="asset-loader-meta">
-                    <span>{progress.toString().padStart(3, '0')}%</span>
-                    <span>{progress === 100 ? copy.ready : copy.preparing}</span>
-                </div>
-                <div className="asset-loader-log">
-                    <span>&gt;&gt; {currentTask}</span>
-                    <span>&gt;&gt; 0x{Math.max(progress * 4093, 1).toString(16).toUpperCase().padStart(6, '0')}</span>
-                </div>
-            </section>
-        </div>
+            </div>
+        </header>
     );
 }
 
-const mediaLanguages = ['id', 'en', 'ja'];
-
-function isCustomCollectionImage(path) {
-    if (typeof path !== 'string' || !path.trim()) return false;
-    return !/^assets\/(experience|skills)\//i.test(path.trim());
-}
-
-function experienceMediaKey(item, index) {
-    if (!item || typeof item !== 'object' || Array.isArray(item)) return `experience-${index}`;
-    return String(item.company || item.title || `experience-${index}`)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-');
-}
-
-function skillMediaKey(item, index) {
-    if (!item || typeof item !== 'object' || Array.isArray(item)) return `skill-${index}`;
-    const value = `${item.name || item.title || ''} ${item.image || ''}`.toLowerCase();
-    const aliases = [
-        ['microsoft-excel', /excel/], ['microsoft-powerpoint', /powerpoint/], ['microsoft-word', /\bword\b/],
-        ['canva', /canva/], ['basic-english', /english|inggris|英語/],
-        ['problem-solving', /problem|pemecahan|問題/], ['computer-network', /network|jaringan|ネットワーク/],
-        ['customer-communication', /customer|pelanggan|顧客/], ['stock-management', /stock|stok|在庫/],
-        ['programming', /program|pemrogram|プログラ/]
-    ];
-    return aliases.find(([, pattern]) => pattern.test(value))?.[0] || `skill-${index}`;
-}
-
-function collectionWithSharedImages(portfolioContent, language, type) {
-    const selectedItems = portfolioContent?.languages?.[language]?.[type];
-    if (!Array.isArray(selectedItems)) return selectedItems;
-    const keyFor = type === 'jobs' ? experienceMediaKey : skillMediaKey;
-    const sharedImages = new Map();
-
-    mediaLanguages.forEach((code) => {
-        const items = portfolioContent?.languages?.[code]?.[type];
-        if (!Array.isArray(items)) return;
-        items.forEach((item, index) => {
-            const collectionImage = [item?.image, item?.logo].find((image) => isCustomCollectionImage(image));
-            if (item && typeof item === 'object' && !Array.isArray(item) && collectionImage) {
-                const key = keyFor(item, index);
-                if (!sharedImages.has(key)) sharedImages.set(key, collectionImage);
-            }
-        });
-    });
-
-    return selectedItems.map((item, index) => {
-        if (!item || typeof item !== 'object' || Array.isArray(item)) return item;
-        const sharedImage = sharedImages.get(keyFor(item, index));
-        return sharedImage ? { ...item, image: sharedImage } : item;
-    });
-}
-
-function sanitizeStoredContent(value) {
-    if (typeof value === 'string') return /\?{2,}/.test(value) ? undefined : value;
-    if (Array.isArray(value)) {
-        const sanitizedItems = value.map(sanitizeStoredContent).filter((item) => item !== undefined);
-        return value.length > 0 && sanitizedItems.length === 0 ? undefined : sanitizedItems;
-    }
-    if (value && typeof value === 'object') {
-        return Object.fromEntries(
-            Object.entries(value)
-                .map(([key, item]) => [key, sanitizeStoredContent(item)])
-                .filter(([, item]) => item !== undefined)
-        );
-    }
-    return value;
-}
-
-function MainPortfolio({ language, onChangeLanguage, portfolioContent }) {
-    const storedLanguageOverrides = sanitizeStoredContent(portfolioContent?.languages?.[language] || {});
-    const sharedJobs = sanitizeStoredContent(collectionWithSharedImages(portfolioContent, language, 'jobs'));
-    const sharedSkills = sanitizeStoredContent(collectionWithSharedImages(portfolioContent, language, 'skills'));
-    const languageOverrides = {
-        ...storedLanguageOverrides,
-        ...(Array.isArray(sharedJobs) ? { jobs: sharedJobs } : {}),
-        ...(Array.isArray(sharedSkills) ? { skills: sharedSkills } : {})
-    };
-    const t = { ...translations[language], ...languageOverrides };
-    const common = {
-        name: 'Difa Alfaruq',
-        profession: 'Web Developer',
-        profile_photo: 'foto.jpg',
-        phone: '081776396965',
-        email: 'alfaruqdifa1211@gmail.com',
-        address: 'Papan Indah 2, Mangunjaya, Tambun Selatan, Kab. Bekasi',
-        linkedin: 'https://www.linkedin.com/in/difa-alfaruq-45156b312/',
-        instagram: 'https://www.instagram.com/difaalfaruqq?igsh=ZXZydzVpYmlvcGRm',
-        whatsapp: 'https://wa.me/6281776396965',
-        cv_url: 'https://drive.google.com/file/d/1GPihzRvLOoqR0jMukVrECQ5yT0zxC3t_/view?usp=sharing',
-        open_to_work_enabled: true,
-        ...(portfolioContent?.common || {})
-    };
-    if (!common.phone || common.phone === '089634899278') common.phone = '081776396965';
-    if (!common.whatsapp) common.whatsapp = 'https://wa.me/6281776396965';
-    const [firstName, ...remainingName] = String(common.name || '').trim().split(/\s+/);
-    const [activeSection, setActiveSection] = useState('home');
-    const [showTopButton, setShowTopButton] = useState(false);
-    const [scrollProgress, setScrollProgress] = useState(0);
-    const [footerTime, setFooterTime] = useState(() => new Date());
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLanguageOpen, setIsLanguageOpen] = useState(false);
-    const [selectedCertificate, setSelectedCertificate] = useState(null);
-    const [selectedSkill, setSelectedSkill] = useState(null);
-    const [isCvPreviewOpen, setIsCvPreviewOpen] = useState(false);
-    const [expandedExperienceIndex, setExpandedExperienceIndex] = useState(null);
-    const [activeSkillCategory, setActiveSkillCategory] = useState('hard');
-    const [activeProfilePhoto, setActiveProfilePhoto] = useState(0);
-    const [profileTouchStart, setProfileTouchStart] = useState(null);
-    const hangingCardRef = useRef(null);
-    const hangingStageRef = useRef(null);
-    const hangingRopeRef = useRef(null);
-    const hangingRopeShadowRef = useRef(null);
-    const experienceSectionRef = useRef(null);
-    const experienceStickyRef = useRef(null);
-    const experienceViewportRef = useRef(null);
-    const experienceTrackRef = useRef(null);
-    const experienceProgressRef = useRef(null);
-    const configuredProfilePhotos = Array.isArray(common.profile_photos)
-        ? common.profile_photos.filter((photo) => typeof photo === 'string' && photo.trim() !== '')
-        : [];
-    const profilePhotos = configuredProfilePhotos.length > 0
-        ? configuredProfilePhotos
-        : [common.profile_photo].filter(Boolean);
-    const profileCarouselCopy = {
-        id: { previous: 'Foto sebelumnya', next: 'Foto berikutnya', select: 'Tampilkan foto' },
-        en: { previous: 'Previous photo', next: 'Next photo', select: 'Show photo' },
-        ja: { previous: '前の写真', next: '次の写真', select: '写真を表示' }
-    }[language];
-    const cvCopy = {
-        id: { download: t.downloadCv || 'Unduh CV', preview: t.previewCv || 'Pratinjau CV', title: t.cvTitle || 'Pratinjau Curriculum Vitae', close: t.closeCv || 'Tutup pratinjau CV' },
-        en: { download: t.downloadCv || 'Download CV', preview: t.previewCv || 'Preview CV', title: t.cvTitle || 'Curriculum Vitae Preview', close: t.closeCv || 'Close CV preview' },
-        ja: { download: t.downloadCv || 'Download CV', preview: t.previewCv || 'Preview CV', title: t.cvTitle || 'Curriculum Vitae Preview', close: t.closeCv || 'Close CV preview' }
-    }[language];
-    const cvDriveMatch = String(common.cv_url || '').match(/\/d\/([^/]+)/) || String(common.cv_url || '').match(/[?&]id=([^&]+)/);
-    const cvDriveId = cvDriveMatch?.[1] || '';
-    const cvDownloadUrl = cvDriveId
-        ? `https://drive.google.com/uc?export=download&id=${encodeURIComponent(cvDriveId)}`
-        : common.cv_url;
-    const cvPreviewUrl = cvDriveId
-        ? `https://drive.google.com/file/d/${encodeURIComponent(cvDriveId)}/preview`
-        : common.cv_url;
-    const focusFallback = {
-        id: { title: 'Fokus Utama & Keahlian Pendukung', items: ['Pengembangan Web', 'Pemrograman', 'Jaringan Komputer', 'IT Support & Administrasi'] },
-        en: { title: 'Core Focus & Supporting Skills', items: ['Web Development', 'Programming', 'Computer Networking', 'IT Support & Administration'] },
-        ja: { title: 'Core Focus & Supporting Skills', items: ['Web Development', 'Programming', 'Computer Networking', 'IT Support & Administration'] }
-    }[language];
-    const focusTitle = t.focusTitle || focusFallback.title;
-    const focusItems = Array.isArray(t.focusItems) && t.focusItems.filter(Boolean).length
-        ? t.focusItems.filter(Boolean)
-        : focusFallback.items;
+function PhysicsTags({ content }) {
+    const stageRef = useRef(null);
 
     useEffect(() => {
-        const revealTargets = document.querySelectorAll('.reveal');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.16 });
+        const stage = stageRef.current;
+        if (!stage) return undefined;
 
-        revealTargets.forEach((target) => revealObserver.observe(target));
-
-        const sectionTargets = document.querySelectorAll('[data-section]');
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        }, { rootMargin: '-35% 0px -55% 0px' });
-
-        sectionTargets.forEach((target) => sectionObserver.observe(target));
-
-        const handleScroll = () => {
-            setShowTopButton(window.scrollY > 520);
-            const documentHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-            const remainingScroll = documentHeight - window.scrollY;
-            const exactProgress = remainingScroll <= 2 ? 100 : (window.scrollY / documentHeight) * 100;
-            setScrollProgress(Math.min(100, Math.max(0, Number(exactProgress.toFixed(2)))));
-        };
-
-        handleScroll();
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            revealObserver.disconnect();
-            sectionObserver.disconnect();
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-        const closeMobileMenu = (event) => {
-            if (event.type === 'resize' && window.innerWidth <= 768) return;
-            if (event.type === 'keydown' && event.key !== 'Escape') return;
-            setIsMenuOpen(false);
-            setIsLanguageOpen(false);
-        };
-
-        window.addEventListener('resize', closeMobileMenu);
-        document.addEventListener('keydown', closeMobileMenu);
-
-        return () => {
-            window.removeEventListener('resize', closeMobileMenu);
-            document.removeEventListener('keydown', closeMobileMenu);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (!isMenuOpen || window.innerWidth > 1050) return undefined;
-        const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        return () => { document.body.style.overflow = previousOverflow; };
-    }, [isMenuOpen]);
-
-    useEffect(() => {
-        if (!selectedCertificate && !selectedSkill && !isCvPreviewOpen) return undefined;
-
-        const previousOverflow = document.body.style.overflow;
-        const closeOnEscape = (event) => {
-            if (event.key === 'Escape') {
-                setSelectedCertificate(null);
-                setSelectedSkill(null);
-                setIsCvPreviewOpen(false);
-            }
-        };
-
-        document.body.style.overflow = 'hidden';
-        document.addEventListener('keydown', closeOnEscape);
-
-        return () => {
-            document.body.style.overflow = previousOverflow;
-            document.removeEventListener('keydown', closeOnEscape);
-        };
-    }, [selectedCertificate, selectedSkill, isCvPreviewOpen]);
-
-    useEffect(() => {
-        setExpandedExperienceIndex(null);
-    }, [language]);
-
-    useEffect(() => {
-        const clockTimer = window.setInterval(() => setFooterTime(new Date()), 1000);
-        return () => window.clearInterval(clockTimer);
-    }, []);
-
-    useEffect(() => {
-        if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-        const magneticItems = [
-            ...document.querySelectorAll('.magnetic-surface'),
-            ...document.querySelectorAll('.magnetic-link')
+        const allElements = Array.from(stage.querySelectorAll('[data-physics-chip]'));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const initialSlots = [
+            { x: .10, y: .18, angle: -.10 },
+            { x: .29, y: .08, angle: .07 },
+            { x: .48, y: .16, angle: -.05 },
+            { x: .66, y: .06, angle: .10 },
+            { x: .84, y: .17, angle: -.08 },
+            { x: .56, y: .01, angle: .03 }
         ];
+        const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+        const boundaryPadding = 14;
+        const maxAngularVelocity = .028;
+        const normalizeAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+        let bodies = [];
+        let stageWidth = 0;
+        let stageHeight = 0;
         let animationFrame = 0;
-        let pointerX = -1000;
-        let pointerY = -1000;
+        let lastFrame = performance.now();
+        let activeDrag = null;
+        let destroyed = false;
+        let isStageVisible = true;
 
-        const resetItem = (item) => {
-            item.style.setProperty('--magnetic-x', '0px');
-            item.style.setProperty('--magnetic-y', '0px');
-            item.classList.remove('is-magnetic');
+        const clearActiveDrag = (pointerId, stopMotion = false) => {
+            if (!activeDrag || (pointerId !== undefined && activeDrag.pointerId !== pointerId)) return false;
+            const drag = activeDrag;
+            drag.body.dragging = false;
+            drag.body.element.classList.remove('is-dragging');
+            drag.body.element.style.zIndex = '';
+            if (stopMotion || reduceMotion) {
+                drag.body.vx = 0;
+                drag.body.vy = 0;
+                drag.body.angularVelocity = 0;
+            }
+            if (drag.body.element.hasPointerCapture?.(drag.pointerId)) {
+                drag.body.element.releasePointerCapture(drag.pointerId);
+            }
+            activeDrag = null;
+            return true;
         };
 
-        const updateMagnet = () => {
-            if (window.innerWidth <= 1050) {
-                magneticItems.forEach(resetItem);
-                return;
+        const syncBody = (body) => {
+            body.element.style.transform = `translate3d(${body.x - body.width / 2}px, ${body.y - body.height / 2}px, 0) rotate(${body.angle}rad)`;
+        };
+
+        const getBodyExtents = (body) => {
+            const cosine = Math.abs(Math.cos(body.angle));
+            const sine = Math.abs(Math.sin(body.angle));
+            return {
+                x: (body.width * cosine + body.height * sine) / 2,
+                y: (body.width * sine + body.height * cosine) / 2
+            };
+        };
+
+        const clampBodyCoordinate = (value, extent, stageSize) => {
+            const minimum = extent + boundaryPadding;
+            const maximum = stageSize - extent - boundaryPadding;
+            return minimum <= maximum ? clamp(value, minimum, maximum) : stageSize / 2;
+        };
+
+        const buildBodies = () => {
+            clearActiveDrag(undefined, true);
+            const rect = stage.getBoundingClientRect();
+            stageWidth = Math.max(1, rect.width);
+            stageHeight = Math.max(1, rect.height);
+            const visibleElements = allElements.filter((element) => getComputedStyle(element).display !== 'none');
+
+            bodies = visibleElements.map((element, index) => {
+                const width = element.offsetWidth;
+                const height = element.offsetHeight;
+                const slot = initialSlots[index % initialSlots.length];
+                const body = {
+                    element,
+                    width,
+                    height,
+                    mass: clamp(width / 100, .7, 2.25),
+                    x: 0,
+                    y: 0,
+                    vx: reduceMotion ? 0 : ((index % 3) - 1) * .45,
+                    vy: reduceMotion ? 0 : -.15 * (index % 2),
+                    angle: slot.angle,
+                    angularVelocity: reduceMotion ? 0 : ((index % 2) ? .0025 : -.002),
+                    dragging: false,
+                    supported: false
+                };
+                const extents = getBodyExtents(body);
+                body.x = clampBodyCoordinate(stageWidth * slot.x, extents.x, stageWidth);
+                body.y = clampBodyCoordinate(stageHeight * slot.y + extents.y, extents.y, stageHeight);
+                return body;
+            });
+
+            bodies.forEach(syncBody);
+            stage.classList.add('physics-ready');
+        };
+
+        const resolveBoundaries = (body) => {
+            const extents = getBodyExtents(body);
+            const minimumX = extents.x + boundaryPadding;
+            const maximumX = stageWidth - extents.x - boundaryPadding;
+            const minimumY = extents.y + boundaryPadding;
+            const maximumY = stageHeight - extents.y - boundaryPadding;
+            const bounce = .32;
+
+            if (minimumX > maximumX) {
+                body.x = stageWidth / 2;
+                body.vx = 0;
+            } else if (body.x < minimumX) {
+                const impact = Math.abs(body.vx);
+                body.x = minimumX;
+                body.vx = impact > .6 ? impact * bounce : 0;
+                if (impact > 2) body.angularVelocity -= clamp(body.vy * .00035, -.004, .004);
+            } else if (body.x > maximumX) {
+                const impact = Math.abs(body.vx);
+                body.x = maximumX;
+                body.vx = impact > .6 ? -impact * bounce : 0;
+                if (impact > 2) body.angularVelocity += clamp(body.vy * .00035, -.004, .004);
             }
 
-            magneticItems.forEach((item) => {
-                const rect = item.getBoundingClientRect();
-                const isLink = item.classList.contains('magnetic-link');
-                const range = isLink ? 30 : 76;
-                const strength = isLink ? 4 : (item.classList.contains('nav-brand') ? 9 : 6);
-                const outsideX = Math.max(rect.left - pointerX, 0, pointerX - rect.right);
-                const outsideY = Math.max(rect.top - pointerY, 0, pointerY - rect.bottom);
-                const distance = Math.hypot(outsideX, outsideY);
+            if (minimumY > maximumY) {
+                body.y = stageHeight / 2;
+                body.vy = 0;
+                body.supported = true;
+            } else if (body.y < minimumY) {
+                const impact = Math.abs(body.vy);
+                body.y = minimumY;
+                body.vy = impact > .6 ? impact * bounce : 0;
+            } else if (body.y > maximumY) {
+                const impact = Math.abs(body.vy);
+                body.y = maximumY;
+                body.vy = impact > 1.1 ? -impact * bounce : 0;
+                body.vx *= .88;
+                body.angularVelocity *= .7;
+                body.supported = true;
+                if (Math.abs(body.vx) < .04) body.vx = 0;
+                if (Math.abs(body.angularVelocity) < .0007) body.angularVelocity = 0;
+            } else if (body.y >= maximumY - .4 && body.vy >= -.2) {
+                body.supported = true;
+            }
 
-                if (distance > range) {
-                    resetItem(item);
+            body.angularVelocity = clamp(body.angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+        };
+
+        const resolveCollision = (first, second) => {
+            const firstExtents = getBodyExtents(first);
+            const secondExtents = getBodyExtents(second);
+            const deltaX = second.x - first.x;
+            const deltaY = second.y - first.y;
+            const overlapX = firstExtents.x + secondExtents.x - Math.abs(deltaX);
+            const overlapY = firstExtents.y + secondExtents.y - Math.abs(deltaY);
+            if (overlapX <= 0 || overlapY <= 0) return;
+
+            const inverseFirst = first.dragging ? 0 : 1 / first.mass;
+            const inverseSecond = second.dragging ? 0 : 1 / second.mass;
+            const inverseTotal = inverseFirst + inverseSecond;
+            if (!inverseTotal) return;
+
+            if (overlapX < overlapY) {
+                const normal = deltaX >= 0 ? 1 : -1;
+                const correction = Math.max(0, overlapX - .12) * .78;
+                first.x -= normal * correction * (inverseFirst / inverseTotal);
+                second.x += normal * correction * (inverseSecond / inverseTotal);
+                const relativeVelocity = (second.vx - first.vx) * normal;
+                if (relativeVelocity < -.08) {
+                    const restitution = Math.abs(relativeVelocity) > 4 ? .3 : .04;
+                    const impulse = -(1 + restitution) * relativeVelocity / inverseTotal;
+                    first.vx -= impulse * normal * inverseFirst;
+                    second.vx += impulse * normal * inverseSecond;
+                }
+            } else {
+                const normal = deltaY >= 0 ? 1 : -1;
+                const correction = Math.max(0, overlapY - .12) * .78;
+                first.y -= normal * correction * (inverseFirst / inverseTotal);
+                second.y += normal * correction * (inverseSecond / inverseTotal);
+                const relativeVelocity = (second.vy - first.vy) * normal;
+                if (relativeVelocity < -.08) {
+                    const restitution = Math.abs(relativeVelocity) > 4 ? .28 : .03;
+                    const impulse = -(1 + restitution) * relativeVelocity / inverseTotal;
+                    first.vy -= impulse * normal * inverseFirst;
+                    second.vy += impulse * normal * inverseSecond;
+                }
+
+                const tangentVelocity = second.vx - first.vx;
+                const frictionImpulse = clamp(tangentVelocity * .14 / inverseTotal, -1.2, 1.2);
+                first.vx += frictionImpulse * inverseFirst;
+                second.vx -= frictionImpulse * inverseSecond;
+
+                if (normal > 0) first.supported = true;
+                else second.supported = true;
+            }
+
+            first.angularVelocity = clamp(first.angularVelocity * .88, -maxAngularVelocity, maxAngularVelocity);
+            second.angularVelocity = clamp(second.angularVelocity * .88, -maxAngularVelocity, maxAngularVelocity);
+        };
+
+        const settleSupportedRotation = (body, stepScale) => {
+            const isPill = body.width > body.height * 1.3;
+            if (body.dragging || !body.supported || !isPill) return;
+
+            const angleError = -body.angle;
+            body.angularVelocity += angleError * .06 * stepScale;
+            body.angularVelocity *= Math.pow(.7, stepScale);
+            body.angularVelocity = clamp(body.angularVelocity, -maxAngularVelocity, maxAngularVelocity);
+
+            if (Math.abs(angleError) < .012 && Math.abs(body.angularVelocity) < .0018) {
+                body.angle = 0;
+                body.angularVelocity = 0;
+            }
+        };
+
+        const animate = (timestamp) => {
+            animationFrame = 0;
+            if (destroyed || !isStageVisible) return;
+            const frameScale = clamp((timestamp - lastFrame) / 16.667, .35, 2);
+            const substeps = 3;
+            const stepScale = frameScale / substeps;
+            lastFrame = timestamp;
+
+            for (let step = 0; step < substeps; step += 1) {
+                bodies.forEach((body) => { body.supported = false; });
+                bodies.forEach((body) => {
+                    if (body.dragging) return;
+                    body.vy += (reduceMotion ? 0 : .21) * stepScale;
+                    body.vx *= Math.pow(.996, stepScale);
+                    body.vy *= Math.pow(.999, stepScale);
+                    body.angularVelocity = clamp(
+                        body.angularVelocity * Math.pow(.985, stepScale),
+                        -maxAngularVelocity,
+                        maxAngularVelocity
+                    );
+                    body.x += body.vx * stepScale;
+                    body.y += body.vy * stepScale;
+                    body.angle = normalizeAngle(body.angle + body.angularVelocity * stepScale);
+                    resolveBoundaries(body);
+                });
+
+                for (let solverPass = 0; solverPass < 4; solverPass += 1) {
+                    for (let firstIndex = 0; firstIndex < bodies.length; firstIndex += 1) {
+                        for (let secondIndex = firstIndex + 1; secondIndex < bodies.length; secondIndex += 1) {
+                            resolveCollision(bodies[firstIndex], bodies[secondIndex]);
+                        }
+                    }
+                    bodies.forEach(resolveBoundaries);
+                }
+
+                bodies.forEach((body) => {
+                    settleSupportedRotation(body, stepScale);
+                    resolveBoundaries(body);
+                });
+            }
+
+            bodies.forEach(syncBody);
+            animationFrame = requestAnimationFrame(animate);
+        };
+
+        const localPointer = (event) => {
+            const rect = stage.getBoundingClientRect();
+            return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+        };
+
+        const pointerDownHandlers = allElements.map((element) => {
+            const handler = (event) => {
+                if (event.button !== undefined && event.button !== 0) return;
+                if (activeDrag) return;
+                const body = bodies.find((candidate) => candidate.element === element);
+                if (!body) return;
+                event.preventDefault();
+                const point = localPointer(event);
+                body.dragging = true;
+                body.vx = 0;
+                body.vy = 0;
+                body.angularVelocity = 0;
+                activeDrag = {
+                    body,
+                    pointerId: event.pointerId,
+                    offsetX: point.x - body.x,
+                    offsetY: point.y - body.y,
+                    lastX: point.x,
+                    lastY: point.y,
+                    lastTime: event.timeStamp
+                };
+                element.classList.add('is-dragging');
+                element.style.zIndex = '10';
+                try {
+                    element.setPointerCapture?.(event.pointerId);
+                } catch {
+                    // Global pointer listeners keep dragging functional without capture.
+                }
+            };
+            element.addEventListener('pointerdown', handler);
+            return handler;
+        });
+
+        const handlePointerMove = (event) => {
+            if (!activeDrag || activeDrag.pointerId !== event.pointerId) return;
+            event.preventDefault();
+            const point = localPointer(event);
+            const { body } = activeDrag;
+            const extents = getBodyExtents(body);
+            const nextX = clampBodyCoordinate(point.x - activeDrag.offsetX, extents.x, stageWidth);
+            const nextY = clampBodyCoordinate(point.y - activeDrag.offsetY, extents.y, stageHeight);
+            const elapsed = Math.max(8, event.timeStamp - activeDrag.lastTime);
+            body.vx = clamp((nextX - body.x) / elapsed * 16.667, -38, 38);
+            body.vy = clamp((nextY - body.y) / elapsed * 16.667, -38, 38);
+            body.angle = normalizeAngle(body.angle + clamp(body.vx * .0014, -.026, .026));
+            body.angularVelocity = clamp(body.vx * .0011, -maxAngularVelocity, maxAngularVelocity);
+            body.x = nextX;
+            body.y = nextY;
+            resolveBoundaries(body);
+            activeDrag.lastX = point.x;
+            activeDrag.lastY = point.y;
+            activeDrag.lastTime = event.timeStamp;
+        };
+
+        const releasePointer = (event) => {
+            if (!activeDrag || activeDrag.pointerId !== event.pointerId) return;
+            const pausedBeforeRelease = event.timeStamp - activeDrag.lastTime > 90;
+            clearActiveDrag(event.pointerId, pausedBeforeRelease || event.type === 'pointercancel');
+        };
+
+        const keyboardHandlers = allElements.map((element) => {
+            const handler = (event) => {
+                const body = bodies.find((candidate) => candidate.element === element);
+                if (!body) return;
+                const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', 'Enter'];
+                if (!keys.includes(event.key)) return;
+                event.preventDefault();
+
+                if (reduceMotion) {
+                    const distance = 18;
+                    if (event.key === 'ArrowLeft') body.x -= distance;
+                    if (event.key === 'ArrowRight') body.x += distance;
+                    if (event.key === 'ArrowUp' || event.key === ' ' || event.key === 'Enter') body.y -= distance;
+                    if (event.key === 'ArrowDown') body.y += distance;
+                    body.vx = 0;
+                    body.vy = 0;
+                    body.angularVelocity = 0;
+                    resolveBoundaries(body);
+                    syncBody(body);
                     return;
                 }
 
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                const pull = 1 - distance / range;
-                const normalizedX = Math.max(-1, Math.min(1, (pointerX - centerX) / (rect.width / 2 + range)));
-                const normalizedY = Math.max(-1, Math.min(1, (pointerY - centerY) / (rect.height / 2 + range)));
-                item.style.setProperty('--magnetic-x', `${normalizedX * strength * pull}px`);
-                item.style.setProperty('--magnetic-y', `${normalizedY * strength * pull}px`);
-                item.classList.add('is-magnetic');
+                const jump = () => { body.vx += (Math.random() - .5) * 14; body.vy -= 10; };
+                const actions = {
+                    ArrowLeft: () => { body.vx -= 7; body.angularVelocity -= .025; },
+                    ArrowRight: () => { body.vx += 7; body.angularVelocity += .025; },
+                    ArrowUp: () => { body.vy -= 9; },
+                    ArrowDown: () => { body.vy += 6; },
+                    ' ': jump,
+                    Enter: jump
+                };
+                actions[event.key]();
+            };
+            element.addEventListener('keydown', handler);
+            return handler;
+        });
+
+        const resizeObserver = new ResizeObserver(() => {
+            if (!stage.classList.contains('physics-ready')) return;
+            buildBodies();
+        });
+        const intersectionObserver = 'IntersectionObserver' in window
+            ? new IntersectionObserver(([entry]) => {
+                const nextVisibility = entry?.isIntersecting ?? true;
+                if (nextVisibility === isStageVisible) return;
+                isStageVisible = nextVisibility;
+                if (isStageVisible && !animationFrame) {
+                    lastFrame = performance.now();
+                    animationFrame = requestAnimationFrame(animate);
+                } else if (!isStageVisible && animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                    animationFrame = 0;
+                }
+            })
+            : null;
+
+        window.addEventListener('pointermove', handlePointerMove, { passive: false });
+        window.addEventListener('pointerup', releasePointer);
+        window.addEventListener('pointercancel', releasePointer);
+
+        const start = () => {
+            if (destroyed) return;
+            buildBodies();
+            resizeObserver.observe(stage);
+            intersectionObserver?.observe(stage);
+            lastFrame = performance.now();
+            animationFrame = requestAnimationFrame(animate);
+        };
+
+        if (document.fonts?.ready) document.fonts.ready.then(start);
+        else requestAnimationFrame(start);
+
+        return () => {
+            destroyed = true;
+            cancelAnimationFrame(animationFrame);
+            clearActiveDrag(undefined, true);
+            resizeObserver.disconnect();
+            intersectionObserver?.disconnect();
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerup', releasePointer);
+            window.removeEventListener('pointercancel', releasePointer);
+            allElements.forEach((element, index) => {
+                element.removeEventListener('pointerdown', pointerDownHandlers[index]);
+                element.removeEventListener('keydown', keyboardHandlers[index]);
             });
         };
-
-        const handlePointerMove = (event) => {
-            pointerX = event.clientX;
-            pointerY = event.clientY;
-            window.cancelAnimationFrame(animationFrame);
-            animationFrame = window.requestAnimationFrame(updateMagnet);
-        };
-        const resetAll = () => magneticItems.forEach(resetItem);
-
-        document.addEventListener('pointermove', handlePointerMove, { passive: true });
-        document.addEventListener('pointerleave', resetAll);
-        window.addEventListener('blur', resetAll);
-
-        return () => {
-            window.cancelAnimationFrame(animationFrame);
-            document.removeEventListener('pointermove', handlePointerMove);
-            document.removeEventListener('pointerleave', resetAll);
-            window.removeEventListener('blur', resetAll);
-            resetAll();
-        };
-    }, []);
-
-    useEffect(() => {
-        const card = hangingCardRef.current;
-        const stage = hangingStageRef.current;
-        const rope = hangingRopeRef.current;
-        const ropeShadow = hangingRopeShadowRef.current;
-        if (!card || !stage || !rope || !ropeShadow || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-        const motion = {
-            angle: 0,
-            angularVelocity: 0,
-            shiftX: 0,
-            shiftVelocity: 0,
-            shiftY: 0,
-            shiftVelocityY: 0,
-            tiltX: 0,
-            targetAngle: 0,
-            targetShiftX: 0,
-            targetShiftY: 0,
-            targetTiltX: 0,
-            dragging: false,
-            pointerId: null,
-            lastPointerX: 0,
-            lastPointerY: 0,
-            lastPointerTime: performance.now(),
-            lastScrollY: window.scrollY,
-            dragStartPointerX: 0,
-            dragStartPointerY: 0,
-            dragStartShiftX: 0,
-            dragStartShiftY: 0,
-            ropeWidth: 480,
-            ropeStartOffset: 260,
-            ropeBaseEndY: 420,
-            ropeHeight: 650
-        };
-        let animationFrame = 0;
-
-        const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
-        const section = stage.closest('.about-section');
-
-        const updateLanyardGeometry = () => {
-            if (!section) return;
-            const stageRect = stage.getBoundingClientRect();
-            const sectionRect = section.getBoundingClientRect();
-            const stagePaddingTop = Number.parseFloat(window.getComputedStyle(stage).paddingTop) || 0;
-            motion.ropeWidth = stageRect.width;
-            motion.ropeStartOffset = Math.max(30, stageRect.top - sectionRect.top + 4);
-            motion.ropeBaseEndY = motion.ropeStartOffset + stagePaddingTop - 4;
-            motion.ropeHeight = motion.ropeBaseEndY + 250;
-            const ropeSvg = rope.ownerSVGElement;
-            ropeSvg.style.top = `${(-motion.ropeStartOffset).toFixed(1)}px`;
-            ropeSvg.style.height = `${motion.ropeHeight.toFixed(1)}px`;
-            ropeSvg.setAttribute('viewBox', `0 0 ${motion.ropeWidth.toFixed(1)} ${motion.ropeHeight.toFixed(1)}`);
-        };
-
-        const animateCard = () => {
-            const spring = motion.dragging ? 0.15 : 0.038;
-            motion.angularVelocity += (motion.targetAngle - motion.angle) * spring;
-            motion.angularVelocity *= motion.dragging ? 0.72 : 0.91;
-            motion.angle = clamp(motion.angle + motion.angularVelocity, -13, 13);
-
-            motion.shiftVelocity += (motion.targetShiftX - motion.shiftX) * (motion.dragging ? 0.12 : 0.045);
-            motion.shiftVelocity *= motion.dragging ? 0.7 : 0.86;
-            motion.shiftX = clamp(motion.shiftX + motion.shiftVelocity, -190, 190);
-            motion.shiftVelocityY += (motion.targetShiftY - motion.shiftY) * (motion.dragging ? 0.12 : 0.042);
-            motion.shiftVelocityY *= motion.dragging ? 0.7 : 0.87;
-            motion.shiftY = clamp(motion.shiftY + motion.shiftVelocityY, -125, 210);
-            motion.tiltX += (motion.targetTiltX - motion.tiltX) * 0.1;
-
-            card.style.setProperty('--id-angle', `${motion.angle.toFixed(3)}deg`);
-            card.style.setProperty('--id-shift-x', `${motion.shiftX.toFixed(3)}px`);
-            card.style.setProperty('--id-shift-y', `${motion.shiftY.toFixed(3)}px`);
-            card.style.setProperty('--id-tilt-x', `${motion.tiltX.toFixed(3)}deg`);
-            card.style.setProperty('--id-strain', `${Math.min(5, Math.abs(motion.angularVelocity) * 1.4).toFixed(2)}px`);
-
-            const startX = motion.ropeWidth / 2;
-            const endX = startX + motion.shiftX;
-            const endY = motion.ropeBaseEndY + motion.shiftY;
-            const bend = clamp((motion.shiftVelocity * 8) + (motion.angularVelocity * 13), -52, 52);
-            const controlOneX = startX + motion.shiftX * 0.08 + bend * 0.22;
-            const controlOneY = Math.max(42, endY * 0.34);
-            const controlTwoX = endX - motion.shiftX * 0.2 - bend;
-            const controlTwoY = endY - Math.max(48, endY * 0.2);
-            const ropePath = `M ${startX.toFixed(2)} 0 C ${controlOneX.toFixed(2)} ${controlOneY.toFixed(2)}, ${controlTwoX.toFixed(2)} ${controlTwoY.toFixed(2)}, ${endX.toFixed(2)} ${endY.toFixed(2)}`;
-            rope.setAttribute('d', ropePath);
-            ropeShadow.setAttribute('d', ropePath);
-            animationFrame = window.requestAnimationFrame(animateCard);
-        };
-
-        const updatePointerTarget = (event, isDragging = motion.dragging) => {
-            const rect = stage.getBoundingClientRect();
-            const normalizedX = clamp((event.clientX - (rect.left + rect.width / 2)) / Math.max(rect.width / 2, 1), -1, 1);
-            const normalizedY = clamp((event.clientY - (rect.top + rect.height / 2)) / Math.max(rect.height / 2, 1), -1, 1);
-            if (!isDragging) motion.targetAngle = normalizedX * 3.2;
-            motion.targetTiltX = normalizedY * -3.5;
-        };
-
-        const handlePointerDown = (event) => {
-            if (event.pointerType === 'touch' || event.target.closest('button')) return;
-            motion.dragging = true;
-            motion.pointerId = event.pointerId;
-            motion.lastPointerX = event.clientX;
-            motion.lastPointerY = event.clientY;
-            motion.lastPointerTime = performance.now();
-            motion.dragStartPointerX = event.clientX;
-            motion.dragStartPointerY = event.clientY;
-            motion.dragStartShiftX = motion.shiftX;
-            motion.dragStartShiftY = motion.shiftY;
-            card.classList.add('is-grabbed');
-            card.setPointerCapture?.(event.pointerId);
-            updatePointerTarget(event, true);
-        };
-
-        const handlePointerMove = (event) => {
-            if (event.pointerType === 'touch') return;
-            if (motion.dragging && event.pointerId !== motion.pointerId) return;
-
-            const now = performance.now();
-            const elapsed = Math.max(now - motion.lastPointerTime, 8);
-            if (motion.dragging) {
-                const pointerSpeedX = (event.clientX - motion.lastPointerX) / elapsed;
-                const pointerSpeedY = (event.clientY - motion.lastPointerY) / elapsed;
-                const maximumX = Math.max(80, Math.min(190, stage.clientWidth * 0.42));
-                motion.targetShiftX = clamp(motion.dragStartShiftX + (event.clientX - motion.dragStartPointerX) * 0.88, -maximumX, maximumX);
-                motion.targetShiftY = clamp(motion.dragStartShiftY + (event.clientY - motion.dragStartPointerY) * 0.88, -125, 210);
-                motion.targetAngle = clamp(motion.targetShiftX * 0.035 + pointerSpeedX * 1.8, -12, 12);
-                motion.shiftVelocity = clamp(motion.shiftVelocity + pointerSpeedX * 0.3, -3.2, 3.2);
-                motion.shiftVelocityY = clamp(motion.shiftVelocityY + pointerSpeedY * 0.3, -3.2, 3.2);
-            }
-            motion.lastPointerX = event.clientX;
-            motion.lastPointerY = event.clientY;
-            motion.lastPointerTime = now;
-            updatePointerTarget(event);
-        };
-
-        const releaseCard = (event) => {
-            if (!motion.dragging || (event?.pointerId !== undefined && event.pointerId !== motion.pointerId)) return;
-            motion.dragging = false;
-            motion.pointerId = null;
-            motion.targetAngle = 0;
-            motion.targetShiftX = 0;
-            motion.targetShiftY = 0;
-            motion.targetTiltX = 0;
-            card.classList.remove('is-grabbed');
-        };
-
-        const resetHover = () => {
-            if (motion.dragging) return;
-            motion.targetAngle = 0;
-            motion.targetShiftX = 0;
-            motion.targetShiftY = 0;
-            motion.targetTiltX = 0;
-        };
-
-        const handleScrollSwing = () => {
-            const currentScrollY = window.scrollY;
-            const delta = currentScrollY - motion.lastScrollY;
-            motion.lastScrollY = currentScrollY;
-            motion.angularVelocity = clamp(motion.angularVelocity + delta * 0.018, -2.4, 2.4);
-            motion.shiftVelocity = clamp(motion.shiftVelocity + delta * 0.022, -1.8, 1.8);
-            motion.shiftVelocityY = clamp(motion.shiftVelocityY - delta * 0.028, -2.4, 2.4);
-        };
-
-        card.addEventListener('pointerdown', handlePointerDown);
-        card.addEventListener('pointermove', handlePointerMove);
-        card.addEventListener('pointerup', releaseCard);
-        card.addEventListener('pointercancel', releaseCard);
-        card.addEventListener('pointerleave', resetHover);
-        window.addEventListener('pointerup', releaseCard);
-        window.addEventListener('scroll', handleScrollSwing, { passive: true });
-        window.addEventListener('resize', updateLanyardGeometry);
-        const geometryObserver = typeof ResizeObserver !== 'undefined' && section
-            ? new ResizeObserver(updateLanyardGeometry)
-            : null;
-        geometryObserver?.observe(section);
-        updateLanyardGeometry();
-        animationFrame = window.requestAnimationFrame(animateCard);
-
-        return () => {
-            window.cancelAnimationFrame(animationFrame);
-            card.removeEventListener('pointerdown', handlePointerDown);
-            card.removeEventListener('pointermove', handlePointerMove);
-            card.removeEventListener('pointerup', releaseCard);
-            card.removeEventListener('pointercancel', releaseCard);
-            card.removeEventListener('pointerleave', resetHover);
-            window.removeEventListener('pointerup', releaseCard);
-            window.removeEventListener('scroll', handleScrollSwing);
-            window.removeEventListener('resize', updateLanyardGeometry);
-            geometryObserver?.disconnect();
-        };
-    }, []);
-
-    useEffect(() => {
-        setActiveProfilePhoto((current) => current < profilePhotos.length ? current : 0);
-        if (profilePhotos.length < 2) return undefined;
-
-        const timer = window.setInterval(() => {
-            setActiveProfilePhoto((current) => (current + 1) % profilePhotos.length);
-        }, 5000);
-
-        return () => window.clearInterval(timer);
-    }, [profilePhotos.length]);
-
-    useEffect(() => {
-        const section = experienceSectionRef.current;
-        const sticky = experienceStickyRef.current;
-        const viewport = experienceViewportRef.current;
-        const track = experienceTrackRef.current;
-        const progressBar = experienceProgressRef.current;
-        if (!section || !sticky || !viewport || !track || !progressBar) return undefined;
-
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-        let horizontalTravel = 0;
-        let horizontalMode = false;
-        let animationFrame = 0;
-
-        const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
-
-        const updateHorizontalPosition = () => {
-            animationFrame = 0;
-            if (!horizontalMode || horizontalTravel <= 0) {
-                track.style.transform = 'translate3d(0, 0, 0)';
-                progressBar.style.transform = 'scaleX(0)';
-                return;
-            }
-
-            const sectionRect = section.getBoundingClientRect();
-            const stickyTop = Number.parseFloat(window.getComputedStyle(sticky).top) || 0;
-            const scrollRange = Math.max(section.offsetHeight - sticky.offsetHeight, 1);
-            const progress = clamp((stickyTop - sectionRect.top) / scrollRange, 0, 1);
-            track.style.transform = `translate3d(${(-horizontalTravel * progress).toFixed(2)}px, 0, 0)`;
-            progressBar.style.transform = `scaleX(${progress.toFixed(4)})`;
-        };
-
-        const requestHorizontalUpdate = () => {
-            if (animationFrame) return;
-            animationFrame = window.requestAnimationFrame(updateHorizontalPosition);
-        };
-
-        const measureHorizontalSection = () => {
-            horizontalMode = window.innerWidth > 1050 && !reducedMotion.matches;
-            section.classList.toggle('is-horizontal-ready', horizontalMode);
-
-            if (!horizontalMode) {
-                horizontalTravel = 0;
-                section.style.removeProperty('height');
-                track.style.transform = 'translate3d(0, 0, 0)';
-                track.style.removeProperty('--experience-center-inset');
-                progressBar.style.transform = 'scaleX(0)';
-                return;
-            }
-
-            const firstCard = track.querySelector('.experience-card');
-            const cardWidth = firstCard?.getBoundingClientRect().width || 0;
-            const centerInset = Math.max(2, (viewport.clientWidth - cardWidth) / 2);
-            track.style.setProperty('--experience-center-inset', `${centerInset.toFixed(2)}px`);
-            horizontalTravel = Math.max(0, track.scrollWidth - viewport.clientWidth);
-            section.style.height = `${Math.ceil(sticky.offsetHeight + horizontalTravel)}px`;
-            requestHorizontalUpdate();
-        };
-
-        const resizeObserver = typeof ResizeObserver !== 'undefined'
-            ? new ResizeObserver(measureHorizontalSection)
-            : null;
-        resizeObserver?.observe(viewport);
-        window.addEventListener('resize', measureHorizontalSection);
-        window.addEventListener('scroll', requestHorizontalUpdate, { passive: true });
-        document.fonts?.ready.then(measureHorizontalSection);
-        measureHorizontalSection();
-
-        return () => {
-            window.cancelAnimationFrame(animationFrame);
-            resizeObserver?.disconnect();
-            window.removeEventListener('resize', measureHorizontalSection);
-            window.removeEventListener('scroll', requestHorizontalUpdate);
-            section.style.removeProperty('height');
-            section.classList.remove('is-horizontal-ready');
-            track.style.removeProperty('transform');
-            progressBar.style.removeProperty('transform');
-        };
-    }, [language, portfolioContent]);
-
-    const showPreviousProfilePhoto = () => {
-        setActiveProfilePhoto((current) => (current - 1 + profilePhotos.length) % profilePhotos.length);
-    };
-
-    const showNextProfilePhoto = () => {
-        setActiveProfilePhoto((current) => (current + 1) % profilePhotos.length);
-    };
-
-    const finishProfileSwipe = (event) => {
-        if (profileTouchStart === null || profilePhotos.length < 2) return;
-        const distance = event.changedTouches[0].clientX - profileTouchStart;
-        if (Math.abs(distance) > 45) {
-            if (distance > 0) showPreviousProfilePhoto();
-            else showNextProfilePhoto();
-        }
-        setProfileTouchStart(null);
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const highlights = [
-        { value: t.statValues?.[0] || '2+', label: t.stats[0] },
-        { value: t.statValues?.[1] || '7+', label: t.stats[1] },
-        { value: t.statValues?.[2] || '100%', label: t.stats[2] },
-    ];
-
-    const education = (t.education || []).map((item) => Array.isArray(item)
-        ? { period: item[0], status: item[1], program: item[2], school: item[3], description: item[4], logo: item[5] }
-        : item);
-    const experienceCopy = {
-        id: { category: 'Pengalaman Kerja', detail: 'Buka detail', responsibilities: 'Tanggung jawab', close: 'Tutup detail pengalaman' },
-        en: { category: 'Work Experience', detail: 'View details', responsibilities: 'Responsibilities', close: 'Close experience details' },
-        ja: { category: '職務経験', detail: '詳細を見る', responsibilities: '担当業務', close: '職務経験の詳細を閉じる' }
-    }[language];
-    const experienceDescriptions = {
-        id: [
-            'Mendukung proses produksi, pengemasan, pemindahan, dan penyusunan barang dengan tetap mengikuti SOP, target kerja, dan aturan keselamatan.',
-            'Menangani pelayanan pelanggan, transaksi pembayaran, laporan penjualan, pencatatan stok, dan kebutuhan operasional toko.',
-            'Mendukung administrasi produksi melalui pengelolaan, pemindaian, koordinasi, dan pengarsipan dokumen operasional pabrik.'
-        ],
-        en: [
-            'Supported production, packaging, movement, and arrangement of goods while following SOPs, work targets, and safety requirements.',
-            'Handled customer service, payment transactions, sales reports, stock records, and day-to-day store operations.',
-            'Supported production administration through document management, scanning, coordination, and factory operational filing.'
-        ],
-        ja: [
-            'SOP、作業目標、安全規則に従い、生産、梱包、商品の移動と整理を支援しました。',
-            '顧客対応、決済、売上報告、在庫記録、日々の店舗運営を担当しました。',
-            '生産文書の管理、スキャン、調整、保管を通じて工場の生産事務を支援しました。'
-        ]
-    }[language];
-    const experienceDetailDescriptions = {
-        id: [
-            'Di PT Prakarsa Alam Segar, saya mendukung kelancaran lini produksi mie instan mulai dari proses pengemasan, pemindahan kardus, hingga penataan produk di pallet. Saya terbiasa bekerja cepat dan rapi sesuai SOP, menjaga kebersihan serta keselamatan area kerja, dan berkoordinasi dengan tim produksi maupun gudang untuk mencapai target harian.',
-            'Di Re.juve, saya menangani pengalaman pelanggan dari awal hingga akhir, termasuk transaksi melalui EDC, tunai, dan e-wallet, pelaksanaan program promosi, serta proses opening dan closing toko. Saya juga menyusun laporan penjualan, mencatat pergerakan stok, menyiapkan kebutuhan restock, dan memastikan operasional selalu sesuai SOP serta siap menghadapi audit.',
-            'Selama menjadi Asisten Admin Produksi di Sumitomo Electric Wintec I., saya mengelola dan memindai lebih dari 200 dokumen produksi per hari, memastikan data tersusun akurat dan mudah ditemukan, serta berkoordinasi dengan tim produksi agar setiap dokumen memenuhi standar perusahaan. Pengalaman ini memperkuat ketelitian, kecepatan administrasi, dan pemahaman saya terhadap disiplin kerja serta keselamatan K3 di lingkungan pabrik.'
-        ],
-        en: [
-            'At PT Prakarsa Alam Segar, I supported the instant-noodle production line from packaging and moving cartons to arranging finished products on pallets. I learned to work quickly and accurately within SOPs, maintain a clean and safe workspace, and coordinate with production and warehouse teams to achieve daily targets.',
-            'At Re.juve, I managed the customer journey from payment through EDC, cash, and e-wallet to promotional programs and store opening and closing procedures. I also prepared sales reports, monitored stock movement, coordinated restocking needs, and kept daily operations compliant with SOPs and ready for audit.',
-            'As a Production Admin Assistant at Sumitomo Electric Wintec I., I managed and scanned more than 200 production documents each day, maintained accurate and accessible records, and coordinated with production teams to ensure documentation met company standards. The role strengthened my attention to detail, administrative speed, and understanding of disciplined factory operations and workplace safety.'
-        ],
-        ja: [
-            'PT Prakarsa Alam Segarでは、即席麺の包装、段ボールの移動、完成品のパレット配置まで、生産ラインの円滑な運営を支援しました。SOPを守りながら迅速かつ正確に作業し、清潔で安全な作業環境を維持するとともに、生産・倉庫チームと連携して日々の目標達成に取り組みました。',
-            'Re.juveでは、EDC・現金・電子ウォレットによる決済から販促施策、店舗の開店・閉店業務まで、一連の顧客対応を担当しました。さらに売上報告、在庫管理、補充調整を行い、日々の店舗運営がSOPに沿い監査に対応できる状態を維持しました。',
-            'Sumitomo Electric Wintec I.の生産事務アシスタントとして、1日200件以上の生産文書を管理・スキャンし、正確で検索しやすい記録を維持しました。生産チームと連携して文書を会社基準に合わせる経験を通じ、細部への注意、事務処理の速さ、工場での規律と安全への理解を高めました。'
-        ]
-    }[language];
-    const experienceImages = [
-        'assets/uploads/20260720-082534-05e6dc0432b5.webp',
-        'assets/uploads/20260720-082539-9be8e6f22c3d.png',
-        'assets/experience/sumitomo-electric.jpg'
-    ];
-    const experienceImageFor = (job, defaultJob, index) => {
-        const candidates = [job.image, job.logo, defaultJob.image, defaultJob.logo].filter(Boolean);
-        const customImage = candidates.find((image) => isCustomCollectionImage(image));
-        if (customImage) return customImage;
-        const companyIdentity = `${job.company || defaultJob.company || ''} ${job.title || defaultJob.title || ''}`;
-        if (/prakarsa|\bpas\b/i.test(companyIdentity)) return experienceImages[0];
-        if (/re\.?juve|sewu segar/i.test(companyIdentity)) return experienceImages[1];
-        if (/sumitomo/i.test(companyIdentity)) return experienceImages[2];
-        return candidates[0] || experienceImages[index] || '';
-    };
-    const internshipExperience = {
-        id: {
-            title: 'Asisten Admin Produksi', company: 'Sumitomo Electric Wintec I.', period: 'Juni 2022 - September 2022', category: 'Magang', image: 'assets/experience/sumitomo-electric.jpg',
-            description: experienceDescriptions[2],
-            detail: experienceDetailDescriptions[2],
-            duties: ['Mengelola dokumen hasil produksi untuk mendukung administrasi operasional pabrik.', 'Membuat salinan dokumen lebih dari 200 data per hari menggunakan scanner.', 'Berkoordinasi dengan tim produksi untuk memastikan dokumen sesuai dengan standar perusahaan.', 'Menyusun dan memelihara arsip dokumen agar mudah diakses saat dibutuhkan.', 'Berpengalaman dalam bekerja di lingkungan pabrik dan memahami standar keselamatan kerja (K3).']
-        },
-        en: {
-            title: 'Production Admin Assistant', company: 'Sumitomo Electric Wintec I.', period: 'June 2022 - September 2022', category: 'Internship', image: 'assets/experience/sumitomo-electric.jpg',
-            description: experienceDescriptions[2],
-            detail: experienceDetailDescriptions[2],
-            duties: ['Managed production documents to support factory operational administration.', 'Scanned and copied more than 200 document records per day.', 'Coordinated with the production team to ensure documents met company standards.', 'Organized and maintained document archives for easy retrieval.', 'Gained experience in a factory environment and followed occupational safety standards.']
-        },
-        ja: {
-            title: '生産事務アシスタント', company: 'Sumitomo Electric Wintec I.', period: '2022年6月 - 2022年9月', category: 'インターンシップ', image: 'assets/experience/sumitomo-electric.jpg',
-            description: experienceDescriptions[2],
-            detail: experienceDetailDescriptions[2],
-            duties: ['工場運営事務を支援するため生産文書を管理。', 'スキャナーを使用して1日200件以上の文書データを複製。', '文書が会社基準を満たすよう生産チームと連携。', '必要なときに簡単に参照できるよう文書を整理・保管。', '工場環境での業務と労働安全基準を経験。']
-        }
-    }[language];
-    const normalizedJobs = (t.jobs || []).map((item, index) => {
-        const job = Array.isArray(item) ? { title: item[0], company: item[1], duties: item[2] } : item;
-        const defaultItem = translations[language].jobs?.[index];
-        const defaultJob = Array.isArray(defaultItem)
-            ? { title: defaultItem[0], company: defaultItem[1], duties: defaultItem[2] }
-            : (defaultItem || {});
-        const companyParts = String(job.company || defaultJob.company || '').split('|').map((part) => part.trim()).filter(Boolean);
-        const defaultCompanyParts = String(defaultJob.company || '').split('|').map((part) => part.trim()).filter(Boolean);
-        return {
-            ...defaultJob,
-            ...job,
-            title: job.title || defaultJob.title || '',
-            company: companyParts[0] || defaultCompanyParts[0] || '',
-            period: job.period || companyParts.slice(1).join(' | ') || defaultCompanyParts.slice(1).join(' | '),
-            category: job.category || experienceCopy.category,
-            image: experienceImageFor(job, defaultJob, index),
-            description: job.description || experienceDescriptions[index] || (job.duties || defaultJob.duties || [])[0] || '',
-            detail: job.detail || experienceDetailDescriptions[index] || (job.duties || defaultJob.duties || []).join(' '),
-            duties: job.duties?.length ? job.duties : (defaultJob.duties || [])
-        };
-    });
-    const isSumitomoExperience = (job) => /sumitomo/i.test(`${job.company} ${job.title}`);
-    const hasSumitomoExperience = normalizedJobs.some(isSumitomoExperience);
-    const jobs = hasSumitomoExperience
-        ? normalizedJobs.map((job) => isSumitomoExperience(job) ? {
-            ...internshipExperience,
-            ...job,
-            period: job.period || internshipExperience.period,
-            category: job.category || internshipExperience.category,
-            image: job.image || internshipExperience.image,
-            description: job.description || internshipExperience.description,
-            detail: job.detail || internshipExperience.detail,
-            duties: job.duties?.length ? job.duties : internshipExperience.duties
-        } : job)
-        : [...normalizedJobs, internshipExperience];
-    const projects = (t.projects || []).map((item, index) => {
-        const project = Array.isArray(item) ? { category: item[0], title: item[1], text: item[2] } : item;
-        const defaultItem = translations[language].projects?.[index];
-        const fallback = Array.isArray(defaultItem)
-            ? { category: defaultItem[0], title: defaultItem[1], text: defaultItem[2] }
-            : (defaultItem || {});
-        return {
-            ...fallback,
-            ...project,
-            category: project.category || fallback.category || '',
-            title: project.title || fallback.title || '',
-            text: project.text || fallback.text || ''
-        };
-    });
-    const certificateCopy = {
-        id: { detail: 'Detail', issued: 'Tanggal terbit', number: 'Nomor sertifikat', download: 'Unduh PDF', credential: 'Lihat Credential', pending: 'Tautan credential akan ditambahkan setelah tersedia.', close: 'Tutup detail sertifikat' },
-        en: { detail: 'Details', issued: 'Issued on', number: 'Certificate number', download: 'Download PDF', credential: 'View Credential', pending: 'The credential link will be added once available.', close: 'Close certificate details' },
-        ja: { detail: '詳細', issued: '取得日', number: '認定番号', download: 'PDFをダウンロード', credential: 'Credential を見る', pending: 'Credential リンクは準備でき次第追加されます。', close: '認定詳細を閉じる' }
-    }[language];
-    const allDefaultCertificates = [
-        {
-            title: 'CCNA: Introduction to Networks',
-            issuer: 'Cisco Networking Academy',
-            date: language === 'id' ? '10 Februari 2026' : (language === 'ja' ? '2026年2月10日' : '10 February 2026'),
-            image: 'assets/ccna-preview.png',
-            document: 'assets/DIFA_ALFARUQ_certificate.pdf',
-            certificate_number: '20260202033',
-            description: language === 'id'
-                ? 'Berhasil menyelesaikan CCNA: Introduction to Networks yang diselenggarakan oleh Universitas Bani Saleh melalui program Cisco Networking Academy.'
-                : (language === 'ja'
-                    ? 'Universitas Bani Saleh が Cisco Networking Academy プログラムを通じて提供する CCNA: Introduction to Networks を修了しました。'
-                    : 'Successfully completed CCNA: Introduction to Networks, offered by Universitas Bani Saleh through the Cisco Networking Academy program.'),
-            credential_url: ''
-        },
-        {
-            title: 'Cisco IT Essentials',
-            issuer: 'Cisco Networking Academy',
-            date: language === 'id' ? '15 November 2025' : (language === 'ja' ? '2025年11月15日' : '15 November 2025'),
-            image: 'assets/it-essentials-preview.png',
-            document: 'assets/IT_Essentials_certificate_difaalfaruq-m-ubs-ac-id_0f3bf3c1-43cf-4153-88f0-9d0bd5bfded7 (2).pdf',
-            certificate_number: 'ITE-2025-0891',
-            description: language === 'id'
-                ? 'Sertifikasi IT Essentials dari Cisco Networking Academy yang mencakup pemahaman tentang perangkat keras komputer, perangkat lunak, sistem operasi, jaringan dasar, dan troubleshooting.'
-                : (language === 'ja'
-                    ? 'Cisco Networking Academy による IT Essentials 認定。コンピュータハードウェア、ソフトウェア、OS、ネットワークの基礎、トラブルシューティングを網羅。'
-                    : 'IT Essentials certification from Cisco Networking Academy covering computer hardware, software, operating systems, networking fundamentals, and troubleshooting.'),
-            credential_url: ''
-        },
-        {
-            title: 'Sertifikat Keahlian Jaringan BNSP',
-            issuer: 'Badan Nasional Sertifikasi Profesi (BNSP)',
-            date: language === 'id' ? '20 Agustus 2023' : (language === 'ja' ? '2023年8月20日' : '20 August 2023'),
-            image: 'assets/bnsp-preview.png',
-            document: 'assets/Sertifikat Keahlian Jaringan BNSP (1).pdf',
-            certificate_number: 'BNSP-TKJ-2023-551',
-            description: language === 'id'
-                ? 'Sertifikasi kompetensi nasional bidang Teknik Komputer dan Jaringan yang diterbitkan oleh Badan Nasional Sertifikasi Profesi (BNSP) sebagai pengakuan atas keahlian operasional dan pemeliharaan jaringan.'
-                : (language === 'ja'
-                    ? 'インドネシア国家職業認定機関（BNSP）が発行するコンピュータ・ネットワーク工学分野の国家技能認定。'
-                    : 'National competency certification in Computer and Network Engineering issued by the National Professional Certification Agency (BNSP) recognizing operational and network maintenance expertise.'),
-            credential_url: ''
-        }
-    ];
-    const storedCertifications = Array.isArray(t.certifications) && t.certifications.length > 0 ? t.certifications : [];
-    const updatedStoredCertifications = storedCertifications.map(item => {
-        const matchingDef = allDefaultCertificates.find(d => d.title === item.title || d.certificate_number === item.certificate_number);
-        if (matchingDef) {
-            return {
-                ...item,
-                image: matchingDef.image,
-                document: item.document && !item.document.includes('drive.google.com') ? item.document : matchingDef.document
-            };
-        }
-        return item;
-    });
-    const mergedCertifications = [...updatedStoredCertifications];
-    allDefaultCertificates.forEach(defCert => {
-        if (!mergedCertifications.some(c => c.title === defCert.title || c.certificate_number === defCert.certificate_number)) {
-            mergedCertifications.push(defCert);
-        }
-    });
-    const certifications = mergedCertifications.length > 0 ? mergedCertifications : allDefaultCertificates;
-    const skillCopy = {
-        id: { intro: 'Bukan sekadar daftar nama—buka setiap keahlian untuk melihat pengalaman dan cara saya menggunakannya.', hard: 'Hard Skill', soft: 'Soft Skill', since: 'Sejak', level: 'Tingkat', learned: 'Teknologi yang dipelajari', detail: 'Detail', close: 'Tutup detail keahlian', empty: 'Belum ada keahlian pada kategori ini.' },
-        en: { intro: 'More than a list—open each skill to see my experience and how I use it.', hard: 'Hard Skills', soft: 'Soft Skills', since: 'Since', level: 'Level', learned: 'Technologies learned', detail: 'Details', close: 'Close skill details', empty: 'No skills have been added to this category.' },
-        ja: { intro: '各スキルを開くと、経験や活用方法の詳細を確認できます。', hard: 'ハードスキル', soft: 'ソフトスキル', since: '開始年', level: 'レベル', learned: '学習した技術', detail: '詳細', close: 'スキル詳細を閉じる', empty: 'このカテゴリにはまだスキルがありません。' }
-    }[language];
-    const skillDescriptions = {
-        id: [
-            'Menggunakan Microsoft Excel untuk pencatatan, rekap penjualan, pengelolaan data stok, dan kebutuhan administrasi dasar.',
-            'Menggunakan Microsoft Word untuk membuat, menyunting, dan merapikan dokumen administrasi maupun laporan.',
-            'Menggunakan Microsoft PowerPoint untuk menyusun materi presentasi yang terstruktur dan mudah dipahami.',
-            'Menggunakan Canva untuk membuat desain grafis sederhana, materi promosi, presentasi, dan konten visual.',
-            'Memahami bahasa Inggris dasar untuk membaca instruksi, istilah teknis, dan melakukan komunikasi sederhana.',
-            'Menganalisis kendala operasional secara runtut dan mencari solusi yang aman serta sesuai prosedur kerja.',
-            'Memahami dasar perangkat keras komputer, jaringan, sistem operasi, serta troubleshooting dari pendidikan Teknik Komputer dan Jaringan.',
-            'Berkomunikasi dengan pelanggan secara sopan dan jelas, termasuk saat melayani transaksi dan menjelaskan informasi produk.',
-            'Melakukan pencatatan stok, memantau ketersediaan barang, dan melaporkan kebutuhan restock untuk mendukung operasional.',
-            'Mempelajari pengembangan aplikasi dan website dari sisi antarmuka, logika program, back-end, hingga dasar pengembangan aplikasi lintas platform.'
-        ],
-        en: [
-            'Uses Microsoft Excel for records, sales recaps, stock data management, and basic administration.',
-            'Uses Microsoft Word to create, edit, and format administrative documents and reports.',
-            'Uses Microsoft PowerPoint to prepare structured and easy-to-follow presentation materials.',
-            'Uses Canva for simple graphic design, promotional materials, presentations, and visual content.',
-            'Understands basic English for instructions, technical terms, and simple communication.',
-            'Reviews operational issues methodically and looks for safe solutions that follow work procedures.',
-            'Understands computer hardware, networking, operating systems, and basic troubleshooting from Computer and Network Engineering studies.',
-            'Communicates politely and clearly with customers when handling transactions and product information.',
-            'Records stock, monitors product availability, and reports restocking needs to support operations.',
-            'Studies application and website development, covering interfaces, programming logic, back-end fundamentals, and cross-platform application development.'
-        ],
-        ja: [
-            'Microsoft Excelを使用して、記録、売上集計、在庫データ、基本的な事務作業を行います。',
-            'Microsoft Wordを使用して、文書やレポートの作成、編集、書式設定を行います。',
-            'Microsoft PowerPointを使用して、分かりやすく構成されたプレゼンテーション資料を作成します。',
-            'Canvaを使用して、シンプルなグラフィック、販促資料、プレゼンテーションを作成します。',
-            '指示や技術用語の読解、簡単なコミュニケーションに必要な基礎英語を理解しています。',
-            '業務上の問題を順序立てて分析し、手順に沿った安全な解決策を検討します。',
-            'コンピュータのハードウェア、ネットワーク、OS、基本的なトラブルシューティングを理解しています。',
-            '取引や商品案内の際に、顧客と丁寧かつ明確にコミュニケーションを取ります。',
-            '在庫を記録し、商品状況を確認して補充の必要性を報告します。',
-            'インターフェース、プログラミングロジック、バックエンド、クロスプラットフォーム開発の基礎を学んでいます。'
-        ]
-    }[language];
-    const skillImages = [
-        'assets/skills/microsoft-excel.svg', 'assets/skills/microsoft-word.svg', 'assets/skills/microsoft-powerpoint.svg',
-        'assets/skills/canva.svg', 'assets/skills/basic-english.svg', 'assets/skills/problem-solving.svg',
-        'assets/skills/computer-network.svg', 'assets/skills/customer-communication.svg', 'assets/skills/stock-management.svg',
-        'assets/skills/programming.svg'
-    ];
-    const programmingTechnologies = ['HTML', 'CSS', 'JavaScript', 'PHP', 'Node.js', 'Next.js', 'React', 'Python', 'C++', 'Flutter'];
-    const programmingFallback = {
-        name: language === 'ja' ? 'プログラミング' : 'Programming',
-        category: 'hard',
-        since: '2023',
-        level: language === 'id' ? 'Menengah' : (language === 'ja' ? '中級' : 'Intermediate'),
-        image: 'assets/skills/programming.svg',
-        description: skillDescriptions[9],
-        technologies: programmingTechnologies
-    };
-    const rawSkills = Array.isArray(t.skills) ? t.skills : [];
-    const normalizedSkills = rawSkills.map((item, index) => {
-        const savedImage = typeof item === 'object' && item ? item.image : '';
-        const savedImageIndex = skillImages.indexOf(savedImage);
-        const fallbackIndex = savedImageIndex >= 0 ? savedImageIndex : index;
-        const translatedSkill = translations[language].skills?.[fallbackIndex];
-        const fallback = {
-            name: typeof item === 'string' ? item : (typeof translatedSkill === 'string' ? translatedSkill : `Skill ${index + 1}`),
-            category: [5, 7].includes(fallbackIndex) ? 'soft' : 'hard',
-            since: '',
-            level: '',
-            image: skillImages[fallbackIndex] || '',
-            description: skillDescriptions[fallbackIndex] || '',
-            technologies: fallbackIndex === 9 ? programmingTechnologies : []
-        };
-        if (typeof item === 'string') return fallback;
-        const technologies = Array.isArray(item.technologies)
-            ? item.technologies
-            : (typeof item.technologies === 'string' ? item.technologies.split('\n').map((technology) => technology.trim()).filter(Boolean) : fallback.technologies);
-        return {
-            ...fallback,
-            ...item,
-            name: item.name || item.title || fallback.name,
-            category: item.category === 'soft' ? 'soft' : 'hard',
-            image: item.image || fallback.image,
-            description: item.description || fallback.description,
-            technologies
-        };
-    });
-    const isProgrammingSkill = (skill) => skill.image === programmingFallback.image || /program|pemrogram|プログラ/i.test(skill.name);
-    const hasProgrammingSkill = normalizedSkills.some(isProgrammingSkill);
-    const skills = hasProgrammingSkill
-        ? normalizedSkills.map((skill) => isProgrammingSkill(skill) ? {
-            ...programmingFallback,
-            ...skill,
-            since: skill.since || programmingFallback.since,
-            level: skill.level || programmingFallback.level,
-            image: skill.image || programmingFallback.image,
-            description: skill.description || programmingFallback.description,
-            technologies: skill.technologies?.length ? skill.technologies : programmingTechnologies
-        } : skill)
-        : [...normalizedSkills, programmingFallback];
-    const visibleSkills = skills.filter((skill) => skill.category === activeSkillCategory);
-    const footerClock = new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Asia/Jakarta',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    }).format(footerTime).replace(/:/g, ' : ');
-
-    const sectionIds = ['home', 'about', 'education', 'experience', 'certifications', 'skills', 'rating', 'contact'];
-    const navItems = sectionIds.map((id, index) => ({ href: `#${id}`, id, label: t.nav[index] }));
-    const handleAgentResult = (result) => {
-        if (result.type === 'certificate') setSelectedCertificate(result.item);
-        if (result.type === 'skill') setSelectedSkill(result.item);
-        if (result.type === 'experience') setExpandedExperienceIndex(result.index);
-        window.setTimeout(() => document.getElementById(result.section)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
-    };
+    }, [content.tags]);
 
     return (
-        <div className="main-portfolio fade-in-up">
-            <div className="top-ruler" aria-hidden="true">
-                <span className="top-ruler-brand">DIFA ALFARUQ</span>
-                <span className="top-ruler-track" style={{ '--scroll-progress': `${scrollProgress}%` }}>
-                    {Array.from({ length: 12 }, (_, index) => <i key={index}>{(index + 1) * 100}</i>)}
-                    <strong className={`top-ruler-progress ${scrollProgress === 100 ? 'is-full' : ''}`}>
-                        {scrollProgress === 100 ? 'FULL' : `${Math.round(scrollProgress)}%`}
-                    </strong>
-                </span>
-                <span className="top-ruler-status"><i></i>LIVE · {footerClock}</span>
-            </div>
-            <div className="navigation-shell">
-                <div className="hero-availability-pill"><i></i>{t.available}</div>
-                <nav className="navbar magnetic-surface">
-                <div className={`nav-links ${isMenuOpen ? 'is-open' : ''}`} id="primary-navigation">
-                    <div className="mobile-nav-meta" aria-hidden="true">
-                        <span>Navigation Matrix</span>
-                        <strong><i></i>Mobile</strong>
-                    </div>
-                    {navItems.map((item, index) => (
-                        <a
-                            className={`${activeSection === item.id ? 'active' : ''} ${item.id === 'rating' ? 'nav-rating' : ''} ${item.id === 'contact' ? 'nav-contact' : ''} magnetic-link`.trim()}
-                            href={item.href}
-                            key={item.id}
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            <span className="mobile-nav-index">{String(index + 1).padStart(2, '0')}</span>
-                            <span className="nav-label">{item.label}</span>
-                            <span className="mobile-nav-arrow" aria-hidden="true">↗</span>
-                            {item.id === 'rating' && <span className="nav-link-icon" aria-hidden="true">☆</span>}
-                            {item.id === 'contact' && <span className="nav-link-icon" aria-hidden="true">↗</span>}
-                        </a>
-                    ))}
-                </div>
+        <div className="hero-tags" ref={stageRef} role="group" aria-label={content.physicsA11y}>
+            <span className="sr-only" id="physics-instructions">{content.physicsA11y}</span>
+            {content.tags.map((tag, index) => (
                 <button
-                    className={`menu-toggle ${isMenuOpen ? 'is-open' : ''}`}
                     type="button"
-                    aria-label={isMenuOpen ? t.menuClose : t.menuOpen}
-                    aria-controls="primary-navigation"
-                    aria-expanded={isMenuOpen}
-                    onClick={() => setIsMenuOpen((currentState) => !currentState)}
+                    key={tag}
+                    className={`hero-tag variant-${index % 3}`}
+                    data-physics-chip
+                    aria-describedby="physics-instructions"
+                    title={content.physicsA11y}
                 >
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    {index === 2 && <Icon name="code" size={17}/>} {tag}
                 </button>
-                </nav>
-                <a className="hero-email-pill" href={`mailto:${common.email}`}><span aria-hidden="true">✉</span>{common.email}</a>
-            </div>
-
-            <header id="home" className="hero-section" data-section>
-                <div className="hero-content reveal is-visible">
-                    <InteractiveNameTitle firstName={firstName} remainingName={remainingName.join(' ')} />
-                    <TypewriterProfession firstRole={common.profession} />
-                    <div className="hero-actions">
-                        <a href="#contact" className="btn-primary">{t.contactMe}</a>
-                        <div className="cv-action" role="group" aria-label={cvCopy.download}>
-                            <a href={cvDownloadUrl} className="cv-download" target="_blank" rel="noreferrer">
-                                <span>{cvCopy.download}</span>
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" /></svg>
-                            </a>
-                            <button type="button" className="cv-preview" onClick={() => setIsCvPreviewOpen(true)} aria-label={cvCopy.preview} title={cvCopy.preview}>
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.8" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div className="hero-stats">
-                        {highlights.map((item, index) => (
-                            <div className="stat-card interactive-card" key={`stat-${index}`} style={{ '--delay': `${index * 90}ms` }}>
-                                <strong>{item.value}</strong>
-                                <span>{item.label}</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="hero-corner hero-corner-left"><strong>WORKING WORLDWIDE</strong><span>BEKASI BASED, ON PURPOSE</span></div>
-                <div className="hero-corner hero-corner-right"><strong>OPEN FOR 2026</strong><span>YOUR TIMEZONE, HANDLED</span></div>
-            </header>
-
-            {isCvPreviewOpen && (
-                <div className="cv-preview-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setIsCvPreviewOpen(false)}>
-                    <section className="cv-preview-modal" role="dialog" aria-modal="true" aria-labelledby="cv-preview-title">
-                        <header className="cv-preview-header">
-                            <div>
-                                <span>PDF / CV</span>
-                                <h2 id="cv-preview-title">{cvCopy.title}</h2>
-                            </div>
-                            <button type="button" onClick={() => setIsCvPreviewOpen(false)} aria-label={cvCopy.close}>
-                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
-                            </button>
-                        </header>
-                        <div className="cv-preview-frame">
-                            <iframe src={cvPreviewUrl} title={cvCopy.title} allow="autoplay"></iframe>
-                        </div>
-                        <footer className="cv-preview-footer">
-                            <a href={cvDownloadUrl} target="_blank" rel="noreferrer">{cvCopy.download}</a>
-                        </footer>
-                    </section>
-                </div>
-            )}
-
-            <section id="about" className="section about-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.aboutEyebrow}</p>
-                    <h2 className="section-title">{t.aboutTitle}</h2>
-                </div>
-                <div className="about-grid">
-                    <div className="about-copy-column">
-                        <div className="about-content">
-                            <p>{t.aboutText}</p>
-                        </div>
-                        <div className="core-focus-block">
-                            <p className="core-focus-title"><i aria-hidden="true"></i>{focusTitle}</p>
-                            <div className="core-focus-list">
-                                {focusItems.map((item, index) => <span key={`focus-${index}`}>{item}</span>)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="about-profile-container">
-                        <div className="hanging-id-stage" ref={hangingStageRef}>
-                            <svg className="id-flex-rope" aria-hidden="true" preserveAspectRatio="none">
-                                <path className="id-flex-rope-shadow" ref={hangingRopeShadowRef}></path>
-                                <path className="id-flex-rope-line" ref={hangingRopeRef}></path>
-                            </svg>
-                            <div className="hanging-id-motion" ref={hangingCardRef}>
-                                <span className="id-card-clip" aria-hidden="true"><i></i></span>
-                                <div className="profile-panel id-profile-card">
-                                    <div className="id-card-heading">
-                                        <span>PROFILE / 01</span>
-                                        <strong>DIFA ALFARUQ</strong>
-                                        <i aria-hidden="true"></i>
-                                    </div>
-                            <div
-                                className="image-frame profile-carousel"
-                                onTouchStart={(event) => setProfileTouchStart(event.touches[0].clientX)}
-                                onTouchEnd={finishProfileSwipe}
-                            >
-                                {profilePhotos.length > 0 && (
-                                    <img
-                                        src={profilePhotos[activeProfilePhoto]}
-                                                alt={`${common.name} ${activeProfilePhoto + 1}`}
-                                                className="profile-photo"
-                                                draggable={false}
-                                                key={`${profilePhotos[activeProfilePhoto]}-${activeProfilePhoto}`}
-                                        onError={(event) => { event.currentTarget.style.display = 'none'; }}
-                                    />
-                                )}
-                                <div className="placeholder-image"><span>DA</span></div>
-                                <div className="profile-image-caption">
-                                    <span>NAME</span>
-                                    <strong>{common.name}</strong>
-                                </div>
-                                {profilePhotos.length > 1 && (
-                                    <>
-                                        <button className="profile-carousel-arrow previous" type="button" aria-label={profileCarouselCopy.previous} onClick={showPreviousProfilePhoto}>‹</button>
-                                        <button className="profile-carousel-arrow next" type="button" aria-label={profileCarouselCopy.next} onClick={showNextProfilePhoto}>›</button>
-                                        <div className="profile-carousel-dots" aria-label={`${activeProfilePhoto + 1} / ${profilePhotos.length}`}>
-                                            {profilePhotos.map((photo, index) => (
-                                                <button
-                                                    className={activeProfilePhoto === index ? 'active' : ''}
-                                                    type="button"
-                                                    aria-label={`${profileCarouselCopy.select} ${index + 1}`}
-                                                    aria-current={activeProfilePhoto === index ? 'true' : undefined}
-                                                    onClick={() => setActiveProfilePhoto(index)}
-                                                    key={`${photo}-${index}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
-                                    </div>
-                                    <div className="id-card-footer">
-                                        <span><i className="availability-dot"></i>{common.open_to_work_enabled !== false ? 'AVAILABLE' : 'PROFILE'}</span>
-                                        <strong>{common.profession}</strong>
-                                        <small>{t.infoValues[0]}</small>
-                                    </div>
-                                </div>
-                                <span className="id-drag-hint" aria-hidden="true">DRAG FREELY</span>
-                            </div>
-                        </div>
-                        <div className="profile-meta-grid">
-                            {common.open_to_work_enabled !== false && (
-                                <div className="profile-meta-card">
-                                    <span>STATUS</span>
-                                    <strong><i className="availability-dot"></i>Available</strong>
-                                </div>
-                            )}
-                            <div className="profile-meta-card">
-                                <span>LOCATION</span>
-                                <strong>
-                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                                    {t.infoValues[0]}
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="education" className="section education-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.educationEyebrow}</p>
-                    <h2 className="section-title">{t.educationTitle}</h2>
-                </div>
-                <div className="education-list">
-                    {education.map((item, index) => (
-                        <article className="education-card interactive-card" key={item.school} style={{ '--delay': `${index * 110}ms` }}>
-                            <div className="education-logo">
-                                <img src={item.logo} alt={`Logo ${item.school}`} />
-                            </div>
-                            <div className="education-content">
-                                <div className="education-meta">
-                                    <span>{item.period}</span>
-                                    <small>{item.status}</small>
-                                </div>
-                                <h3>{item.program}</h3>
-                                <h4>{item.school}</h4>
-                                <p>{item.description}</p>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            </section>
-
-            <section id="experience" className="section experience-section reveal" data-section ref={experienceSectionRef}>
-                <div className="experience-sticky" ref={experienceStickyRef}>
-                    <div className="experience-horizontal-header">
-                        <div className="section-heading">
-                            <p className="eyebrow">{t.historyEyebrow}</p>
-                            <h2 className="section-title">{t.historyTitle}</h2>
-                        </div>
-                    </div>
-                    <div className="experience-scroll-viewport" ref={experienceViewportRef}>
-                        <div className="experience-timeline" ref={experienceTrackRef}>
-                        {jobs.map((job, index) => {
-                        const isExpanded = expandedExperienceIndex === index;
-                        const detailId = `experience-detail-${index}`;
-                        return (
-                        <article className={`experience-card interactive-card ${isExpanded ? 'is-expanded' : ''}`} key={`experience-${index}`} style={{ '--delay': `${index * 100}ms` }}>
-                            <span className="experience-dot" aria-hidden="true"></span>
-                            <div className="experience-card-shell">
-                            <div className="experience-card-main">
-                                <span className="experience-card-index">{String(index + 1).padStart(2, '0')}</span>
-                                <div className="experience-card-content">
-                                    <span className="experience-card-meta">
-                                        {job.period && <time>{job.period}</time>}
-                                    </span>
-                                    <h3 className="experience-title">{job.title}</h3>
-                                    <p className="experience-company">{job.company}</p>
-                                    {job.description && <p className="experience-summary">{job.description}</p>}
-                                </div>
-                                <div className={`experience-visual ${/prakarsa/i.test(job.company) ? 'logo-pas' : (/sumitomo/i.test(job.company) ? 'logo-sumitomo' : '')}`}>
-                                    {job.image && (
-                                        <img
-                                            src={job.image}
-                                            alt={`Logo ${job.company}`}
-                                            onError={(event) => event.currentTarget.parentElement?.classList.add('is-missing')}
-                                        />
-                                    )}
-                                    <span className="experience-logo-fallback">{job.company.charAt(0)}</span>
-                                </div>
-                            </div>
-                            <div className="experience-card-action-row">
-                                <button
-                                    className="experience-detail-button"
-                                    type="button"
-                                    aria-expanded={isExpanded}
-                                    aria-controls={detailId}
-                                    onClick={() => setExpandedExperienceIndex(isExpanded ? null : index)}
-                                >
-                                    <span>{isExpanded ? experienceCopy.close : experienceCopy.detail}</span>
-                                    <i aria-hidden="true">{isExpanded ? '−' : '↓'}</i>
-                                </button>
-                            </div>
-                                <div className="experience-inline-detail" id={detailId} aria-hidden={!isExpanded}>
-                                    <div className="experience-inline-detail-inner">
-                                        <p className="experience-detail-paragraph">{job.detail}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        );
-                        })}
-                        </div>
-                    </div>
-                    <div className="experience-pan-status" aria-hidden="true">
-                        <span>01</span>
-                        <i><b ref={experienceProgressRef}></b></i>
-                        <span>{String(jobs.length).padStart(2, '0')}</span>
-                    </div>
-                </div>
-            </section>
-
-            <section id="certifications" className="section certifications-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.certificationEyebrow}</p>
-                    <h2 className="section-title">{t.certificationTitle}</h2>
-                </div>
-                {certifications.length > 0 ? (
-                    <div className="compact-cert-grid">
-                        {certifications.map((item, index) => (
-                            <article
-                                className="compact-cert-card"
-                                key={`${item.title}-${index}`}
-                                onClick={() => setSelectedCertificate(item)}
-                                style={{ '--delay': `${index * 90}ms` }}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedCertificate(item); }}
-                            >
-                                <div className="compact-cert-media">
-                                    {item.image ? (
-                                        <img src={item.image} alt={item.title} />
-                                    ) : (
-                                        <div className="compact-cert-fallback">
-                                            <InterfaceIcon name="certificate" />
-                                        </div>
-                                    )}
-                                    <span className="compact-cert-badge">{item.date}</span>
-                                </div>
-                                <div className="compact-cert-body">
-                                    <span className="compact-cert-issuer">{item.issuer}</span>
-                                    <h3 className="compact-cert-title">{item.title}</h3>
-                                    <div className="compact-cert-footer">
-                                        <span>{certificateCopy.detail}</span>
-                                        <span aria-hidden="true" className="compact-cert-arrow">→</span>
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="certification-empty">
-                        <span className="certification-icon"><InterfaceIcon name="certificate" /></span>
-                        <p>{t.certificationEmpty}</p>
-                    </div>
-                )}
-            </section>
-
-            {selectedCertificate && (
-                <CertificateModal
-                    certificate={selectedCertificate}
-                    copy={certificateCopy}
-                    onClose={() => setSelectedCertificate(null)}
-                />
-            )}
-
-            <section id="skills" className="section skills-section reveal" data-section>
-                <div className="skills-showcase-header">
-                    <div className="section-heading">
-                        <p className="eyebrow">{t.skillEyebrow}</p>
-                        <h2 className="section-title">{t.skillTitle}</h2>
-                        <p className="skills-intro">{skillCopy.intro}</p>
-                    </div>
-                    <div className="skill-tabs" role="tablist" aria-label={t.skillTitle}>
-                        {['hard', 'soft'].map((category) => (
-                            <button
-                                className={activeSkillCategory === category ? 'active' : ''}
-                                type="button"
-                                role="tab"
-                                aria-selected={activeSkillCategory === category}
-                                onClick={() => setActiveSkillCategory(category)}
-                                key={category}
-                            >
-                                <span aria-hidden="true">{category === 'hard' ? '◇' : '○'}</span>
-                                {category === 'hard' ? skillCopy.hard : skillCopy.soft}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-                {visibleSkills.length > 0 ? (
-                    <div className="skills-grid" role="tabpanel">
-                        {visibleSkills.map((skill, index) => (
-                            <article className="skill-card interactive-card" key={`${skill.name}-${index}`} style={{ '--delay': `${index * 55}ms` }}>
-                                <div className="skill-card-icon">
-                                    {skill.image ? <img src={skill.image} alt="" /> : <span aria-hidden="true">{skill.name.charAt(0)}</span>}
-                                </div>
-                                <div className="skill-card-content">
-                                    <h3>{skill.name}</h3>
-                                    {(skill.since || skill.level) && (
-                                        <p>
-                                            {skill.since && `${skillCopy.since} ${skill.since}`}
-                                            {skill.since && skill.level && <span aria-hidden="true"> · </span>}
-                                            {skill.level && skill.level}
-                                        </p>
-                                    )}
-                                </div>
-                                <button type="button" onClick={() => setSelectedSkill(skill)}>
-                                    {skillCopy.detail} <span aria-hidden="true">→</span>
-                                </button>
-                            </article>
-                        ))}
-                    </div>
-                ) : <p className="skills-empty">{skillCopy.empty}</p>}
-            </section>
-
-            {selectedSkill && (
-                <SkillModal skill={selectedSkill} copy={skillCopy} onClose={() => setSelectedSkill(null)} />
-            )}
-
-            <RatingSection language={language} />
-
-            <section id="contact" className="section contact-section reveal" data-section>
-                <div className="section-heading">
-                    <p className="eyebrow">{t.contactEyebrow}</p>
-                    <h2 className="section-title">{t.contactTitle}</h2>
-                </div>
-                <div className="contact-panel">
-                    <div className="contact-copy">
-                        <p>
-                            {t.contactText}
-                        </p>
-                        <div className="social-links" aria-label="Social media">
-                            {[
-                                ['LinkedIn', 'linkedin', common.linkedin],
-                                ['Instagram', 'instagram', common.instagram],
-                                ['WhatsApp', 'whatsapp', common.whatsapp]
-                            ].map(([label, icon, url]) => (
-                                <a href={url} target="_blank" rel="noopener noreferrer" aria-label={label} title={label} key={label}>
-                                    <InterfaceIcon name={icon} />
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="contact-info">
-                        <a href={common.whatsapp} target="_blank" rel="noopener noreferrer"><strong>{t.contactLabels[0]}</strong><span>{common.phone}</span></a>
-                        <a href={`mailto:${common.email}`}><strong>{t.contactLabels[1]}</strong><span>{common.email}</span></a>
-                        <div><strong>{t.contactLabels[2]}</strong><span>{common.address}</span></div>
-                    </div>
-                </div>
-            </section>
-
-            <LocalPortfolioAgent
-                language={language}
-                common={common}
-                education={education}
-                jobs={jobs}
-                projects={projects}
-                certifications={certifications}
-                skills={skills}
-                aboutText={t.aboutText}
-                onOpenResult={handleAgentResult}
-            />
-
-            <section className="preferences-section" aria-label={t.chooseLanguage}>
-                <div className="preferences-controls">
-                    <div className="language-control">
-                        <button
-                            className="language-trigger"
-                            type="button"
-                            aria-label={t.chooseLanguage}
-                            aria-expanded={isLanguageOpen}
-                            onClick={() => setIsLanguageOpen((current) => !current)}
-                        >
-                            <span className="language-icon"><InterfaceIcon name="language" /></span>
-                            <strong>{t.code}</strong>
-                            <span className={`language-chevron ${isLanguageOpen ? 'is-open' : ''}`}><InterfaceIcon name="chevron" /></span>
-                        </button>
-                        <div className={`language-menu ${isLanguageOpen ? 'is-open' : ''}`}>
-                            {['id', 'ja', 'en'].map((code) => {
-                                const option = translations[code];
-                                return (
-                                <button
-                                    className={language === code ? 'active' : ''}
-                                    type="button"
-                                    key={code}
-                                    onClick={() => {
-                                        onChangeLanguage(code);
-                                        setIsLanguageOpen(false);
-                                    }}
-                                >
-                                    <span>{option.language}</span>
-                                    <strong>{option.code}</strong>
-                                </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <footer className="footer">
-                <div className="footer-system-bar">
-                    <div className="footer-system-status">
-                        <span>SYS.STATUS:</span>
-                        <strong><i aria-hidden="true"></i>ONLINE</strong>
-                    </div>
-                    <time dateTime={footerTime.toISOString()}>{footerClock} GMT+7</time>
-                    <div className="footer-legal">
-                        <p>&copy; {new Date().getFullYear()} {common.name}. {t.rights}</p>
-                    </div>
-                </div>
-            </footer>
-
-            <button
-                className={`back-to-top ${showTopButton ? 'show' : ''}`}
-                onClick={scrollToTop}
-                type="button"
-                aria-label={t.backTop}
-            >
-                ^
+            ))}
+            <button type="button" className="hero-symbol" data-physics-chip aria-label={content.physicsSymbolLabel} aria-describedby="physics-instructions" title={content.physicsA11y}>
+                <Icon name="asterisk" size={24}/>
             </button>
         </div>
     );
 }
 
-function TypewriterProfession({ firstRole }) {
-    const roles = [firstRole || 'Web Developer', 'IT Support', 'AI Enthusiast'];
-    const [roleIndex, setRoleIndex] = useState(0);
-    const [visibleText, setVisibleText] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
-    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-
-    useEffect(() => {
-        setRoleIndex(0);
-        setVisibleText('');
-        setIsDeleting(false);
-    }, [firstRole]);
-
-    useEffect(() => {
-        if (prefersReducedMotion) {
-            setVisibleText(roles[0]);
-            return undefined;
-        }
-
-        const activeRole = roles[roleIndex];
-        let delay = isDeleting ? 48 : 92;
-
-        if (!isDeleting && visibleText === activeRole) {
-            delay = 1700;
-        } else if (isDeleting && visibleText === '') {
-            delay = 380;
-        }
-
-        const timer = window.setTimeout(() => {
-            if (!isDeleting && visibleText === activeRole) {
-                setIsDeleting(true);
-                return;
-            }
-            if (isDeleting && visibleText === '') {
-                setIsDeleting(false);
-                setRoleIndex((current) => (current + 1) % roles.length);
-                return;
-            }
-            setVisibleText((current) => isDeleting
-                ? activeRole.slice(0, Math.max(0, current.length - 1))
-                : activeRole.slice(0, current.length + 1));
-        }, delay);
-
-        return () => window.clearTimeout(timer);
-    }, [roleIndex, visibleText, isDeleting, firstRole, prefersReducedMotion]);
+function Hero({ copy, language }) {
+    const today = useMemo(() => new Intl.DateTimeFormat(language === 'id' ? 'id-ID' : 'en-GB', {
+        day: '2-digit', month: 'short', year: 'numeric'
+    }).format(new Date()).toUpperCase(), [language]);
 
     return (
-        <p className="hero-profession typewriter-profession" aria-label={roles[roleIndex]}>
-            <span>{visibleText || '\u00a0'}</span>
-            <i className="typewriter-cursor" aria-hidden="true"></i>
-        </p>
-    );
-}
+        <section id="home" className="hero-section" data-section>
+            <PhysicsTags content={copy.hero}/>
 
-function LocalPortfolioAgent({ language, common, education, jobs, projects, certifications, skills, aboutText, onOpenResult }) {
-    const copy = {
-        id: {
-            name: 'difa_agent', status: 'Lokal / Online', placeholder: 'Tanyakan isi portofolio...', send: 'Kirim', close: 'Tutup asisten lokal', open: 'Buka asisten portofolio',
-            welcome: `System Online. Saya asisten lokal portofolio ${common.name}. Ketik help atau tanyakan sertifikat, pengalaman, skill, pendidikan, proyek, CV, dan kontak.`,
-            help: 'Saya hanya menjawab berdasarkan isi website ini. Gunakan perintah cepat di bawah atau tulis pertanyaan seperti “Apa pengalaman Difa?” dan “Sertifikat apa yang dimiliki?”.',
-            found: 'Saya menemukan data berikut di portofolio:', empty: 'Data tersebut belum saya temukan di portofolio ini.', openResult: 'Tampilkan', thinking: 'Mencari data lokal...'
-        },
-        en: {
-            name: 'difa_agent', status: 'Local / Online', placeholder: 'Ask about this portfolio...', send: 'Send', close: 'Close local assistant', open: 'Open portfolio assistant',
-            welcome: `System Online. I am ${common.name}'s local portfolio assistant. Type help or ask about certificates, experience, skills, education, projects, CV, and contact details.`,
-            help: 'I only answer from the content of this website. Use a quick command below or ask a question such as “What experience does Difa have?”.',
-            found: 'I found the following portfolio data:', empty: 'I could not find that information in this portfolio.', openResult: 'Show', thinking: 'Searching local data...'
-        },
-        ja: {
-            name: 'difa_agent', status: 'Local / Online', placeholder: 'ポートフォリオについて質問...', send: 'Send', close: 'Close local assistant', open: 'Open portfolio assistant',
-            welcome: `${common.name}のローカルポートフォリオアシスタントです。資格、経験、スキル、学歴、プロジェクト、CV、連絡先について質問できます。`,
-            help: 'このウェブサイトに保存されている情報だけを案内します。下のコマンドを選ぶか、質問を入力してください。',
-            found: 'ポートフォリオ内で次の情報が見つかりました：', empty: 'このポートフォリオでは該当情報が見つかりませんでした。', openResult: 'Show', thinking: 'Searching local data...'
-        }
-    }[language];
-    const [isOpen, setIsOpen] = useState(false);
-    const [input, setInput] = useState('');
-    const [messages, setMessages] = useState([{ role: 'agent', text: copy.welcome, results: [] }]);
-    const inputRef = useRef(null);
-    const logRef = useRef(null);
+            <h1 className="hero-name" aria-label={PROFILE.name}>
+                <span>DIFA</span> <span>ALFARUQ</span>
+            </h1>
 
-    useEffect(() => {
-        setMessages([{ role: 'agent', text: copy.welcome, results: [] }]);
-        setInput('');
-    }, [language]);
-
-    useEffect(() => {
-        const handleShortcut = (event) => {
-            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-                event.preventDefault();
-                setIsOpen((current) => !current);
-            }
-            if (event.key === 'Escape') setIsOpen(false);
-        };
-        document.addEventListener('keydown', handleShortcut);
-        return () => document.removeEventListener('keydown', handleShortcut);
-    }, []);
-
-    useEffect(() => {
-        if (isOpen) window.setTimeout(() => inputRef.current?.focus(), 80);
-    }, [isOpen]);
-
-    useEffect(() => {
-        if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
-    }, [messages, isOpen]);
-
-    const textOf = (value) => String(value || '').toLowerCase();
-    const includesAny = (query, words) => words.some((word) => query.includes(word));
-    const catalogs = {
-        certificates: certifications.map((item, index) => ({
-            type: 'certificate', section: 'certifications', index, item,
-            title: item.title, meta: [item.issuer, item.date].filter(Boolean).join(' · '),
-            search: textOf([item.title, item.issuer, item.date, item.description, item.certificate_number].join(' '))
-        })),
-        experience: jobs.map((item, index) => ({
-            type: 'experience', section: 'experience', index, item,
-            title: item.title, meta: [item.company, item.period].filter(Boolean).join(' · '),
-            search: textOf([item.title, item.company, item.period, item.category, item.description, ...(item.duties || [])].join(' '))
-        })),
-        skills: skills.map((item, index) => ({
-            type: 'skill', section: 'skills', index, item,
-            title: item.name, meta: [item.since && `Sejak ${item.since}`, item.level].filter(Boolean).join(' · '),
-            search: textOf([item.name, item.category, item.since, item.level, item.description, ...(item.technologies || [])].join(' '))
-        })),
-        education: education.map((item, index) => ({
-            type: 'education', section: 'education', index, item,
-            title: item.program, meta: [item.school, item.period].filter(Boolean).join(' · '),
-            search: textOf([item.program, item.school, item.period, item.status, item.description].join(' '))
-        })),
-        projects: projects.map((item, index) => ({
-            type: 'project', section: 'projects', index, item,
-            title: item.title, meta: item.category || '',
-            search: textOf([item.title, item.category, item.text].join(' '))
-        }))
-    };
-
-    const answerQuery = (rawQuery) => {
-        const query = textOf(rawQuery).trim();
-        if (!query) return null;
-        if (includesAny(query, ['help', 'bantuan', 'tolong', './help'])) return { text: copy.help, results: [] };
-
-        if (includesAny(query, ['siapa', 'tentang difa', 'profil', 'about difa', 'who is'])) {
-            return { text: `${common.name} — ${common.profession}. ${aboutText || ''}`.trim(), results: [] };
-        }
-
-        if (includesAny(query, ['whatsapp', 'kontak', 'contact', 'telepon', 'nomor', 'email', 'alamat', 'address'])) {
-            return {
-                text: copy.found,
-                results: [
-                    { type: 'external', title: `WhatsApp · ${common.phone}`, meta: common.whatsapp, url: common.whatsapp },
-                    { type: 'external', title: `Email · ${common.email}`, meta: common.email, url: `mailto:${common.email}` }
-                ]
-            };
-        }
-        if (includesAny(query, ['cv', 'resume', 'curriculum'])) {
-            return { text: copy.found, results: [{ type: 'external', title: 'Curriculum Vitae', meta: common.name, url: common.cv_url }] };
-        }
-
-        let scope = null;
-        if (includesAny(query, ['sertifikat', 'certificate', 'certification', 'credential', './certificates'])) scope = 'certificates';
-        else if (includesAny(query, ['pengalaman', 'experience', 'kerja', 'magang', './experience'])) scope = 'experience';
-        else if (includesAny(query, ['skill', 'keahlian', 'kemampuan', 'programming', 'pemrograman', './skills', './stack'])) scope = 'skills';
-        else if (includesAny(query, ['pendidikan', 'education', 'kuliah', 'sekolah', 'kampus', './education'])) scope = 'education';
-        else if (includesAny(query, ['proyek', 'project', 'kontribusi', './projects'])) scope = 'projects';
-
-        const allItems = Object.values(catalogs).flat();
-        const searchableWords = query.split(/\s+/).filter((word) => word.length > 2 && !['apa', 'yang', 'difa', 'saya', 'tentang', 'adalah', 'show', 'what', 'does', 'have'].includes(word));
-        let results = scope ? catalogs[scope] : allItems.filter((entry) => searchableWords.some((word) => entry.search.includes(word)));
-        if (scope && searchableWords.length > 0) {
-            const specific = results.filter((entry) => searchableWords.some((word) => entry.search.includes(word)));
-            if (specific.length > 0) results = specific;
-        }
-        results = results.slice(0, 6);
-        return results.length ? { text: copy.found, results } : { text: copy.empty, results: [] };
-    };
-
-    const submitQuery = (queryValue) => {
-        const cleanQuery = String(queryValue || '').trim();
-        if (!cleanQuery) return;
-        const answer = answerQuery(cleanQuery);
-        setMessages((current) => [...current, { role: 'user', text: cleanQuery, results: [] }, { role: 'agent', ...answer }]);
-        setInput('');
-    };
-
-    const openResult = (result) => {
-        if (result.type === 'external') {
-            const openedWindow = window.open(result.url, '_blank', 'noopener,noreferrer');
-            if (openedWindow) openedWindow.opener = null;
-        } else {
-            onOpenResult(result);
-        }
-        setIsOpen(false);
-    };
-
-    const shortcuts = [
-        ['./skills', './skills'],
-        ['./certificates', './certificates'],
-        ['./experience', './experience'],
-        ['./contact', 'kontak whatsapp']
-    ];
-
-    return (
-        <div className={`portfolio-agent ${isOpen ? 'is-open' : ''}`}>
-            <button className="portfolio-agent-trigger" type="button" aria-label={copy.open} aria-expanded={isOpen} onClick={() => setIsOpen((current) => !current)}>
-                <span aria-hidden="true">&gt;_</span>
-            </button>
-            <section className="portfolio-agent-window" role="dialog" aria-modal="false" aria-label={copy.name}>
-                <header className="portfolio-agent-header">
-                    <div className="agent-window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-                    <strong>{copy.name}</strong>
-                    <span>{copy.status}</span>
-                    <kbd>Ctrl+K</kbd>
-                    <button type="button" onClick={() => setIsOpen(false)} aria-label={copy.close}>×</button>
-                </header>
-                <div className="portfolio-agent-log" ref={logRef} aria-live="polite">
-                    <p className="agent-last-login">Last login: {new Date().toLocaleDateString(language === 'id' ? 'id-ID' : 'en-GB')} on portfolio.local</p>
-                    {messages.map((message, index) => (
-                        <div className={`agent-message ${message.role}`} key={`agent-message-${index}`}>
-                            <span className="agent-prompt" aria-hidden="true">{message.role === 'agent' ? '●' : '›'}</span>
-                            <div>
-                                <p>{message.text}</p>
-                                {message.results?.length > 0 && (
-                                    <div className="agent-results">
-                                        {message.results.map((result, resultIndex) => (
-                                            <button type="button" onClick={() => openResult(result)} key={`${result.type}-${result.title}-${resultIndex}`}>
-                                                <span><strong>{result.title}</strong><small>{result.meta}</small></span>
-                                                <b>{copy.openResult} ↗</b>
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div className="portfolio-agent-shortcuts">
-                    {shortcuts.map(([label, query]) => <button type="button" onClick={() => submitQuery(query)} key={label}>{label}</button>)}
-                </div>
-                <form className="portfolio-agent-input" onSubmit={(event) => { event.preventDefault(); submitQuery(input); }}>
-                    <span aria-hidden="true">›</span>
-                    <input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder={copy.placeholder} autoComplete="off" />
-                    <button type="submit" aria-label={copy.send}>↵</button>
-                </form>
-            </section>
-        </div>
-    );
-}
-
-function ExperienceModal({ experience, copy, onClose }) {
-    const closeOnBackdrop = (event) => {
-        if (event.target === event.currentTarget) onClose();
-    };
-
-    return (
-        <div className="experience-modal-backdrop" role="presentation" onMouseDown={closeOnBackdrop}>
-            <section className="experience-modal" role="dialog" aria-modal="true" aria-labelledby="experience-modal-title">
-                <button className="experience-modal-close" type="button" onClick={onClose} aria-label={copy.close} autoFocus>
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div className="experience-modal-header">
-                    <div className="experience-modal-image">
-                        {experience.image ? <img src={experience.image} alt="" /> : <span>{experience.company.charAt(0)}</span>}
-                    </div>
-                    <div>
-                        <span className="experience-modal-category">{experience.category}</span>
-                        <h2 id="experience-modal-title">{experience.title}</h2>
-                        <h3>{experience.company}</h3>
-                        {experience.period && <time>{experience.period}</time>}
-                    </div>
-                </div>
-                {experience.description && <p className="experience-modal-description">{experience.description}</p>}
-                {(experience.duties || []).length > 0 && (
-                    <div className="experience-responsibilities">
-                        <strong>{copy.responsibilities}</strong>
-                        <ul>{experience.duties.map((duty) => <li key={duty}>{duty}</li>)}</ul>
-                    </div>
-                )}
-            </section>
-        </div>
-    );
-}
-
-function SkillModal({ skill, copy, onClose }) {
-    const closeOnBackdrop = (event) => {
-        if (event.target === event.currentTarget) onClose();
-    };
-
-    return (
-        <div className="skill-modal-backdrop" role="presentation" onMouseDown={closeOnBackdrop}>
-            <section className="skill-modal" role="dialog" aria-modal="true" aria-labelledby="skill-modal-title">
-                <button className="skill-modal-close" type="button" onClick={onClose} aria-label={copy.close} autoFocus>
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div className="skill-modal-icon">
-                    {skill.image ? <img src={skill.image} alt="" /> : <span aria-hidden="true">{skill.name.charAt(0)}</span>}
-                </div>
-                <span className="skill-modal-category">{skill.category === 'soft' ? copy.soft : copy.hard}</span>
-                <h2 id="skill-modal-title">{skill.name}</h2>
-                {skill.description && <p>{skill.description}</p>}
-                {Array.isArray(skill.technologies) && skill.technologies.length > 0 && (
-                    <div className="skill-technologies">
-                        <strong>{copy.learned}</strong>
-                        <div className="skill-technology-list">
-                            {skill.technologies.map((technology) => <span key={technology}>{technology}</span>)}
-                        </div>
-                    </div>
-                )}
-                {(skill.since || skill.level) && (
-                    <dl className="skill-modal-meta">
-                        {skill.since && <div><dt>{copy.since}</dt><dd>{skill.since}</dd></div>}
-                        {skill.level && <div><dt>{copy.level}</dt><dd>{skill.level}</dd></div>}
-                    </dl>
-                )}
-            </section>
-        </div>
-    );
-}
-
-function CertificateModal({ certificate, copy, onClose }) {
-    const closeOnBackdrop = (event) => {
-        if (event.target === event.currentTarget) onClose();
-    };
-
-    return (
-        <div className="certificate-modal-backdrop" role="presentation" onMouseDown={closeOnBackdrop}>
-            <section className="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="certificate-modal-title">
-                <button className="certificate-modal-close" type="button" onClick={onClose} aria-label={copy.close} autoFocus>
-                    <span aria-hidden="true">×</span>
-                </button>
-                <div className="certificate-modal-preview">
-                    {certificate.image
-                        ? <img src={certificate.image} alt={`Sertifikat ${certificate.title}`} />
-                        : <span className="certification-icon"><InterfaceIcon name="certificate" /></span>}
-                </div>
-                <div className="certificate-modal-content">
-                    <span className="certificate-modal-kicker">{certificate.issuer}</span>
-                    <h2 id="certificate-modal-title">{certificate.title}</h2>
-                    {certificate.description && <p>{certificate.description}</p>}
-                    <dl className="certificate-meta">
-                        <div>
-                            <dt>{copy.issued}</dt>
-                            <dd>{certificate.date}</dd>
-                        </div>
-                        {certificate.certificate_number && (
-                            <div>
-                                <dt>{copy.number}</dt>
-                                <dd>{certificate.certificate_number}</dd>
-                            </div>
-                        )}
-                    </dl>
-                    <div className="certificate-modal-actions">
-                        {certificate.document && (
-                            <a className="certificate-download-button" href={certificate.document} target="_blank" rel="noopener noreferrer">
-                                {copy.download} <span aria-hidden="true">↓</span>
-                            </a>
-                        )}
-                        {certificate.credential_url ? (
-                            <a className="certificate-credential-button" href={certificate.credential_url} target="_blank" rel="noopener noreferrer">
-                                {copy.credential} <span aria-hidden="true">↗</span>
-                            </a>
-                        ) : (
-                            <button className="certificate-credential-button is-disabled" type="button" disabled title={copy.pending}>
-                                {copy.credential} <span aria-hidden="true">↗</span>
-                            </button>
-                        )}
-                    </div>
-                    {!certificate.credential_url && <small className="certificate-credential-note">{copy.pending}</small>}
-                </div>
-            </section>
-        </div>
-    );
-}
-
-function RatingSection({ language }) {
-    const copy = {
-        id: { eyebrow: 'Rating Pengunjung', title: 'Bagikan kesan setelah melihat portofolio saya', reviews: 'ulasan', loading: 'Memuat rating pengunjung...', empty: 'Belum ada rating. Jadilah pengunjung pertama yang memberi masukan.', formTitle: 'Kasih masukan', formText: 'Rating dan pesan yang kamu kirim akan langsung ditampilkan.', stars: 'Bintang', name: 'Nama', namePlaceholder: 'Nama kamu', origin: 'Asal', originPlaceholder: 'Kota atau instansi (opsional)', message: 'Masukan', messagePlaceholder: 'Tulis kesan, kritik, atau saran', sending: 'Mengirim...', submit: 'Kirim masukan', chooseStar: 'Pilih jumlah bintang terlebih dahulu.', success: 'Terima kasih! Rating kamu berhasil ditampilkan.', loadError: 'Rating belum dapat dimuat.', submitError: 'Rating gagal dikirim.', outOf: 'dari 5 bintang' },
-        en: { eyebrow: 'Visitor Ratings', title: 'Share your impression after viewing my portfolio', reviews: 'reviews', loading: 'Loading visitor ratings...', empty: 'No ratings yet. Be the first visitor to leave feedback.', formTitle: 'Leave feedback', formText: 'Your rating and message will be displayed immediately.', stars: 'Stars', name: 'Name', namePlaceholder: 'Your name', origin: 'From', originPlaceholder: 'City or organization (optional)', message: 'Feedback', messagePlaceholder: 'Write your impressions or suggestions', sending: 'Sending...', submit: 'Send feedback', chooseStar: 'Please select a star rating first.', success: 'Thank you! Your rating is now displayed.', loadError: 'Ratings could not be loaded.', submitError: 'Rating could not be sent.', outOf: 'out of 5 stars' },
-        ja: { eyebrow: '訪問者の評価', title: 'ポートフォリオをご覧になった感想をお聞かせください', reviews: '件のレビュー', loading: '評価を読み込んでいます...', empty: 'まだ評価はありません。最初の感想をお寄せください。', formTitle: '感想を送る', formText: '評価とメッセージはすぐに表示されます。', stars: '星', name: 'お名前', namePlaceholder: 'お名前', origin: '所属・地域', originPlaceholder: '都市または組織（任意）', message: 'メッセージ', messagePlaceholder: '感想やご提案をご記入ください', sending: '送信中...', submit: '送信する', chooseStar: '星の数を選択してください。', success: 'ありがとうございます。評価が表示されました。', loadError: '評価を読み込めませんでした。', submitError: '評価を送信できませんでした。', outOf: '5つ星のうち' }
-    }[language];
-    const emptyForm = { rating: 0, name: '', origin: '', message: '' };
-    const [ratings, setRatings] = useState([]);
-    const [form, setForm] = useState(emptyForm);
-    const [loading, setLoading] = useState(true);
-    const [submitting, setSubmitting] = useState(false);
-    const [notice, setNotice] = useState({ type: '', text: '' });
-
-    const loadRatings = async () => {
-        try {
-            if (window.portfolioSupabase?.configured) {
-                const data = await window.portfolioSupabase.getRatings();
-                setRatings(data);
-            } else {
-                const response = await fetch('api/ratings.php', {
-                    headers: { Accept: 'application/json' },
-                });
-                const result = await response.json();
-                if (!response.ok || !result.success) throw new Error(result.message || copy.loadError);
-                setRatings(result.data);
-            }
-        } catch (error) {
-            setNotice({ type: 'error', text: error.message });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        loadRatings();
-    }, []);
-
-    const updateField = (event) => {
-        const { name, value } = event.target;
-        setForm((current) => ({ ...current, [name]: value }));
-    };
-
-    const submitRating = async (event) => {
-        event.preventDefault();
-        setNotice({ type: '', text: '' });
-
-        if (form.rating < 1) {
-            setNotice({ type: 'error', text: copy.chooseStar });
-            return;
-        }
-
-        setSubmitting(true);
-
-        try {
-            let createdRating;
-            if (window.portfolioSupabase?.configured) {
-                createdRating = await window.portfolioSupabase.createRating(form);
-            } else {
-                const response = await fetch('api/ratings.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                    body: JSON.stringify({ ...form, rating: Number(form.rating) }),
-                });
-                const result = await response.json();
-                if (!response.ok || !result.success) throw new Error(result.message || copy.submitError);
-                createdRating = result.data;
-            }
-            setRatings((current) => [createdRating, ...current]);
-            setForm(emptyForm);
-            setNotice({ type: 'success', text: copy.success });
-        } catch (error) {
-            setNotice({ type: 'error', text: error.message });
-        } finally {
-            setSubmitting(false);
-        }
-    };
-
-    const average = ratings.length
-        ? (ratings.reduce((total, item) => total + Number(item.rating), 0) / ratings.length).toFixed(1)
-        : '0.0';
-
-    return (
-        <section id="rating" className="section rating-section reveal" data-section>
-            <div className="rating-heading">
-                <div>
-                    <p className="eyebrow">{copy.eyebrow}</p>
-                    <h2 className="section-title">{copy.title}</h2>
-                </div>
-                <div className="rating-summary" aria-label={`${average} ${copy.outOf}`}>
-                    <strong>{average}</strong>
-                    <span className="summary-stars">★</span>
-                    <small>{ratings.length} {copy.reviews}</small>
-                </div>
-            </div>
-
-            <div className="rating-layout">
-                <div className="rating-list" aria-live="polite">
-                    {loading && <div className="rating-state">{copy.loading}</div>}
-                    {!loading && ratings.length === 0 && (
-                        <div className="rating-state">{copy.empty}</div>
-                    )}
-                    {ratings.map((item) => (
-                        <article className="rating-card" key={item.id}>
-                            <div className="rating-card-top">
-                                <div>
-                                    <h3>{item.name}</h3>
-                                    <p>{item.origin ? `${item.origin} · ` : ''}{item.created_at}</p>
-                                </div>
-                                <div className="stars-display" aria-label={`${item.rating} ${copy.outOf}`}>
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <span className={star <= item.rating ? 'filled' : ''} key={star}>★</span>
-                                    ))}
-                                </div>
-                            </div>
-                            <p className="rating-message">{item.message}</p>
-                        </article>
-                    ))}
-                </div>
-
-                <form className="rating-form" onSubmit={submitRating}>
-                    <h3>{copy.formTitle}</h3>
-                    <p>{copy.formText}</p>
-
-                    <fieldset className="star-picker">
-                        <legend>{copy.stars}</legend>
-                        <div>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                    className={star <= form.rating ? 'selected' : ''}
-                                    key={star}
-                                    onClick={() => setForm((current) => ({ ...current, rating: star }))}
-                                    type="button"
-                                    aria-label={`${star} ${copy.stars}`}
-                                    aria-pressed={star === form.rating}
-                                >
-                                    ★
-                                </button>
-                            ))}
-                        </div>
-                    </fieldset>
-
-                    <label>
-                        <span>{copy.name}</span>
-                        <input name="name" value={form.name} onChange={updateField} maxLength="80" placeholder={copy.namePlaceholder} required />
-                    </label>
-                    <label>
-                        <span>{copy.origin}</span>
-                        <input name="origin" value={form.origin} onChange={updateField} maxLength="100" placeholder={copy.originPlaceholder} />
-                    </label>
-                    <label>
-                        <span>{copy.message}</span>
-                        <textarea name="message" value={form.message} onChange={updateField} maxLength="500" rows="5" placeholder={copy.messagePlaceholder} required></textarea>
-                    </label>
-
-                    {notice.text && <div className={`form-notice ${notice.type}`}>{notice.text}</div>}
-
-                    <button className="rating-submit" type="submit" disabled={submitting}>
-                        {submitting ? copy.sending : copy.submit}
-                    </button>
-                </form>
+            <div className="hero-statusbar">
+                <div className="status-available"><span className="live-dot"><i></i></span><strong>{copy.hero.available}</strong></div>
+                <div>{copy.hero.based}</div>
+                <div><strong>{copy.hero.today}:</strong> {today}</div>
+                <a href="#about">{copy.hero.scroll}<Icon name="down" size={16}/></a>
             </div>
         </section>
     );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+function ProfileCard({ copy }) {
+    const cardRef = useRef(null);
+
+    const handleMove = (event) => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const element = cardRef.current;
+        if (!element) return;
+        const rect = element.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
+        const y = ((event.clientY - rect.top) / rect.height - 0.5) * -10;
+        element.style.setProperty('--tilt-x', `${y}deg`);
+        element.style.setProperty('--tilt-y', `${x}deg`);
+        element.style.setProperty('--glow-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+        element.style.setProperty('--glow-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+    };
+
+    const resetTilt = () => {
+        if (!cardRef.current) return;
+        cardRef.current.style.setProperty('--tilt-x', '0deg');
+        cardRef.current.style.setProperty('--tilt-y', '0deg');
+    };
+
+    return (
+        <div className="profile-stage reveal">
+            <div className="profile-card" ref={cardRef} onPointerMove={handleMove} onPointerLeave={resetTilt}>
+                <div className="profile-glare" aria-hidden="true"></div>
+                <img src={PROFILE.photo} alt="Potret Difa Alfaruq"/>
+                <div className="profile-card-info">
+                    <div>
+                        <strong>{copy.about.handle}</strong>
+                        <span><i></i>{copy.about.online}</span>
+                    </div>
+                    <a href="#contact">{copy.about.hire}</a>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function About({ copy }) {
+    return (
+        <section id="about" className="about-section page-section" data-section>
+            <div className="section-container">
+                <h2 className="section-title reveal">{copy.about.title}</h2>
+
+                <div className="bento-grid">
+                    <article className="bento-card intro-card reveal">
+                        <div>
+                            <h3>{copy.about.greeting}</h3>
+                            <p>{copy.about.description}</p>
+                            <p>{copy.about.descriptionTwo}</p>
+                        </div>
+                        <div className="resume-actions">
+                            <a className="pill-button dark-button" href={PROFILE.cv} download="CV_Difa_Alfaruq_EN.pdf">
+                                <Icon name="download" size={16}/>{copy.about.resumeDownload}
+                            </a>
+                            <a className="resume-preview-button" href={PROFILE.cv} target="_blank" rel="noopener noreferrer" aria-label={copy.about.resumePreview} title={copy.about.resumePreview}>
+                                <Icon name="eye" size={19}/>
+                            </a>
+                        </div>
+                    </article>
+
+                    <ProfileCard copy={copy}/>
+
+                    <article className="bento-card education-card reveal">
+                        <div className="education-topline">
+                            <span>{copy.about.educationLabel}</span>
+                            <small>{copy.about.educationStatus}</small>
+                        </div>
+                        <img src={PROFILE.campusLogo} alt="Logo Universitas Bani Saleh"/>
+                        <div className="education-body">
+                            <h3>{copy.about.campus}</h3>
+                            <h4>{copy.about.degree}</h4>
+                            <p>{copy.about.courseworkLabel}</p>
+                            <div className="coursework-list">
+                                {copy.about.coursework.map((item) => <span key={item}>{item}</span>)}
+                            </div>
+                            <div className="education-gpa">
+                                <strong>{copy.about.gpaValue}</strong>
+                                <span><b>{copy.about.gpaLabel}</b><small>{copy.about.gpaScale}</small></span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article className="bento-card tech-card reveal">
+                        <div className="tech-card-heading">
+                            <span aria-hidden="true"><Icon name="terminal" size={22}/></span>
+                            <h3>{copy.about.stackTitle}</h3>
+                        </div>
+                        <div className="tech-groups">
+                            {copy.stackGroups.map((group) => (
+                                <div className="tech-group" key={group.title}>
+                                    <div className="tech-group-title"><Icon name={group.icon} size={18}/><h4>{group.title}</h4></div>
+                                    <div className="tech-items">
+                                        {group.items.map((item) => <span key={item}>{item}</span>)}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </article>
+
+                    <article className="bento-card inverse-card workflow-card reveal">
+                        <div>
+                            <h3>{copy.about.workflowTitle}</h3>
+                            <p>{copy.about.workflow}</p>
+                        </div>
+                        <div className="focus-pills">
+                            {copy.about.workflowTags.map((tag) => <span key={tag}>{tag}</span>)}
+                        </div>
+                    </article>
+
+                    <article className="bento-card inverse-card focus-card reveal">
+                        <h3>{copy.about.focusTitle}</h3>
+                        <p>{copy.about.focus}</p>
+                        <div className="focus-pills">
+                            {copy.about.focusTags.map((tag) => <span key={tag}>{tag}</span>)}
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function ProjectVisual({ compact = false }) {
+    return (
+        <div className={`project-visual ${compact ? 'compact' : ''}`} aria-hidden="true">
+            <div className="browser-bar">
+                <div className="browser-dots"><i></i><i></i><i></i></div>
+                <span>difaalfaruq.portfolio</span>
+                <i className="browser-live"></i>
+            </div>
+            <div className="browser-page">
+                <div className="mini-nav"><b>DA</b><span>HOME&nbsp;&nbsp; ABOUT&nbsp;&nbsp; WORK</span><i></i></div>
+                <div className="mini-tags"><span>WEB DEVELOPER</span><span>IT SUPPORT</span><span>INFRASTRUCTURE</span></div>
+                <strong>DIFA<br/><em>ALFARUQ</em></strong>
+                <div className="mini-grid"><i></i><i></i><i></i></div>
+            </div>
+        </div>
+    );
+}
+
+function Projects({ copy, onOpen }) {
+    const project = copy.projects;
+    return (
+        <section id="projects" className="projects-section inverse-section page-section" data-section>
+            <div className="section-container">
+                <div className="projects-heading reveal">
+                    <h2>{project.headingTop}<br/>{project.headingBottom}</h2>
+                    <p>{project.intro}</p>
+                </div>
+
+                <article className="selected-project reveal">
+                    <div className="project-copy">
+                        <span className="project-category">{project.category}</span>
+                        <h3>{project.title}</h3>
+                        <p>{project.description}</p>
+
+                        <div className="project-metrics">
+                            {project.metrics.map(([value, label]) => (
+                                <div key={label}><strong>{value}</strong><span>{label}</span></div>
+                            ))}
+                        </div>
+
+                        <div className="project-tags">
+                            {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                        </div>
+
+                        <div className="project-actions">
+                            <button type="button" className="text-link" onClick={onOpen}><Icon name="file" size={17}/>{project.caseStudy}</button>
+                            <a className="project-visit" href="#home">{project.visit}<Icon name="arrow" size={16}/></a>
+                        </div>
+                    </div>
+
+                    <button type="button" className="project-preview" onClick={onOpen} aria-label={project.view}>
+                        <ProjectVisual/>
+                        <span><Icon name="file" size={17}/>{project.view}</span>
+                    </button>
+                </article>
+            </div>
+        </section>
+    );
+}
+
+function Experience({ copy, onOpen }) {
+    const timelineRef = useRef(null);
+    const markerRef = useRef(null);
+    const progressRef = useRef(null);
+
+    useEffect(() => {
+        const timeline = timelineRef.current;
+        const marker = markerRef.current;
+        const progressLine = progressRef.current;
+
+        if (!timeline || !marker || !progressLine) return undefined;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const markerStart = 12;
+        let currentY = markerStart;
+        let targetY = markerStart;
+        let animationFrame = 0;
+        let measureFrame = 0;
+        let initialized = false;
+        let destroyed = false;
+        let timelineHeight = 1;
+        let markerHeight = marker.offsetHeight;
+
+        const paint = () => {
+            const progress = Math.min(1, Math.max(0, (currentY + markerHeight * 0.5) / timelineHeight));
+
+            marker.style.transform = `translate3d(-50%, ${currentY}px, 0)`;
+            progressLine.style.transform = `scaleY(${progress})`;
+        };
+
+        const animate = () => {
+            animationFrame = 0;
+            if (destroyed) return;
+
+            currentY += (targetY - currentY) * 0.2;
+
+            if (Math.abs(targetY - currentY) < 0.1) {
+                currentY = targetY;
+            }
+
+            paint();
+
+            if (currentY !== targetY) {
+                animationFrame = window.requestAnimationFrame(animate);
+            }
+        };
+
+        const updateTarget = () => {
+            const timelineRect = timeline.getBoundingClientRect();
+            const viewportAnchor = window.innerHeight * 0.5;
+            timelineHeight = Math.max(1, timelineRect.height);
+            markerHeight = marker.offsetHeight;
+            const progress = Math.min(1, Math.max(0, (viewportAnchor - timelineRect.top) / timelineHeight));
+            const travel = Math.max(0, timelineHeight - markerHeight - markerStart);
+
+            targetY = markerStart + progress * travel;
+
+            if (!initialized || reduceMotion) {
+                initialized = true;
+                currentY = targetY;
+                paint();
+                return;
+            }
+
+            if (!animationFrame) {
+                animationFrame = window.requestAnimationFrame(animate);
+            }
+        };
+
+        const scheduleUpdate = () => {
+            if (destroyed || measureFrame) return;
+
+            measureFrame = window.requestAnimationFrame(() => {
+                measureFrame = 0;
+                updateTarget();
+            });
+        };
+
+        const resizeObserver = 'ResizeObserver' in window
+            ? new ResizeObserver(scheduleUpdate)
+            : null;
+
+        resizeObserver?.observe(timeline);
+        window.addEventListener('scroll', scheduleUpdate, { passive: true });
+        window.addEventListener('resize', scheduleUpdate);
+        document.fonts?.ready?.then(scheduleUpdate);
+        scheduleUpdate();
+
+        return () => {
+            destroyed = true;
+            window.cancelAnimationFrame(animationFrame);
+            window.cancelAnimationFrame(measureFrame);
+            resizeObserver?.disconnect();
+            window.removeEventListener('scroll', scheduleUpdate);
+            window.removeEventListener('resize', scheduleUpdate);
+        };
+    }, [copy.jobs.length]);
+
+    return (
+        <section id="experience" className="experience-section page-section" data-section>
+            <div className="experience-grid-pattern" aria-hidden="true"></div>
+            <div className="section-container">
+                <div className="experience-heading reveal">
+                    <h2>{copy.experience.title}</h2>
+                    <p>{copy.experience.intro}</p>
+                </div>
+
+                <div className="timeline" ref={timelineRef}>
+                    <div className="timeline-line" aria-hidden="true">
+                        <span className="timeline-scroll-progress" ref={progressRef}></span>
+                        <span className="timeline-scroll-marker" ref={markerRef}></span>
+                    </div>
+                    {copy.jobs.map((job, index) => (
+                        <article className={`timeline-item ${index % 2 ? 'reverse' : ''} reveal`} key={`${job.company}-${job.period}`}>
+                            <div className="timeline-card">
+                                <div className="timeline-card-top">
+                                    <span>{job.category}</span>
+                                    <time>{job.period}</time>
+                                </div>
+                                <h3>{job.title}</h3>
+                                <h4><Icon name="pin" size={14}/>{job.company}</h4>
+                                <p>{job.description}</p>
+                                <div className="timeline-tags">
+                                    {job.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                                </div>
+                            </div>
+
+                            <span className="timeline-dot" aria-hidden="true"><i></i></span>
+
+                            <button className="experience-archive" type="button" onClick={() => onOpen(job)} aria-label={`${copy.experience.open}: ${job.title}`}>
+                                <span className="archive-year">{job.year}</span>
+                                <span className="archive-image"><img src={job.image} alt=""/></span>
+                                <strong>{copy.experience.archive}</strong>
+                                <small>{copy.experience.open}</small>
+                            </button>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function Contact({ copy }) {
+    const [copied, setCopied] = useState(false);
+    const [sending, setSending] = useState(false);
+
+    const copyEmail = async () => {
+        try {
+            await navigator.clipboard.writeText(PROFILE.email);
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 1800);
+        } catch (_) {
+            window.location.href = `mailto:${PROFILE.email}`;
+        }
+    };
+
+    const submitMessage = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const subject = data.get('subject');
+        const body = `${copy.contact.fields.name}: ${data.get('name')}\n${copy.contact.fields.email}: ${data.get('email')}\n\n${data.get('message')}`;
+        setSending(true);
+        window.location.href = `mailto:${PROFILE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.setTimeout(() => setSending(false), 1800);
+    };
+
+    return (
+        <section id="contact" className="contact-section inverse-section page-section" data-section>
+            <div className="section-container">
+                <div className="contact-grid">
+                    <div className="contact-copy reveal">
+                        <h2>{copy.contact.titleTop}<br/>{copy.contact.titleBottom}</h2>
+                        <p>{copy.contact.intro}</p>
+
+                        <div className="contact-block">
+                            <span>{copy.contact.direct}</span>
+                            <button type="button" className="email-copy" onClick={copyEmail}>
+                                <i><Icon name="mail" size={20}/></i>
+                                <strong>{copied ? copy.contact.copied : PROFILE.email}</strong>
+                                <Icon name="copy" size={20}/>
+                            </button>
+                        </div>
+
+                        <div className="contact-block">
+                            <span>{copy.contact.social}</span>
+                            <div className="social-links">
+                                <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Icon name="linkedin" size={22}/></a>
+                                <a href={PROFILE.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Icon name="instagram" size={22}/></a>
+                                <a href={PROFILE.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><Icon name="whatsapp" size={22}/></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="contact-form-shell reveal">
+                        <form onSubmit={submitMessage}>
+                            <div className="form-row">
+                                <label><span>{copy.contact.fields.name}</span><input name="name" type="text" placeholder={copy.contact.placeholders.name} required/></label>
+                                <label><span>{copy.contact.fields.email}</span><input name="email" type="email" placeholder={copy.contact.placeholders.email} required/></label>
+                            </div>
+                            <label><span>{copy.contact.fields.subject}</span>
+                                <select name="subject" defaultValue={copy.contact.subjects[0]}>
+                                    {copy.contact.subjects.map((subject) => <option value={subject} key={subject}>{subject}</option>)}
+                                </select>
+                            </label>
+                            <label><span>{copy.contact.fields.message}</span><textarea name="message" rows="6" placeholder={copy.contact.placeholders.message} required></textarea></label>
+                            <button className="send-button" type="submit" disabled={sending}>
+                                {sending ? copy.contact.sending : copy.contact.send}<Icon name="send" size={18}/>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <footer className="site-footer">
+                    <p>© {new Date().getFullYear()} {PROFILE.name}. {copy.contact.rights}</p>
+                    <div><span>{PROFILE.location}</span><span>{copy.contact.remote}</span></div>
+                </footer>
+            </div>
+        </section>
+    );
+}
+
+function ProjectModal({ copy, onClose }) {
+    const dialogRef = useRef(null);
+    useEffect(() => dialogRef.current?.focus(), []);
+
+    return (
+        <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+            <article className="modal-dialog case-study-dialog" role="dialog" aria-modal="true" aria-labelledby="case-study-title" tabIndex="-1" ref={dialogRef}>
+                <button className="modal-close" type="button" aria-label={copy.modal.close} onClick={onClose}><Icon name="close" size={23}/></button>
+                <span className="modal-eyebrow">{copy.projects.modalEyebrow}</span>
+                <h2 id="case-study-title">{copy.projects.title}</h2>
+                <p className="modal-lead">{copy.projects.modalIntro}</p>
+                <ProjectVisual compact/>
+                <div className="case-sections">
+                    {copy.projects.modalSections.map(([title, text]) => (
+                        <section key={title}><h3>{title}</h3><p>{text}</p></section>
+                    ))}
+                </div>
+                <div className="project-tags modal-tags">
+                    {copy.projects.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+            </article>
+        </div>
+    );
+}
+
+function JobModal({ copy, job, onClose }) {
+    const dialogRef = useRef(null);
+    useEffect(() => dialogRef.current?.focus(), []);
+
+    return (
+        <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+            <article className="modal-dialog job-dialog" role="dialog" aria-modal="true" aria-labelledby="job-title" tabIndex="-1" ref={dialogRef}>
+                <button className="modal-close" type="button" aria-label={copy.modal.close} onClick={onClose}><Icon name="close" size={23}/></button>
+                <div className="job-modal-header">
+                    <div className="job-modal-logo"><img src={job.image} alt=""/></div>
+                    <div>
+                        <span className="modal-eyebrow">{job.category} / {job.year}</span>
+                        <h2 id="job-title">{job.title}</h2>
+                        <h3>{job.company}</h3>
+                        <time>{job.period}</time>
+                    </div>
+                </div>
+                <p className="modal-lead">{job.description}</p>
+                <div className="responsibility-list">
+                    <h3>{copy.experience.responsibilities}</h3>
+                    <ul>{job.duties.map((duty) => <li key={duty}>{duty}</li>)}</ul>
+                </div>
+                <div className="timeline-tags modal-tags">
+                    {job.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+            </article>
+        </div>
+    );
+}
+
+function App() {
+    const [language, setLanguageState] = useState(() => {
+        const stored = localStorage.getItem('difa-language');
+        return stored === 'en' ? 'en' : 'id';
+    });
+    const [theme, setThemeState] = useState(() => localStorage.getItem('difa-theme') === 'dark' ? 'dark' : 'light');
+    const [activeSection, setActiveSection] = useState('home');
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [projectOpen, setProjectOpen] = useState(false);
+    const [activeJob, setActiveJob] = useState(null);
+    const [showBackTop, setShowBackTop] = useState(false);
+    const copy = CONTENT[language];
+
+    const setLanguage = (value) => {
+        localStorage.setItem('difa-language', value);
+        setLanguageState(value);
+    };
+
+    const setTheme = (value) => {
+        localStorage.setItem('difa-theme', value);
+        setThemeState(value);
+    };
+
+    useEffect(() => {
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.lang = language;
+        document.title = copy.documentTitle;
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#050505' : '#ffffff');
+    }, [theme, language, copy.documentTitle]);
+
+    useEffect(() => {
+        window.history.scrollRestoration = 'manual';
+        const resetToHero = () => window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        resetToHero();
+        const frame = window.requestAnimationFrame(resetToHero);
+        const timer = window.setTimeout(resetToHero, 120);
+        return () => {
+            window.cancelAnimationFrame(frame);
+            window.clearTimeout(timer);
+        };
+    }, []);
+
+    useEffect(() => {
+        const sections = Array.from(document.querySelectorAll('[data-section]'));
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) setActiveSection(entry.target.id);
+            });
+        }, { rootMargin: '-28% 0px -58% 0px', threshold: 0 });
+        sections.forEach((section) => observer.observe(section));
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const elements = Array.from(document.querySelectorAll('.reveal'));
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -50px' });
+        elements.forEach((element, index) => {
+            element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+            observer.observe(element);
+        });
+        return () => observer.disconnect();
+    }, [language]);
+
+    useEffect(() => {
+        const onScroll = () => setShowBackTop(window.scrollY > 900);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    useEffect(() => {
+        const modalOpen = projectOpen || Boolean(activeJob);
+        document.body.classList.toggle('no-scroll', menuOpen || modalOpen);
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                setMenuOpen(false);
+                setProjectOpen(false);
+                setActiveJob(null);
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.classList.remove('no-scroll');
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [menuOpen, projectOpen, activeJob]);
+
+    return (
+        <>
+            <Header
+                copy={copy}
+                language={language}
+                setLanguage={setLanguage}
+                theme={theme}
+                setTheme={setTheme}
+                activeSection={activeSection}
+                menuOpen={menuOpen}
+                setMenuOpen={setMenuOpen}
+            />
+            <main>
+                <Hero copy={copy} language={language}/>
+                <About copy={copy}/>
+                <Projects copy={copy} onOpen={() => setProjectOpen(true)}/>
+                <Experience copy={copy} onOpen={setActiveJob}/>
+                <Contact copy={copy}/>
+            </main>
+
+            <button
+                className={`back-to-top ${showBackTop ? 'visible' : ''}`}
+                type="button"
+                aria-label={copy.backTop}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
+                <Icon name="up" size={18}/>
+            </button>
+
+            {projectOpen && <ProjectModal copy={copy} onClose={() => setProjectOpen(false)}/>}
+            {activeJob && <JobModal copy={copy} job={activeJob} onClose={() => setActiveJob(null)}/>}
+        </>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
